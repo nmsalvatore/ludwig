@@ -22,7 +22,7 @@ SECRET_KEY = "django-insecure-cybsx#o&fybiqp4^9(#4u5k*89_0144myv(e^skf6cogzdy7&b
 
 # Paths
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 MEDIA_ROOT = BASE_DIR / "media_root"
 STATIC_ROOT = BASE_DIR / "static_root"
 STATICFILES_DIRS = [BASE_DIR / "static"]
@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "ludwig.conversations",
+    "ludwig.dialogues",
     "ludwig.accounts"
 ]
 

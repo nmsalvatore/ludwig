@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class ConversationsConfig(AppConfig):
+class DialoguesConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "ludwig.conversations"
+    name = "ludwig.dialogues"

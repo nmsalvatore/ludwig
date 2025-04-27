@@ -6,11 +6,11 @@ from ludwig.core.models import TimeStampedModel
 from ludwig.accounts.models import User
 
 
-class Conversation(TimeStampedModel):
+class Dialogue(TimeStampedModel):
     """A model representing a conversation between multiple users."""
     is_open = models.BooleanField()
     is_visible = models.BooleanField()
-    participants = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='conversations')
+    participants = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='dialogues')
     summary = models.TextField(blank=True)
     title = models.CharField(max_length=200)
     views = models.IntegerField(default=0)
@@ -26,7 +26,7 @@ class Post(TimeStampedModel):
     """A model representing a single post within a conversation."""
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     body = models.TextField()
-    dialogue = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='posts')
+    dialogue = models.ForeignKey(Dialogue, on_delete=models.CASCADE, related_name='posts')
 
     class Meta:
         ordering = ["created_on"]
