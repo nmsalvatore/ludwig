@@ -1,0 +1,54 @@
+main {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+div.form-container {
+    margin: auto;
+    max-width: 360px;
+    width: 100%;
+}
+
+h2 {
+    margin-bottom: 2rem;
+}
+
+main form {
+    margin-bottom: 2rem;
+}
+
+main form > div {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+}
+
+main form label {
+    margin-bottom: 0.25rem;
+}
+
+main form input {
+    border-radius: 0.25rem;
+    padding: 8px;
+    border: none;
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+}
+
+main form input:focus {
+    outline: 1px solid var(--color-2);
+}
+
+main form input::placeholder {
+    opacity: 0.5;
+    color: inherit;
+}
+
+main form button {
+    background: var(--color-2);
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+}

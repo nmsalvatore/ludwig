@@ -1,0 +1,108 @@
+:root {
+    --color-1: hsl(60 10% 94%);
+    --color-2: hsl(30 20% 80%);
+    --color-3: hsl(30 40% 40%);
+    --color-4: hsl(60 90% 6%);
+    --line-height: 1.6;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    background: var(--color-1);
+    color: var(--color-4);
+}
+
+body {
+    display: grid;
+    grid-template-rows: min-content 1fr min-content;
+    grid-template-areas:
+        "header"
+        "main"
+        "footer";
+    font-family: monospace;
+    min-height: 100dvh;
+    padding: 2rem 0;
+}
+
+@media only screen and (max-width: 720px) {
+    body {
+        padding: 0;
+    }
+}
+
+header {
+    display: flex;
+    grid-area: header;
+    justify-content: center;
+}
+
+.container {
+    display: flex;
+    padding: 1rem;
+    max-width: 720px;
+    width: 100%;
+}
+
+header .container {
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+main .container {
+    flex-direction: column;
+}
+
+header a.logo {
+    text-decoration: none;
+}
+
+main {
+    grid-area: main;
+}
+
+footer {
+    grid-area: footer;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-size: inherit;
+}
+
+a {
+    color: inherit;
+    display: block;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+}
+
+header button {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+}
+
+button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+}
+
+p {
+    line-height: var(--line-height);
+}
+
+.logo {
+    font-weight: bold;
+}

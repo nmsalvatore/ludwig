@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
+{% block main %}
+<p>
+    <a href="{% url 'accounts:register' %}">Register</a>
+    <a href="{% url 'accounts:login' %}">Log In</a>
+</p>
+{% endblock %}
