@@ -48,3 +48,17 @@ main form button {
     padding: 0.5rem;
     border-radius: 0.25rem;
 }
+
+ul.errorlist {
+    color: var(--color-alert);
+    margin-left: 1rem;
+    font-weight: bold;
+}
+
+form > ul.errorlist {
+    margin-bottom: 1rem;
+}
+
+label + ul.errorlist {
+    margin-bottom: 0.5rem;
+}

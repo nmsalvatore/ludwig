@@ -3,6 +3,7 @@
     --color-2: hsl(150 30% 80%);
     --color-3: hsl(150 30% 40%);
     --color-4: hsl(60 90% 5%);
+    --color-alert: hsl(0 35% 50%);
     --line-height: 1.6;
 }
 
