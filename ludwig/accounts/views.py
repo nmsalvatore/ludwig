@@ -30,19 +30,8 @@ class UserLoginView(LoginView):
     authentication_form = UserLoginForm
     redirect_authenticated_user = True
 
-    def form_valid(self, form):
-        remember_me = form.cleaned_data.get("remember_me")
-
-        if not remember_me:
-            # Set session expiry to browser close
-            self.request.session.set_expiry(0)
-            self.request.session.modified = True
-
-        messages.success(self.request, f"Welcome back, {self.request.POST.get("username")}!")
-        return super().form_valid(form)
-
     def get_success_url(self):
-        return self.request.GET.get("next", reverse_lazy("home"))
+        return self.request.GET.get("next", reverse_lazy("accounts:dashboard"))
 
 
 @login_required
@@ -59,3 +48,9 @@ def logout_view(request):
 def profile_view(request):
     """View the user's profile."""
     return render(request, "accounts/profile.html")
+
+
+@login_required
+def dashboard_view(request):
+    """View the user's dashboard"""
+    return render(request, "accounts/dashboard.html")

@@ -4,13 +4,17 @@ from django.db import models
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, password=None, **extra_fields):
+    def create_user(self, username, email, password=None, **extra_fields):
         """Creates and saves a user with a given email and password."""
         if not email:
             raise ValueError("Users must have an email address.")
 
+        if not username:
+            raise ValueError("Users must have a username.")
+
         user = self.model(
             email=self.normalize_email(email),
+            username=username,
             **extra_fields
         )
 
@@ -18,7 +22,7 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, password=None, **extra_fields):
+    def create_superuser(self, username, email, password=None, **extra_fields):
         """Creates and saves a superuser with a given email and password"""
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
@@ -29,10 +33,11 @@ class UserManager(BaseUserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
 
-        return self.create_user(email, password, **extra_fields)
+        return self.create_user(username, email, password, **extra_fields)
 
 
 class User(AbstractBaseUser):
+    username = models.CharField(max_length=30, unique=True)
     email = models.EmailField(unique=True)
     display_name = models.CharField(max_length=100, blank=True)
     is_active = models.BooleanField(default=True)
@@ -42,11 +47,11 @@ class User(AbstractBaseUser):
 
     objects = UserManager()
 
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = []
+    USERNAME_FIELD = "username"
+    REQUIRED_FIELDS = ["email"]
 
     def __str__(self):
-        return self.email
+        return self.username
 
     def has_perm(self, perm, obj=None):
         return self.is_superuser

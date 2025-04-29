@@ -12,11 +12,19 @@
     <body>
         <header>
             <div class="container">
-                <a href="/" class="logo">Ludwig</a>
-                <form method="post" action="{% url 'accounts:logout' %}">
-                    {% csrf_token %}
-                    <button type="submit">Logout</button>
-                </form>
+                <div>
+                    <a href="/" class="logo">Ludwig</a>
+                    {% if user.is_authenticated %}
+                        <p class="username">@{{ user }}</p>
+                    {% endif %}
+                </div>
+
+                {% if user.is_authenticated %}
+                    <form method="post" action="{% url 'accounts:logout' %}">
+                        {% csrf_token %}
+                        <button type="submit">Logout</button>
+                    </form>
+                {% endif %}
             </div>
         </header>
         <main>
