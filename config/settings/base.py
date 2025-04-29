@@ -8,8 +8,13 @@ from django.core.exceptions import ImproperlyConfigured
 
 SECRETS_FILENAME = "secrets.json"
 
-with open("secrets.json") as f:
-    secrets = json.load(f)
+try:
+    with open(SECRETS_FILENAME) as f:
+        secrets = json.load(f)
+except FileNotFoundError:
+    raise ImproperlyConfigured(f"The secrets file {SECRETS_FILENAME} was not found")
+except json.JSONDecodeError:
+    raise ImproperlyConfigured(f"The secrets file {SECRETS_FILENAME} is not valid JSON")
 
 def get_secret(var_name, secrets=secrets):
     try:
@@ -96,7 +101,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "America/Los_Angeles"
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
