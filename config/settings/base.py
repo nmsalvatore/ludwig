@@ -17,7 +17,7 @@ def get_secret(var_name, secrets=secrets):
     except KeyError:
         error_msg = f"Could not find variable {var_name}. Please check {SECRETS_FILENAME}"
 
-SECRET_KEY = "django-insecure-cybsx#o&fybiqp4^9(#4u5k*89_0144myv(e^skf6cogzdy7&b"
+SECRET_KEY = get_secret("SECRET_KEY")
 
 
 # Paths
