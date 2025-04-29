@@ -10,10 +10,6 @@ div.form-container {
     width: 100%;
 }
 
-h2 {
-    margin-bottom: 2rem;
-}
-
 main form {
     margin-bottom: 2rem;
 }
@@ -51,4 +47,18 @@ main form button {
     width: 100%;
     padding: 0.5rem;
     border-radius: 0.25rem;
+}
+
+ul.errorlist {
+    color: var(--color-alert);
+    margin-left: 1rem;
+    font-weight: bold;
+}
+
+form > ul.errorlist {
+    margin-bottom: 1rem;
+}
+
+label + ul.errorlist {
+    margin-bottom: 0.5rem;
 }

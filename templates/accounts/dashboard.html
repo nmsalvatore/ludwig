@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{% static 'css/accounts/dashboard.css' %}">
+{% endblock %}
+
+{% block main %}
+<div class="container">
+    <h2>Dashboard</h2>
+    <p>Hello, <strong>{{ user }}</strong>! Welcome to the Ludwig user dashboard!</p>
+    <ul>
+        <li>
+            <a href="#">Start a dialogue</a>
+        </li>
+        <li>
+            <a href="#">Account settings</a>
+        </li>
+    </ul>
+</div>
+{% endblock %}
