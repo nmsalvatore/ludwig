@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{% static 'css/dashboard/dashboard.css' %}">
+{% endblock %}
+
+{% block main %}
+<div class="container">
+    <h2>Dashboard</h2>
+    <div class="dashboard-intro-container">
+        <p>Hello, <strong>{{ user }}</strong>! Welcome to the Ludwig user dashboard!</p>
+    </div>
+    <div class="dashboard-option-container">
+        <h3><a href="#">Start a dialogue</a></h3>
+        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Esse dolores atque deserunt, distinctio placeat ab? Vel eligendi necessitatibus qui odit accusantium esse quas magnam iure id, maiores unde amet! Cumque?</p>
+    </div>
+    <div class="dashboard-option-container">
+        <h3><a href="#">Account settings</a></h3>
+        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aut voluptatum ullam aliquid in laborum facilis repudiandae culpa. Error perferendis ad optio, deleniti, veniam sint doloremque quasi, rerum distinctio quaerat consequuntur.</p>
+    </div>
+</div>
+{% endblock %}

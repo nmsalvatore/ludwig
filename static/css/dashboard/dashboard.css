@@ -1,0 +1,11 @@
+div.dashboard-intro-container {
+    margin-bottom: 2rem;
+}
+
+div.dashboard-option-container {
+    margin-bottom: 1rem;
+}
+
+div.dashboard-option-container h3 {
+    margin-bottom: 0.25rem;
+}

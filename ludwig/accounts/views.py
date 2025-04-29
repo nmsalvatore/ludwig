@@ -12,17 +12,28 @@ from .forms import UserRegistrationForm, UserLoginForm
 class UserRegistrationView(CreateView):
     template_name = "accounts/register.html"
     form_class = UserRegistrationForm
-    success_url = reverse_lazy("accounts:login")
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect("home")
+            return redirect("dashboard:home")
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
-        response = super().form_valid(form)
-        messages.success(self.request, "Your account has been created! You can now log in.")
-        return response
+        valid_form = super().form_valid(form)
+
+        username = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password1')
+
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            login(self.request, user)
+
+        messages.success(self.request, "Your account has been created! Welcome to Ludwig.")
+
+        return redirect('dashboard:home')
+
+    def get_success_url(self):
+        return reverse_lazy('dashboard:home')
 
 
 class UserLoginView(LoginView):
@@ -31,7 +42,7 @@ class UserLoginView(LoginView):
     redirect_authenticated_user = True
 
     def get_success_url(self):
-        return self.request.GET.get("next", reverse_lazy("accounts:dashboard"))
+        return self.request.GET.get("next", reverse_lazy("dashboard:home"))
 
 
 @login_required
@@ -42,15 +53,3 @@ def logout_view(request):
         messages.success(request, "You have been logged out successfully.")
         return redirect("accounts:login")
     return render(request, "accounts/logout.html")
-
-
-@login_required
-def profile_view(request):
-    """View the user's profile."""
-    return render(request, "accounts/profile.html")
-
-
-@login_required
-def dashboard_view(request):
-    """View the user's dashboard"""
-    return render(request, "accounts/dashboard.html")
