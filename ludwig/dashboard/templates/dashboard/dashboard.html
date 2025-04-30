@@ -1,28 +1,28 @@
-{% extends "base.html" %}
+{% extends "core/core.html" %}
 
 {% load static %}
 
 {% block stylesheets %}
-<link rel="stylesheet" href="{% static 'css/dashboard/dashboard.css' %}">
+<link rel="stylesheet" href="{% static 'dashboard/css/dashboard.css' %}">
 {% endblock %}
 
 {% block main %}
 <div class="container">
-    <h2>Dashboard</h2>
+    <h1>Dashboard</h1>
     <div class="dashboard-intro-container">
         <p>Hello, <strong>{{ user }}</strong>! Welcome to the Ludwig user dashboard!</p>
     </div>
     <div class="dashboard-option-container">
-        <h3><a href="#">Start a dialogue</a></h3>
+        <h2><a href="{% url 'dialogues:dialogue' %}">Start a dialogue</a></h2>
         <p>Create a dialogue space with other Ludwig members. Dialogues are private by default but may be opened up for public viewing if you wish to share the conversation with others.</p>
     </div>
     <div class="dashboard-option-container">
-        <h3><a href="#">Find a dialogue</a></h3>
+        <h2><a href="#">Find a dialogue</a></h2>
         <p>Search the Ludwig database for public dialogues between members.</p>
     </div>
     <div class="dashboard-option-container">
-        <h3><a href="#">Accounts settings</a></h3>
-        <p>Come here change your email, username, password, and/or display name.</p>
+        <h2><a href="#">Accounts settings</a></h2>
+        <p>Change your email, username, password, and/or display name.</p>
     </div>
 </div>
 {% endblock %}

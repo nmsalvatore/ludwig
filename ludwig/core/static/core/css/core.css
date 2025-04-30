@@ -1,4 +1,5 @@
 :root {
+    --color-0: hsl(60 10% 98%);
     --color-1: hsl(60 10% 94%);
     --color-2: hsl(150 30% 80%);
     --color-3: hsl(150 30% 40%);
@@ -89,18 +90,20 @@ a {
     text-underline-offset: 2px;
 }
 
-header button {
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 2px;
-}
-
 button {
     background: none;
     border: none;
     cursor: pointer;
     font-family: inherit;
     font-size: inherit;
+}
+
+button.logout {
+    background: var(--color-2);
+    padding: 4px;
+    border: 1px solid;
+    box-shadow: 2px 2px;
+    color: inherit;
 }
 
 /* class targets */

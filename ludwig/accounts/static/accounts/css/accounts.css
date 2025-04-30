@@ -25,6 +25,7 @@ main form label {
 }
 
 main form input {
+    background: var(--color-0);
     border-radius: 0.25rem;
     padding: 8px;
     border: none;

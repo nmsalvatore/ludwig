@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
+    "ludwig.core",
     "ludwig.accounts",
     "ludwig.dashboard",
     "ludwig.dialogues",

@@ -3,12 +3,14 @@ div.dashboard-intro-container {
 }
 
 div.dashboard-option-container {
+    cursor: pointer;
     margin-bottom: 1rem;
     padding: 1rem;
     border: 1px solid;
-    box-shadow: 2px 2px;
+    box-shadow: 2px 2px var(--color-3);
+    background: var(--color-0);
 }
 
-div.dashboard-option-container h3 {
+div.dashboard-option-container h2 {
     margin-bottom: 0.25rem;
 }
