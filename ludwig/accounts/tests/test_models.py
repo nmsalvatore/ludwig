@@ -5,6 +5,7 @@ User = get_user_model()
 
 class UserModelTests(TestCase):
     def test_create_user(self):
+        # create user in database
         user = User.objects.create_user(
             username="testuser",
             email="test@example.com",
@@ -17,6 +18,7 @@ class UserModelTests(TestCase):
         self.assertFalse(user.is_superuser)
 
     def test_create_superuser(self):
+        # create superuser in database
         user = User.objects.create_superuser(
             username="admin",
             email="admin@example.com",

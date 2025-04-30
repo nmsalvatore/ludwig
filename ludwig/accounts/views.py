@@ -20,15 +20,12 @@ class UserRegistrationView(CreateView):
 
     def form_valid(self, form):
         valid_form = super().form_valid(form)
-
         username = form.cleaned_data.get('username')
         password = form.cleaned_data.get('password1')
 
         user = authenticate(username=username, password=password)
         if user is not None:
             login(self.request, user)
-
-        messages.success(self.request, "Your account has been created! Welcome to Ludwig.")
 
         return redirect('dashboard:home')
 

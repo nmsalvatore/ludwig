@@ -4,6 +4,9 @@ div.dashboard-intro-container {
 
 div.dashboard-option-container {
     margin-bottom: 1rem;
+    padding: 1rem;
+    border: 1px solid;
+    box-shadow: 2px 2px;
 }
 
 div.dashboard-option-container h3 {
