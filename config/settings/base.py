@@ -2,39 +2,19 @@ import json
 from pathlib import Path
 
 from django.core.exceptions import ImproperlyConfigured
+from environs import Env
 
+# load environment variables
+env = Env()
+env.read_env()
 
-# Secret access
-
-SECRETS_FILENAME = "secrets.json"
-
-try:
-    with open(SECRETS_FILENAME) as f:
-        secrets = json.load(f)
-except FileNotFoundError:
-    raise ImproperlyConfigured(f"The secrets file {SECRETS_FILENAME} was not found")
-except json.JSONDecodeError:
-    raise ImproperlyConfigured(f"The secrets file {SECRETS_FILENAME} is not valid JSON")
-
-def get_secret(var_name, secrets=secrets):
-    try:
-        return secrets[var_name]
-    except KeyError:
-        error_msg = f"Could not find variable {var_name}. Please check {SECRETS_FILENAME}"
-
-SECRET_KEY = get_secret("SECRET_KEY")
-
-
-# Paths
-
+# set BASE_DIR to project root
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-MEDIA_ROOT = BASE_DIR / "media_root"
-STATIC_ROOT = BASE_DIR / "static_root"
-STATICFILES_DIRS = [BASE_DIR / "static"]
 
+# set secret key
+SECRET_KEY = env.str("SECRET_KEY")
 
-# Application definition
-
+# project apps
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -42,13 +22,13 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
     "ludwig.core",
     "ludwig.accounts",
     "ludwig.dashboard",
     "ludwig.dialogues",
 ]
 
+# project middleware
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -59,12 +39,13 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+# root url path
 ROOT_URLCONF = "config.urls"
 
+# template settings
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -76,12 +57,10 @@ TEMPLATES = [
     },
 ]
 
+# wsgi application path
 WSGI_APPLICATION = "config.wsgi.application"
 
-
-# Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
-
+# password validation
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -97,29 +76,22 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
-
+# internationalization
 LANGUAGE_CODE = "en-us"
-
 TIME_ZONE = "UTC"
-
 USE_I18N = True
-
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
+# static files
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "static_root"
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
+# uploaded files
+MEDIA_URL = "media/"
+MEDIA_ROOT = BASE_DIR / "media_root"
 
+# default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-
-# Users
+# users
 AUTH_USER_MODEL = "accounts.User"
