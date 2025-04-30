@@ -8,5 +8,6 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("auth/", include("ludwig.accounts.urls")),
     path("dashboard/", include("ludwig.dashboard.urls")),
+    path("d/", include("ludwig.dialogues.urls")),
     path("", home_view, name="home")
 ]
