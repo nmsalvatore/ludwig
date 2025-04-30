@@ -25,16 +25,19 @@ main form label {
 }
 
 main form input {
-    border-radius: 0.25rem;
-    padding: 8px;
-    border: none;
+    background: var(--color-0);
+    border: 1px solid;
+    box-shadow: 2px 2px;
+    color: inherit;
     font-family: inherit;
     font-size: inherit;
-    color: inherit;
+    padding: 0.5rem;
 }
 
 main form input:focus {
-    outline: 1px solid var(--color-2);
+    outline: none;
+    border: 1px solid var(--color-3);
+    box-shadow: 2px 2px var(--color-3);
 }
 
 main form input::placeholder {
@@ -44,9 +47,10 @@ main form input::placeholder {
 
 main form button {
     background: var(--color-2);
+    border: 1px solid;
+    box-shadow: 2px 2px;
     width: 100%;
     padding: 0.5rem;
-    border-radius: 0.25rem;
 }
 
 ul.errorlist {

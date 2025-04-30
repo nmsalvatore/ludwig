@@ -15,5 +15,5 @@ wheels/
 # MacOS
 .DS_Store
 
-# Secrets
-secrets.json
+# Environment variables
+*.env

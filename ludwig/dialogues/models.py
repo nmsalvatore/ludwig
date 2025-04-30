@@ -1,9 +1,9 @@
-from django.contrib.postgres.fields import ArrayField
 from django.conf import settings
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
-from ludwig.core.models import TimeStampedModel
 from ludwig.accounts.models import User
+from ludwig.core.models import TimeStampedModel
 
 
 class Dialogue(TimeStampedModel):

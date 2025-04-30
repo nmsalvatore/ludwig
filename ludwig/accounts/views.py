@@ -6,7 +6,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
-from .forms import UserRegistrationForm, UserLoginForm
+from .forms import UserLoginForm, UserRegistrationForm
 
 
 class UserRegistrationView(CreateView):
