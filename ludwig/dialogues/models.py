@@ -3,7 +3,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
 from ludwig.accounts.models import User
-from ludwig.core.models import TimeStampedModel
+from ludwig.base.models import TimeStampedModel
 
 
 class Dialogue(TimeStampedModel):
