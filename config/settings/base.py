@@ -83,7 +83,8 @@ USE_I18N = True
 USE_TZ = True
 
 # static files
-STATIC_URL = "static/"
+STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_URL = "staticfiles/"
 STATIC_ROOT = BASE_DIR / "static_root"
 
 # uploaded files
