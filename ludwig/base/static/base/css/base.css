@@ -40,6 +40,13 @@ body {
 
 /* grid layout */
 
+header,
+main,
+footer {
+    display: flex;
+    flex-direction: column;
+}
+
 header {
     grid-area: header;
 }
@@ -52,14 +59,15 @@ footer {
     grid-area: footer;
 }
 
-/* containers */
+/* wrapper defaults */
 
 .container {
     display: flex;
-    padding: 1rem;
+    flex: 1;
     line-height: var(--line-height);
-    margin: auto;
+    margin: 0 auto;
     max-width: 720px;
+    padding: 1rem;
     width: 100%;
 }
 
@@ -70,6 +78,14 @@ header .container {
 
 main .container {
     flex-direction: column;
+}
+
+main header {
+    margin-bottom: 2rem;
+}
+
+section {
+    margin-bottom: 2rem;
 }
 
 /* defaults */
@@ -92,7 +108,6 @@ h1 {
 
 h2 {
     margin-bottom: 0.5rem;
-    margin-top: 2rem;
 }
 
 a {
@@ -124,12 +139,56 @@ button {
     font-size: inherit;
 }
 
-button.logout {
-    background: var(--color-2);
-    padding: 4px;
+form label {
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="password"],
+form textarea {
+    background: var(--color-0);
     border: 1px solid;
+    border-radius: 0.25rem;
     box-shadow: 2px 2px var(--color-2);
     color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    padding: 0.5rem;
+    width: 100%;
+}
+
+form input:focus,
+form textarea:focus {
+    outline: none;
+}
+
+form input::placeholder {
+    opacity: 0.5;
+    color: inherit;
+}
+
+form button[type="submit"] {
+    background: var(--color-2);
+    border: 1px solid;
+    box-shadow: 2px 2px var(--color-2);
+    width: 100%;
+    padding: 0.5rem;
+}
+
+form ul.errorlist {
+    color: var(--color-alert);
+    margin-left: 1rem;
+    font-weight: bold;
+}
+
+form > ul.errorlist {
+    margin-bottom: 1rem;
+}
+
+form label + ul.errorlist {
+    margin-bottom: 0.5rem;
 }
 
 /* class targets */
@@ -146,4 +205,8 @@ a.logo {
 div:has(> .logo) {
     display: flex;
     flex-direction: column;
+}
+
+form button.logout {
+    background: var(--color-1);
 }

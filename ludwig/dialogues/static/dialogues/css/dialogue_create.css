@@ -1,0 +1,93 @@
+form label {
+    font-weight: bold;
+}
+
+form .checkbox-field-container {
+    display: flex;
+    align-items: center;
+}
+
+form .hint {
+    margin-bottom: 0.5rem;
+}
+
+form .checkbox-field-container input {
+    margin-right: 0.5rem;
+}
+
+form .checkbox-field-container label {
+    font-weight: normal;
+    margin: 0;
+}
+
+/* user search styles */
+
+.user-search-container {
+    position: relative;
+}
+
+#search-indicator {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.8em;
+    opacity: 0.7;
+    display: none;
+}
+
+.htmx-request #search-indicator {
+    display: block;
+}
+
+.search-results-dropdown:has(.user-option) {
+    position: absolute;
+    width: 100%;
+    background: var(--color-0);
+    border: 1px solid;
+    box-shadow: 2px 2px var(--color-2);
+    z-index: 10;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.user-option {
+    padding: 0.5rem;
+    cursor: pointer;
+}
+
+.user-option:hover {
+    background: var(--color-1);
+}
+
+.no-results {
+    margin-top: 0.5rem;
+    font-style: italic;
+    opacity: 0.6;
+}
+
+.selected-users {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.selected-user {
+    display: flex;
+    align-items: center;
+    background: var(--color-1);
+    padding: 0.25rem 0.5rem;
+    border: 1px solid;
+    border-radius: 0.25rem;
+    box-shadow: 2px 2px var(--color-2);
+}
+
+.remove-user {
+    margin-left: 0.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-size: 1.2em;
+}
