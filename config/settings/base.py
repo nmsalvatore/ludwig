@@ -83,7 +83,8 @@ USE_I18N = True
 USE_TZ = True
 
 # static files
-STATIC_URL = "static/"
+STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_URL = "staticfiles/"
 STATIC_ROOT = BASE_DIR / "static_root"
 
 # uploaded files
@@ -95,3 +96,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # users
 AUTH_USER_MODEL = "accounts.User"
+
+# login urls
+LOGIN_URL = "/auth/login"
+LOGIN_REDIRECT_URL = "/dashboard"

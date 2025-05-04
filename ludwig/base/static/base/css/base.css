@@ -1,9 +1,10 @@
 :root {
-    --color-0: hsl(60 10% 98%);
+    --color-0: hsl(60 10% 97%);
     --color-1: hsl(60 10% 94%);
     --color-2: hsl(150 30% 80%);
     --color-3: hsl(150 30% 40%);
     --color-4: hsl(60 90% 5%);
+    --color-5: hsl(210 30% 50%);
     --color-alert: hsl(0 35% 50%);
     --line-height: 1.6;
 }
@@ -39,6 +40,13 @@ body {
 
 /* grid layout */
 
+header,
+main,
+footer {
+    display: flex;
+    flex-direction: column;
+}
+
 header {
     grid-area: header;
 }
@@ -51,14 +59,15 @@ footer {
     grid-area: footer;
 }
 
-/* containers */
+/* wrapper defaults */
 
 .container {
     display: flex;
-    padding: 1rem;
+    flex: 1;
     line-height: var(--line-height);
-    margin: auto;
+    margin: 0 auto;
     max-width: 720px;
+    padding: 1rem;
     width: 100%;
 }
 
@@ -71,6 +80,14 @@ main .container {
     flex-direction: column;
 }
 
+main header {
+    margin-bottom: 2rem;
+}
+
+section {
+    margin-bottom: 2rem;
+}
+
 /* defaults */
 
 h1,
@@ -80,30 +97,98 @@ h4,
 h5,
 h6 {
     font-size: inherit;
+}
+
+h1 {
     margin-bottom: 1rem;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-decoration-color: var(--color-2);
+}
+
+h2 {
+    margin-bottom: 0.5rem;
 }
 
 a {
-    color: inherit;
-    display: block;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 2px;
+    color: var(--color-3);
+}
+
+p {
+    margin-bottom: 1rem;
+}
+
+p:last-child {
+    margin-bottom: 0;
+}
+
+ul {
+    margin-left: 1rem;
+}
+
+textarea {
+    line-height: inherit;
 }
 
 button {
     background: none;
     border: none;
+    border-radius: 0.25rem;
     cursor: pointer;
     font-family: inherit;
     font-size: inherit;
 }
 
-button.logout {
-    background: var(--color-2);
-    padding: 4px;
+form label {
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="password"],
+form textarea {
+    background: var(--color-0);
     border: 1px solid;
-    box-shadow: 2px 2px;
+    border-radius: 0.25rem;
+    box-shadow: 2px 2px var(--color-2);
     color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    padding: 0.5rem;
+    width: 100%;
+}
+
+form input:focus,
+form textarea:focus {
+    outline: none;
+}
+
+form input::placeholder {
+    opacity: 0.5;
+    color: inherit;
+}
+
+form button[type="submit"] {
+    background: var(--color-2);
+    border: 1px solid;
+    box-shadow: 2px 2px var(--color-2);
+    width: 100%;
+    padding: 0.5rem;
+}
+
+form ul.errorlist {
+    color: var(--color-alert);
+    margin-left: 1rem;
+    font-weight: bold;
+}
+
+form > ul.errorlist {
+    margin-bottom: 1rem;
+}
+
+form label + ul.errorlist {
+    margin-bottom: 0.5rem;
 }
 
 /* class targets */
@@ -115,4 +200,13 @@ button.logout {
 
 a.logo {
     text-decoration: none;
+}
+
+div:has(> .logo) {
+    display: flex;
+    flex-direction: column;
+}
+
+form button.logout {
+    background: var(--color-1);
 }

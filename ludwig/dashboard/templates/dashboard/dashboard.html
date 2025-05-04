@@ -9,20 +9,43 @@
 {% block main %}
 <div class="container">
     <h1>Dashboard</h1>
-    <div class="dashboard-intro-container">
+
+    <!-- Dashboard welcome message -->
+    <section class="dashboard-intro">
         <p>Hello, <strong>{{ user }}</strong>! Welcome to the Ludwig user dashboard!</p>
-    </div>
-    <div class="dashboard-option-container">
-        <h2><a href="{% url 'dialogues:dialogue' %}">Start a dialogue</a></h2>
-        <p>Create a dialogue space with other Ludwig members. Dialogues are private by default but may be opened up for public viewing if you wish to share the conversation with others.</p>
-    </div>
-    <div class="dashboard-option-container">
-        <h2><a href="#">Find a dialogue</a></h2>
-        <p>Search the Ludwig database for public dialogues between members.</p>
-    </div>
-    <div class="dashboard-option-container">
-        <h2><a href="#">Accounts settings</a></h2>
-        <p>Change your email, username, password, and/or display name.</p>
-    </div>
+    </section>
+
+    <!-- Dashboard action buttons -->
+    <section class="dashboard-options">
+        <h2>Actions</h2>
+        <a href="{% url 'dialogues:create_dialogue' %}" class="dashboard-button primary">
+            <img src="{% static 'icons/dialogue_icon.svg' %}" alt="Two chat bubbles overlapped">
+            Start a dialogue
+        </a>
+        <a href="{% url 'dialogues:find_dialogue' %}" class="dashboard-button coming-soon">
+            <img src="{% static 'icons/search_icon.svg' %}" alt="Magnifying glass">
+                Find a dialogue
+        </a>
+        <a href="{% url 'dialogues:create_dialogue' %}" class="dashboard-button coming-soon">
+            <img src="{% static 'icons/settings_icon.svg' %}" alt="Two chat bubbles overlapped">
+                Account settings
+        </a>
+    </section>
+
+    <!-- List of all of current user's dialogues -->
+    {% if user_dialogues %}
+        <section class="user-dialogues">
+            <h2>Your dialogues</h2>
+            <ul>
+                {% for dialogue in user_dialogues %}
+                    <li>
+                        <a href="{% url 'dialogues:detail' dialogue.id %}">
+                            {{ dialogue.title }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+    {% endif %}
 </div>
 {% endblock %}

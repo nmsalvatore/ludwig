@@ -1,15 +1,23 @@
 from django.conf import settings
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
+from nanoid import generate as generate_nanoid
 
 from ludwig.accounts.models import User
 from ludwig.base.models import TimeStampedModel
 
+models.ForeignKey.many_to_many
+
 
 class Dialogue(TimeStampedModel):
-    """A model representing a conversation between multiple users."""
-    is_open = models.BooleanField()
-    is_visible = models.BooleanField()
+    id = models.CharField(
+        primary_key=True,
+        default=generate_nanoid(size=10),
+        editable=False,
+        max_length=10
+    )
+    is_open = models.BooleanField(default=False)
+    is_visible = models.BooleanField(default=True)
     participants = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='dialogues')
     summary = models.TextField(blank=True)
     title = models.CharField(max_length=200)
@@ -23,7 +31,6 @@ class Dialogue(TimeStampedModel):
 
 
 class Post(TimeStampedModel):
-    """A model representing a single post within a conversation."""
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     body = models.TextField()
     dialogue = models.ForeignKey(Dialogue, on_delete=models.CASCADE, related_name='posts')

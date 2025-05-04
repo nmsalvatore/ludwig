@@ -1,0 +1,44 @@
+.participants {
+    font-style: italic;
+}
+
+.dialogue-info p {
+    margin-bottom: 0;
+}
+
+.post {
+    margin-bottom: 1rem;
+}
+
+.post:last-child {
+    margin-bottom: 0;
+}
+
+.post-body {
+    padding: 0.5rem;
+    background: var(--color-0);
+    border: 1px solid;
+    border-radius: 0.25rem;
+    box-shadow: 2px 2px var(--color-2);
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.25rem;
+}
+
+.post-author {
+    color: var(--color-5);
+    font-weight: bold;
+}
+
+.post-by-user .post-author {
+    color: var(--color-3);
+}
+
+.post-time {
+    font-size: 11px;
+    opacity: 0.6;
+    margin-left: 1rem;
+}

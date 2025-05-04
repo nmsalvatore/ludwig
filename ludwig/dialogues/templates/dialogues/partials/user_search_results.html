@@ -1,0 +1,7 @@
+{% if users %}
+    {% for user in users %}
+        <div class="user-option" data-user-id="{{ user.id }}">{{ user.username }}</div>
+    {% endfor %}
+{% elif query and query|length >= 2 %}
+    <div class="no-results">No users found matching "{{ query }}"</div>
+{% endif %}

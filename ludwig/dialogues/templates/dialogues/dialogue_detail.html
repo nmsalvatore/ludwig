@@ -1,0 +1,68 @@
+{% extends "base/base.html" %}
+
+{% load static %}
+{% load dialogue_filters %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{% static 'dialogues/css/dialogues.css' %}">
+<link rel="stylesheet" href="{% static 'dialogues/css/dialogue_detail.css' %}">
+{% endblock %}
+
+{% block main %}
+<div class="container">
+    <header>
+        <h1>{{ dialogue.title }}</h1>
+        <p class="participants">Participants: {{ dialogue.participants.all|text_list }}</p>
+
+        {% if dialogue.summary %}
+            <div class="dialogue-summary">
+                <p>{{ dialogue.summary }}</p>
+            </div>
+        {% endif %}
+    </header>
+
+    <section class="dialogue-conversation">
+        {% if posts %}
+            {% for post in posts %}
+                <div class="post {% if post.author == request.user %}post-by-user{% endif %}" data-post-id="{{ post.id }}">
+                    <div class="post-header">
+                        <div class="post-author">{{ post.author.username }}</div>
+                        <div class="post-time">{{ post.created_on|timesince }} ago</div>
+                    </div>
+                    <div class="post-body">
+                        {{ post.body|linebreaks }}
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="no-posts">
+                <p>No messages yet. Start the conversation!</p>
+            </div>
+        {% endif %}
+    </section>
+
+    {% if request.user in dialogue.participants.all or dialogue.is_open %}
+        <section class="post-form">
+            <h2>Write your post</h2>
+            <form method="post" hx-post="{{ request.path }}" hx-target="#post-status" hx-swap="innerHTML">
+                {% csrf_token %}
+                <textarea name="body" cols="40" rows="10" placeholder="Spit some hot fire"></textarea>
+                <div id="post-status"></div>
+                <div class="form-buttons">
+                    <button type="submit">Submit post</button>
+                </div>
+            </form>
+        </section>
+    {% endif %}
+
+    <section class="dialogue-info">
+        <p><strong>Created:</strong> {{ dialogue.created_on|date:"F j, Y" }}</p>
+        <p><strong>Visibility:</strong> {% if dialogue.is_visible %}Public{% else %}Private{% endif %}</p>
+        <p><strong>Access:</strong> {% if dialogue.is_open %}Open to join{% else %}Closed{% endif %}</p>
+    </section>
+
+    <section class="dialogue-actions">
+        <a href="{% url 'dashboard:home' %}" class="button">Back to Dashboard</a>
+    </section>
+</div>
+{% endblock %}
