@@ -12,7 +12,7 @@
 <div class="container">
     <header>
         <h1>{{ dialogue.title }}</h1>
-        <p class="participants">In this dialogue: {{ dialogue.participants.all|text_list }}</p>
+        <p class="participants">Participants: {{ dialogue.participants.all|text_list }}</p>
 
         {% if dialogue.summary %}
             <div class="dialogue-summary">
@@ -65,58 +65,4 @@
         <a href="{% url 'dashboard:home' %}" class="button">Back to Dashboard</a>
     </section>
 </div>
-
-<!-- Javascript -->
-<script src="https://unpkg.com/htmx.org@2.0.4"></script>
-<script>
-    // Add to the script section in dialogue_detail.html
-    document.addEventListener('DOMContentLoaded', function() {
-        const postsContainer = document.querySelector('.posts-container');
-        let lastPostId = 0;
-
-        // Get the ID of the last post
-        const posts = document.querySelectorAll('.post');
-        if (posts.length > 0) {
-            const lastPost = posts[posts.length - 1];
-            lastPostId = lastPost.dataset.postId;
-        }
-
-        // Connect to the event stream
-        const source = new EventSource(`{% url 'dialogues:stream' dialogue_id=dialogue.id %}?last_id=${lastPostId}`);
-
-        source.onmessage = function(event) {
-            const data = JSON.parse(event.data);
-
-            // Create a new post element
-            const postEl = document.createElement('div');
-            postEl.className = `post ${data.is_self ? 'post-by-user' : ''}`;
-            postEl.dataset.postId = data.id;
-
-            postEl.innerHTML = `
-                <div class="post-header">
-                    <div class="post-author">${data.author}</div>
-                    <div class="post-time">${data.created_on}</div>
-                </div>
-                <div class="post-body">
-                    ${data.body.replace(/\n/g, '<br>')}
-                </div>
-            `;
-
-            // Add the post to the container
-            postsContainer.appendChild(postEl);
-
-            // Scroll to the new post
-            postsContainer.scrollTop = postsContainer.scrollHeight;
-        };
-
-        source.onerror = function() {
-            // Reconnect if connection is lost
-            setTimeout(() => {
-                source.close();
-                const newSource = new EventSource(`{% url 'dialogues:stream' dialogue_id=dialogue.id %}?last_id=${lastPostId}`);
-                source = newSource;
-            }, 5000);
-        };
-    });
-</script>
 {% endblock %}

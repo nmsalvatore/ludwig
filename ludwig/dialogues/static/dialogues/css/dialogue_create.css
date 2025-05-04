@@ -26,7 +26,7 @@ form .checkbox-field-container label {
     position: relative;
 }
 
-#search-indicator {
+#search_indicator {
     position: absolute;
     right: 8px;
     top: 50%;
@@ -36,7 +36,7 @@ form .checkbox-field-container label {
     display: none;
 }
 
-.htmx-request #search-indicator {
+.htmx-request #search_indicator {
     display: block;
 }
 
@@ -70,6 +70,9 @@ form .checkbox-field-container label {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
+}
+
+.selected-users:has(.selected-user) {
     margin-top: 1rem;
 }
 

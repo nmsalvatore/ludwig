@@ -7,6 +7,11 @@
 <link rel="stylesheet" href="{% static 'dialogues/css/dialogue_create.css' %}">
 {% endblock %}
 
+{% block scripts %}
+<script src="https://unpkg.com/htmx.org@2.0.4"></script>
+<script src="{% static 'dialogues/js/user_selection.js' %}" defer></script>
+{% endblock %}
+
 {% block main %}
 <div class="container">
     <header class="dialogue-intro">
@@ -33,20 +38,20 @@
 
             <div class="user-search-container">
                 <input type="text"
-                    id="user-search"
+                    id="user_search"
                     name="query"
                     placeholder="ex. ludwig51"
                     autocomplete="off"
                     hx-get="{% url 'dialogues:search_users' %}"
                     hx-trigger="keyup changed delay:300ms"
-                    hx-target="#search-results"
-                    hx-indicator="#search-indicator">
+                    hx-target="#search_results"
+                    hx-indicator="#search_indicator">
 
-                <div id="search-indicator" class="htmx-indicator">Searching...</div>
-                <div id="search-results" class="search-results-dropdown"></div>
+                <div id="search_indicator" class="htmx-indicator">Searching...</div>
+                <div id="search_results" class="search-results-dropdown"></div>
             </div>
 
-            <div id="selected-users" class="selected-users"></div>
+            <div id="selected_users" class="selected-users"></div>
         </section>
 
         <section class="form-field">
@@ -64,39 +69,4 @@
         </section>
     </form>
 </div>
-
-<!-- Include HTMX library -->
-<script src="https://unpkg.com/htmx.org@2.0.4"></script>
-<script>
-    // Handle selecting a user
-    document.addEventListener('click', function(e) {
-        if (e.target && e.target.classList.contains('user-option')) {
-            const userId = e.target.dataset.userId;
-            const username = e.target.textContent.trim();
-
-            // Check if user is already selected
-            if (!document.querySelector(`input[value="${userId}"]`)) {
-                // Create the selected user display
-                const selectedUser = document.createElement('div');
-                selectedUser.className = 'selected-user';
-                selectedUser.innerHTML = `
-                    <span>${username}</span>
-                    <button type="button" class="remove-user">×</button>
-                    <input type="hidden" name="selected_participants" value="${userId}">
-                `;
-
-                document.getElementById('selected-users').appendChild(selectedUser);
-
-                // Clear the search input and results
-                document.getElementById('user-search').value = '';
-                document.getElementById('search-results').innerHTML = '';
-            }
-        }
-
-        // Handle removing a selected user
-        if (e.target && e.target.classList.contains('remove-user')) {
-            e.target.closest('.selected-user').remove();
-        }
-    });
-</script>
 {% endblock %}
