@@ -1,0 +1,103 @@
+{% extends "base/base.html" %}
+
+{% load static %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{% static 'dialogues/css/dialogues.css' %}">
+<link rel="stylesheet" href="{% static 'dialogues/css/dialogue_create.css' %}">
+{% endblock %}
+
+{% block main %}
+<div class="container">
+    <header class="dialogue-intro">
+        <h1>Start a dialogue</h1>
+        <p>Dialogues on Ludwig are focused spaces where selected members engage in thoughtful exchanges. While participation is limited to members chosen by the dialogue's creator, a dialogue can be made public for viewing by anyone..</p>
+    </header>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <section class="form-field">
+            <label for="{{ form.title.id_for_label }}">First, give your dialogue a title.</label>
+            {{ form.title }}
+        </section>
+
+        <section class="form-field">
+            <label for="{{ form.summary.id_for_label }}">Briefly explain your objectives for this dialogue.</label>
+            {{ form.summary }}
+        </section>
+
+        <section class="form-field">
+            <label>Who would you like to participate in this dialogue?</label>
+            <p class="hint">Search for users by username. Select the user to include them in the dialogue.</p>
+
+            <div class="user-search-container">
+                <input type="text"
+                    id="user-search"
+                    name="query"
+                    placeholder="ex. ludwig51"
+                    autocomplete="off"
+                    hx-get="{% url 'dialogues:search_users' %}"
+                    hx-trigger="keyup changed delay:300ms"
+                    hx-target="#search-results"
+                    hx-indicator="#search-indicator">
+
+                <div id="search-indicator" class="htmx-indicator">Searching...</div>
+
+                <div id="search-results" class="search-results-dropdown"></div>
+            </div>
+
+            <div id="selected-users" class="selected-users"></div>
+        </section>
+
+        <section class="form-field">
+            <label for="{{ form.is_visible.id_for_label }}">
+                Would you like this dialogue to be visible to the public?
+            </label>
+            <div class="checkbox-field-container">
+                {{ form.is_visible }}
+                <label>Yes, make it public</label>
+            </div>
+        </section>
+
+        <section class="form-buttons">
+            <button type="submit">Create dialogue</button>
+        </section>
+    </form>
+</div>
+
+<!-- Include HTMX library -->
+<script src="https://unpkg.com/htmx.org@2.0.4"></script>
+<script>
+    // Handle selecting a user
+    document.addEventListener('click', function(e) {
+        if (e.target && e.target.classList.contains('user-option')) {
+            const userId = e.target.dataset.userId;
+            const username = e.target.textContent.trim();
+
+            // Check if user is already selected
+            if (!document.querySelector(`input[value="${userId}"]`)) {
+                // Create the selected user display
+                const selectedUser = document.createElement('div');
+                selectedUser.className = 'selected-user';
+                selectedUser.innerHTML = `
+                    <span>${username}</span>
+                    <button type="button" class="remove-user">×</button>
+                    <input type="hidden" name="selected_participants" value="${userId}">
+                `;
+
+                document.getElementById('selected-users').appendChild(selectedUser);
+
+                // Clear the search input and results
+                document.getElementById('user-search').value = '';
+                document.getElementById('search-results').innerHTML = '';
+            }
+        }
+
+        // Handle removing a selected user
+        if (e.target && e.target.classList.contains('remove-user')) {
+            e.target.closest('.selected-user').remove();
+        }
+    });
+</script>
+{% endblock %}
