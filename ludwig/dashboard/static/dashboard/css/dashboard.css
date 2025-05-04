@@ -1,7 +1,3 @@
-div.dashboard-intro-container {
-    margin-bottom: 2rem;
-}
-
 div.dashboard-option-container {
     cursor: pointer;
     margin-bottom: 1rem;
@@ -11,6 +7,42 @@ div.dashboard-option-container {
     background: var(--color-0);
 }
 
-div.dashboard-option-container h2 {
-    margin-bottom: 0.25rem;
+div.dashboard-options {
+    display: flex;
+    flex-direction: column;
+}
+
+a.dashboard-button {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid;
+    border-radius: 0.25rem;
+    box-shadow: 2px 2px var(--color-2);
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    text-decoration: none;
+    color: inherit;
+}
+
+a.dashboard-button:last-child {
+    margin-bottom: 0;
+}
+
+.dashboard-button.primary {
+    background: var(--color-2);
+}
+
+a.dashboard-button img {
+    margin-right: 1rem;
+}
+
+.coming-soon {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.coming-soon::after {
+    margin-left: 1ch;
+    content: "- Coming soon!";
+    font-style: italic;
 }
