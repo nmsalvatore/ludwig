@@ -11,13 +11,13 @@
     <h1>Dashboard</h1>
 
     <!-- Dashboard welcome message -->
-    <div class="dashboard-intro">
+    <section class="dashboard-intro">
         <p>Hello, <strong>{{ user }}</strong>! Welcome to the Ludwig user dashboard!</p>
-    </div>
+    </section>
 
     <!-- Dashboard action buttons -->
-    <div class="dashboard-options">
-        <h2>Action options</h2>
+    <section class="dashboard-options">
+        <h2>Actions</h2>
         <a href="{% url 'dialogues:create_dialogue' %}" class="dashboard-button primary">
             <img src="{% static 'icons/dialogue_icon.svg' %}" alt="Two chat bubbles overlapped">
             Start a dialogue
@@ -30,11 +30,11 @@
             <img src="{% static 'icons/settings_icon.svg' %}" alt="Two chat bubbles overlapped">
                 Account settings
         </a>
-    </div>
+    </section>
 
     <!-- List of all of current user's dialogues -->
     {% if user_dialogues %}
-        <div class="user-dialogues">
+        <section class="user-dialogues">
             <h2>Your dialogues</h2>
             <ul>
                 {% for dialogue in user_dialogues %}
@@ -45,7 +45,7 @@
                     </li>
                 {% endfor %}
             </ul>
-        </div>
+        </section>
     {% endif %}
 </div>
 {% endblock %}

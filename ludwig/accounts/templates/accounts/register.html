@@ -8,7 +8,7 @@
 
 {% block main %}
 <div class="container">
-    <div class="form-container">
+    <section class="form-container">
         <h2>Create an account</h2>
         <form method="post" novalidate>
             {% csrf_token %}
@@ -16,6 +16,6 @@
             <button type="submit">Register</button>
         </form>
         <p>Already have an account? <a href="{% url 'accounts:login' %}">Login here</a></p>
-    </div>
+    </section>
 </div>
 {% endblock %}
