@@ -15,7 +15,7 @@
                 <div>
                     <a href="/" class="logo">Ludwig</a>
                     {% if user.is_authenticated %}
-                        <p class="username">@{{ user }}</p>
+                        <span class="username">@{{ user }}</span>
                     {% endif %}
                 </div>
 
@@ -33,7 +33,12 @@
         </main>
         <footer>
             <div class="container">
-                <p>&copy; {% now "Y" %} Ludwig</p>
+                {% now "Y" as current_year %}
+                {% if current_year == "2025" %}
+                    <p>&copy; {{ current_year }} Ludwig</p>
+                {% else %}
+                    <p>&copy; 2025-{{ current_year }} Ludwig</p>
+                {% endif %}
             </div>
         </footer>
     </body>
