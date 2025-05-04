@@ -1,9 +1,10 @@
 :root {
-    --color-0: hsl(60 10% 98%);
+    --color-0: hsl(60 10% 97%);
     --color-1: hsl(60 10% 94%);
     --color-2: hsl(150 30% 80%);
     --color-3: hsl(150 30% 40%);
     --color-4: hsl(60 90% 5%);
+    --color-5: hsl(210 30% 50%);
     --color-alert: hsl(0 35% 50%);
     --line-height: 1.6;
 }
@@ -80,19 +81,44 @@ h4,
 h5,
 h6 {
     font-size: inherit;
+}
+
+h1 {
     margin-bottom: 1rem;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-decoration-color: var(--color-2);
+}
+
+h2 {
+    margin-bottom: 0.5rem;
+    margin-top: 2rem;
 }
 
 a {
-    color: inherit;
-    display: block;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 2px;
+    color: var(--color-3);
+}
+
+p {
+    margin-bottom: 1rem;
+}
+
+p:last-child {
+    margin-bottom: 0;
+}
+
+ul {
+    margin-left: 1rem;
+}
+
+textarea {
+    line-height: inherit;
 }
 
 button {
     background: none;
     border: none;
+    border-radius: 0.25rem;
     cursor: pointer;
     font-family: inherit;
     font-size: inherit;
@@ -102,7 +128,7 @@ button.logout {
     background: var(--color-2);
     padding: 4px;
     border: 1px solid;
-    box-shadow: 2px 2px;
+    box-shadow: 2px 2px var(--color-2);
     color: inherit;
 }
 
@@ -115,4 +141,9 @@ button.logout {
 
 a.logo {
     text-decoration: none;
+}
+
+div:has(> .logo) {
+    display: flex;
+    flex-direction: column;
 }
