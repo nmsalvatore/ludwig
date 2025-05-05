@@ -57,25 +57,31 @@ def search_users(request):
 
 @login_required
 def dialogue_detail(request, dialogue_id):
+    # get dialogue instance, otherwise throw a 404 error
     dialogue = get_object_or_404(Dialogue, id=dialogue_id)
 
+    # get user instance from request
     user = get_user(request)
 
     if user in dialogue.participants.all() and request.method == "POST":
-        body = request.POST.get("body", "").strip()
-        if body:
+        post_body = request.POST.get("body", "").strip()
+
+        if post_body:
+            # add the post to the database
             Post.objects.create(
                 author=request.user,
                 dialogue=dialogue,
-                body=body
+                body=post_body
             )
 
-            if request.headers.get("HX-Request"):
-                response = HttpResponse()
-                response["HX-Trigger"] = "reset-form"
-                return response
+        # since the event stream will catch the new post and
+        # append it to the dialogue with htmx, if the request is
+        # from htmx, simply refresh the form
+        if request.headers.get("HX-Request"):
+            return render(request, "dialogues/partials/form.html")
 
-            return redirect("dialogues:detail", dialogue_id=dialogue_id)
+        # if js is disabled, htmx is disabled, so just refresh the page
+        return redirect("dialogues:detail", dialogue_id=dialogue_id)
 
     posts = Post.objects.filter(dialogue=dialogue).select_related("author")
 
