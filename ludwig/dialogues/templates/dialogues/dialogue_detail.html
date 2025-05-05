@@ -45,32 +45,7 @@
     {% if request.user in dialogue.participants.all or dialogue.is_open %}
         <section class="post-form">
             <h2>Write your post</h2>
-            <form
-                method="post"
-                hx-post="{{ request.path }}"
-                hx-target="#post_status"
-                hx-swap="innerHTML">
-
-                {% csrf_token %}
-
-                <textarea
-                    name="body"
-                    cols="40"
-                    rows="10"
-                    placeholder="Spit some hot philoso-fire"
-                ></textarea>
-
-                <div id="post_status"></div>
-                <div class="form-buttons">
-                    <button type="submit">Submit post</button>
-                </div>
-            </form>
-
-            <script>
-                document.body.addEventListener("reset-form", e => {
-                    document.querySelector("textarea[name='body']").value = "";
-                });
-            </script>
+            {% include 'dialogues/partials/form.html' %}
         </section>
     {% endif %}
 

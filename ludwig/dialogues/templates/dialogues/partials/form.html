@@ -1,0 +1,14 @@
+<form method="post" hx-post="{{ request.path }}">
+    {% csrf_token %}
+
+    <textarea
+        name="body"
+        cols="40"
+        rows="10"
+        placeholder="Say something..."
+    ></textarea>
+
+    <div class="form-buttons">
+        <button type="submit">Submit post</button>
+    </div>
+</form>
