@@ -8,8 +8,13 @@
 <link rel="stylesheet" href="{% static 'dialogues/css/dialogue_detail.css' %}">
 {% endblock %}
 
+{% block scripts %}
+<script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/htmx-ext-sse@2.2.2" integrity="sha384-fw+eTlCc7suMV/1w/7fr2/PmwElUIt5i82bi+qTiLXvjRXZ2/FkiTNA/w0MhXnGI" crossorigin="anonymous"></script>
+{% endblock %}
+
 {% block main %}
-<div class="container">
+<div class="container" hx-ext="sse">
     <header>
         <h1>{{ dialogue.title }}</h1>
         <p class="participants">Participants: {{ dialogue.participants.all|text_list }}</p>
@@ -21,21 +26,17 @@
         {% endif %}
     </header>
 
-    <section class="dialogue-conversation">
+    <div sse-connect="{% url 'dialogues:stream' dialogue.id %}?last_id={% if posts %}{{ posts.last.id }}{% else %}0{% endif %}">
+        <div sse-swap="message" hx-target="#posts_container" hx-swap="beforeend"></div>
+    </div>
+
+    <section id="posts_container">
         {% if posts %}
             {% for post in posts %}
-                <div class="post {% if post.author == request.user %}post-by-user{% endif %}" data-post-id="{{ post.id }}">
-                    <div class="post-header">
-                        <div class="post-author">{{ post.author.username }}</div>
-                        <div class="post-time">{{ post.created_on|timesince }} ago</div>
-                    </div>
-                    <div class="post-body">
-                        {{ post.body|linebreaks }}
-                    </div>
-                </div>
+                {% include "dialogues/partials/post.html" with post=post %}
             {% endfor %}
         {% else %}
-            <div class="no-posts">
+            <div class="no-posts" id="no_posts_message">
                 <p>No messages yet. Start the conversation!</p>
             </div>
         {% endif %}
@@ -44,14 +45,32 @@
     {% if request.user in dialogue.participants.all or dialogue.is_open %}
         <section class="post-form">
             <h2>Write your post</h2>
-            <form method="post" hx-post="{{ request.path }}" hx-target="#post-status" hx-swap="innerHTML">
+            <form
+                method="post"
+                hx-post="{{ request.path }}"
+                hx-target="#post_status"
+                hx-swap="innerHTML">
+
                 {% csrf_token %}
-                <textarea name="body" cols="40" rows="10" placeholder="Spit some hot fire"></textarea>
-                <div id="post-status"></div>
+
+                <textarea
+                    name="body"
+                    cols="40"
+                    rows="10"
+                    placeholder="Spit some hot philoso-fire"
+                ></textarea>
+
+                <div id="post_status"></div>
                 <div class="form-buttons">
                     <button type="submit">Submit post</button>
                 </div>
             </form>
+
+            <script>
+                document.body.addEventListener("reset-form", e => {
+                    document.querySelector("textarea[name='body']").value = "";
+                });
+            </script>
         </section>
     {% endif %}
 
