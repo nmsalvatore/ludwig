@@ -64,6 +64,7 @@ def dialogue_detail(request, dialogue_id):
     user = get_user(request)
 
     if user in dialogue.participants.all() and request.method == "POST":
+        # get post body and remove surrounding whitespace
         post_body = request.POST.get("body", "").strip()
 
         if post_body:
@@ -83,11 +84,8 @@ def dialogue_detail(request, dialogue_id):
         # if js is disabled, htmx is disabled, so just refresh the page
         return redirect("dialogues:detail", dialogue_id=dialogue_id)
 
+    # get fresh queryset of posts, including the new one
     posts = Post.objects.filter(dialogue=dialogue).select_related("author")
-
-    if request.user not in dialogue.participants.all():
-        dialogue.views += 1
-        dialogue.save()
 
     context = {"dialogue": dialogue, "posts": posts}
     return render(request, "dialogues/dialogue_detail.html", context)
@@ -125,11 +123,11 @@ def dialogue_stream(request, dialogue_id):
 
                     html = render_to_string(
                         "dialogues/partials/post.html",
-                        context={"post": post},
-                        request=request
+                        {"post": post},
+                        request
                     ).replace("\n", "")
 
-                    yield f"data: {html} \n\n"
+                    yield f"event: new-post\ndata: {html} \n\n"
 
             time.sleep(1)
 

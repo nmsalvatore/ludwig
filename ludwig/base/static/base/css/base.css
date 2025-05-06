@@ -7,7 +7,7 @@
     --color-3: hsl(150 25% 60%);
     --color-4: hsl(150 20% 40%);
     --color-5: hsl(150 15% 20%);
-    --color-6: hsl(210 30% 50%);
+    --color-6: hsl(60 10% 90%);
     --color-alert: hsl(0 35% 50%);
     --line-height: 1.6;
 }
@@ -32,7 +32,7 @@ body {
         "main"
         "footer";
     font-family: "IBM Plex Mono", monospace;
-    letter-spacing: -0.03rem;
+    letter-spacing: -0.04rem;
     min-height: 100dvh;
 }
 

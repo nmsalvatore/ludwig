@@ -6,13 +6,15 @@ from nanoid import generate as generate_nanoid
 from ludwig.accounts.models import User
 from ludwig.base.models import TimeStampedModel
 
-models.ForeignKey.many_to_many
+
+def generate_unique_id():
+    return generate_nanoid(size=10)
 
 
 class Dialogue(TimeStampedModel):
     id = models.CharField(
         primary_key=True,
-        default=generate_nanoid(size=10),
+        default=generate_unique_id,
         editable=False,
         max_length=10
     )

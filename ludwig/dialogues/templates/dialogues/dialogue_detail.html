@@ -11,6 +11,7 @@
 {% block scripts %}
 <script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/htmx-ext-sse@2.2.2" integrity="sha384-fw+eTlCc7suMV/1w/7fr2/PmwElUIt5i82bi+qTiLXvjRXZ2/FkiTNA/w0MhXnGI" crossorigin="anonymous"></script>
+<script src="{% static 'dialogues/js/hx_listeners.js' %}" defer></script>
 {% endblock %}
 
 {% block main %}
@@ -27,7 +28,7 @@
     </header>
 
     <div sse-connect="{% url 'dialogues:stream' dialogue.id %}?last_id={% if posts %}{{ posts.last.id }}{% else %}0{% endif %}">
-        <div sse-swap="message" hx-target="#posts_container" hx-swap="beforeend"></div>
+        <div sse-swap="new-post" hx-target="#posts_container" hx-swap="beforeend"></div>
     </div>
 
     <section id="posts_container">
