@@ -36,7 +36,7 @@ a.dashboard-button img {
 }
 
 a.dashboard-button.coming-soon {
-    background: var(--color-0);
+    background: var(--color-6);
     box-shadow: 2px 2px var(--color-2);
     color: var(--color-3);
     pointer-events: none;

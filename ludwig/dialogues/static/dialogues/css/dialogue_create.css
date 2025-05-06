@@ -44,10 +44,12 @@ form .checkbox-field-container label {
     position: absolute;
     width: 100%;
     background: var(--color-0);
-    border: 1px solid;
+    border: 1px solid var(--color-2);
+    border-radius: 0.25rem;
     box-shadow: 2px 2px var(--color-2);
     z-index: 10;
     max-height: 200px;
+    margin-top: 0.25rem;
     overflow-y: auto;
 }
 
@@ -79,16 +81,14 @@ form .checkbox-field-container label {
 .selected-user {
     display: flex;
     align-items: center;
-    background: var(--color-1);
+    background: var(--color-6);
     padding: 0.25rem 0.5rem;
-    border: 1px solid;
     border-radius: 0.25rem;
-    box-shadow: 2px 2px var(--color-2);
 }
 
 .remove-user {
+    color: inherit;
     margin-left: 0.5rem;
-    font-weight: bold;
     cursor: pointer;
     border: none;
     background: none;
