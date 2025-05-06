@@ -1,10 +1,13 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap");
+
 :root {
     --color-0: hsl(60 10% 97%);
     --color-1: hsl(60 10% 94%);
     --color-2: hsl(150 30% 80%);
-    --color-3: hsl(150 30% 40%);
-    --color-4: hsl(60 90% 5%);
-    --color-5: hsl(210 30% 50%);
+    --color-3: hsl(150 25% 60%);
+    --color-4: hsl(150 20% 40%);
+    --color-5: hsl(150 15% 20%);
+    --color-6: hsl(210 30% 50%);
     --color-alert: hsl(0 35% 50%);
     --line-height: 1.6;
 }
@@ -17,7 +20,8 @@
 
 html {
     background: var(--color-1);
-    color: var(--color-4);
+    color: var(--color-5);
+    font-size: 15px;
 }
 
 body {
@@ -27,15 +31,9 @@ body {
         "header"
         "main"
         "footer";
-    font-family: monospace;
+    font-family: "IBM Plex Mono", monospace;
+    letter-spacing: -0.03rem;
     min-height: 100dvh;
-    padding: 2rem 0;
-}
-
-@media only screen and (max-width: 720px) {
-    body {
-        padding: 0;
-    }
 }
 
 /* grid layout */
@@ -47,16 +45,28 @@ footer {
     flex-direction: column;
 }
 
-header {
+body > header {
     grid-area: header;
+    margin-top: 3rem;
 }
 
-main {
+body > main {
     grid-area: main;
 }
 
-footer {
+body > footer {
     grid-area: footer;
+    margin-bottom: 3rem;
+}
+
+@media only screen and (max-width: 720px) {
+    body > header {
+        margin-top: 0;
+    }
+
+    body > footer {
+        margin-bottom: 0;
+    }
 }
 
 /* wrapper defaults */
@@ -111,7 +121,7 @@ h2 {
 }
 
 a {
-    color: var(--color-3);
+    color: var(--color-4);
 }
 
 p {
@@ -149,13 +159,13 @@ form input[type="email"],
 form input[type="password"],
 form textarea {
     background: var(--color-0);
-    border: 1px solid;
+    border: none;
     border-radius: 0.25rem;
     box-shadow: 2px 2px var(--color-2);
     color: inherit;
     font-family: inherit;
     font-size: inherit;
-    padding: 0.5rem;
+    padding: 1rem;
     width: 100%;
 }
 
@@ -164,15 +174,17 @@ form textarea:focus {
     outline: none;
 }
 
-form input::placeholder {
+form input::placeholder,
+form textarea::placeholder {
     opacity: 0.5;
     color: inherit;
 }
 
 form button[type="submit"] {
     background: var(--color-2);
-    border: 1px solid;
-    box-shadow: 2px 2px var(--color-2);
+    border: none;
+    box-shadow: 2px 2px var(--color-3);
+    color: inherit;
     width: 100%;
     padding: 0.5rem;
 }
@@ -195,7 +207,7 @@ form label + ul.errorlist {
 
 .logo {
     font-weight: bold;
-    color: var(--color-3);
+    color: var(--color-4);
 }
 
 a.logo {
@@ -209,4 +221,8 @@ div:has(> .logo) {
 
 form button.logout {
     background: var(--color-1);
+    padding: 0;
+    text-decoration: underline;
+    box-shadow: none;
+    color: var(--color-4);
 }

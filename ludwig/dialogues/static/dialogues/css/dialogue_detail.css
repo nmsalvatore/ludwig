@@ -1,5 +1,5 @@
 .participants {
-    font-style: italic;
+    font-size: 0.8rem;
 }
 
 .dialogue-info p {
@@ -15,9 +15,8 @@
 }
 
 .post-body {
-    padding: 0.5rem;
+    padding: 1rem;
     background: var(--color-0);
-    border: 1px solid;
     border-radius: 0.25rem;
     box-shadow: 2px 2px var(--color-2);
 }
@@ -29,16 +28,11 @@
 }
 
 .post-author {
-    color: var(--color-5);
+    color: var(--color-4);
     font-weight: bold;
 }
 
-.post-by-user .post-author {
-    color: var(--color-3);
-}
-
 .post-time {
-    font-size: 11px;
-    opacity: 0.6;
+    font-size: 0.8rem;
     margin-left: 1rem;
 }
