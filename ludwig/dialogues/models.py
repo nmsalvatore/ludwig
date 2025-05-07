@@ -26,7 +26,7 @@ class Dialogue(TimeStampedModel):
     views = models.IntegerField(default=0)
 
     class Meta:
-        ordering = ["created_on"]
+        ordering = ["-created_on"]
 
     def __str__(self):
         return self.title
