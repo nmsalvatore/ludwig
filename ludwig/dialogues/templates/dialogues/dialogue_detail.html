@@ -18,7 +18,7 @@
 <div class="container" hx-ext="sse">
     <header>
         <h1>{{ dialogue.title }}</h1>
-        <p class="participants">Users: {{ dialogue.participants.all|text_list }}</p>
+        <p class="participants">With {{ dialogue.participants.all|text_list }}</p>
 
         {% if dialogue.summary %}
             <div class="dialogue-summary">
