@@ -159,6 +159,7 @@ form label {
     color: var(--color-6);
     display: block;
     font-family: Bitter, serif;
+    font-weight: 500;
     margin-bottom: 0.25rem;
 }
 
