@@ -23,12 +23,12 @@
         {% csrf_token %}
 
         <section class="form-field">
-            <label for="{{ form.title.id_for_label }}">First, give your dialogue a title.</label>
+            <label for="{{ form.title.id_for_label }}">Give this dialogue a title.</label>
             {{ form.title }}
         </section>
 
         <section class="form-field">
-            <label for="{{ form.summary.id_for_label }}">Briefly explain your objectives for this dialogue.</label>
+            <label for="{{ form.summary.id_for_label }}">Briefly explain the purpose of this dialogue.</label>
             {{ form.summary }}
         </section>
 
@@ -60,7 +60,7 @@
             </label>
             <div class="checkbox-field-container">
                 {{ form.is_visible }}
-                <label>Yes, make it public</label>
+                <span>Yes, make it public</span>
             </div>
         </section>
 
