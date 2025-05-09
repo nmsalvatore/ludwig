@@ -6,7 +6,7 @@
     --color-2: hsl(150 30% 80%);
     --color-3: hsl(150 25% 60%);
     --color-4: hsl(150 20% 40%);
-    --color-5: hsl(150 15% 30%);
+    --color-5: hsl(150 10% 30%);
     --color-6: hsl(150 10% 20%);
     --color-7: hsl(60 10% 91%);
     --color-8: hsl(60 10% 85%);
@@ -135,10 +135,6 @@ p {
 
 p:last-child {
     margin-bottom: 0;
-}
-
-ul {
-    margin-left: 1rem;
 }
 
 textarea {

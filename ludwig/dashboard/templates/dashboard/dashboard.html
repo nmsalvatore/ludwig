@@ -19,15 +19,15 @@
     <section class="dashboard-options">
         <h2>Actions</h2>
         <a href="{% url 'dialogues:create_dialogue' %}" class="dashboard-button primary">
-            <img src="{% static 'icons/dialogue_icon.svg' %}" alt="Two chat bubbles overlapped">
+            <img src="{% static 'icons/create_icon.svg' %}" alt="An icon of a plus symbol">
             Start a dialogue
         </a>
         <a href="{% url 'dialogues:find_dialogue' %}" class="dashboard-button coming-soon">
-            <img src="{% static 'icons/search_icon.svg' %}" alt="Magnifying glass">
+            <img src="{% static 'icons/search_icon.svg' %}" alt="An icon of a magnifying glass">
                 Find a dialogue
         </a>
         <a href="{% url 'dialogues:create_dialogue' %}" class="dashboard-button coming-soon">
-            <img src="{% static 'icons/settings_icon.svg' %}" alt="Two chat bubbles overlapped">
+            <img src="{% static 'icons/settings_icon.svg' %}" alt="An icon of a mechanical gear">
                 Account settings
         </a>
     </section>
@@ -40,6 +40,7 @@
                 {% for dialogue in user_dialogues %}
                     <li>
                         <a href="{% url 'dialogues:detail' dialogue.id %}">
+                            <img src="{% static 'icons/dialogue_icon.svg' %}" alt="An icon of two over bubbles overlapping">
                             {{ dialogue.title }}
                         </a>
                     </li>

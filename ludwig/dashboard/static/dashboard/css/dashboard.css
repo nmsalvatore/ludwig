@@ -5,6 +5,7 @@ div.dashboard-options {
 
 a.dashboard-button {
     display: flex;
+    gap: 1rem;
     align-items: center;
     border-radius: 0.25rem;
     padding: 0.5rem;
@@ -21,10 +22,6 @@ a.dashboard-button.primary {
     background: var(--color-2);
 }
 
-a.dashboard-button img {
-    margin-right: 1rem;
-}
-
 a.dashboard-button.coming-soon {
     background: var(--color-7);
     color: rgba(43, 59, 51, 0.5);
@@ -32,7 +29,25 @@ a.dashboard-button.coming-soon {
 }
 
 .coming-soon::after {
-    margin-left: 1ch;
-    content: "- Coming soon!";
+    content: "Coming soon!";
+    font-size: 0.625rem;
     font-style: italic;
+}
+
+.user-dialogues ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    list-style-type: none;
+}
+
+.user-dialogues ul li a {
+    background: var(--color-7);
+    border: 1px solid var(--color-8);
+    border-radius: 0.25rem;
+    color: inherit;
+    display: flex;
+    gap: 1rem;
+    padding: 0.5rem;
+    text-decoration: none;
 }
