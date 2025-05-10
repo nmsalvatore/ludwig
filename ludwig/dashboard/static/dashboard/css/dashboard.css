@@ -5,13 +5,19 @@ div.dashboard-options {
 
 a.dashboard-button {
     display: flex;
-    gap: 1rem;
+    gap: 0.5rem;
     align-items: center;
     border-radius: 0.25rem;
     padding: 0.5rem;
     margin-bottom: 0.5rem;
     text-decoration: none;
     color: inherit;
+}
+
+a.dashboard-button span {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 a.dashboard-button:last-child {
@@ -41,13 +47,7 @@ a.dashboard-button.coming-soon {
     list-style-type: none;
 }
 
-.user-dialogues ul li a {
+.user-dialogues .dashboard-button {
     background: var(--color-7);
     border: 1px solid var(--color-8);
-    border-radius: 0.25rem;
-    color: inherit;
-    display: flex;
-    gap: 1rem;
-    padding: 0.5rem;
-    text-decoration: none;
 }
