@@ -18,17 +18,39 @@
     <!-- Dashboard action buttons -->
     <section class="dashboard-options">
         <h2>Actions</h2>
-        <a href="{% url 'dialogues:create_dialogue' %}" class="dashboard-button primary">
-            <img src="{% static 'icons/create_icon.svg' %}" alt="An icon of a plus symbol">
+
+        <a
+            href="{% url 'dialogues:create_dialogue' %}"
+            class="dashboard-button primary">
+
+            <img
+                src="{% static 'icons/create_icon.svg' %}"
+                alt="An icon of a plus symbol"
+                class="icon">
+
             Start a dialogue
         </a>
-        <a href="{% url 'dialogues:find_dialogue' %}" class="dashboard-button coming-soon">
-            <img src="{% static 'icons/search_icon.svg' %}" alt="An icon of a magnifying glass">
-                Find a dialogue
+        <a
+            href="{% url 'dialogues:find_dialogue' %}"
+            class="dashboard-button coming-soon">
+
+            <img
+                src="{% static 'icons/search_icon.svg' %}"
+                alt="An icon of a magnifying glass"
+                class="icon">
+
+            Find a dialogue
         </a>
-        <a href="{% url 'dialogues:create_dialogue' %}" class="dashboard-button coming-soon">
-            <img src="{% static 'icons/settings_icon.svg' %}" alt="An icon of a mechanical gear">
-                Account settings
+        <a
+            href="{% url 'dialogues:create_dialogue' %}"
+            class="dashboard-button coming-soon">
+
+            <img
+                src="{% static 'icons/settings_icon.svg' %}"
+                alt="An icon of a mechanical gear"
+                class="icon">
+
+            Account settings
         </a>
     </section>
 
@@ -36,12 +58,20 @@
     {% if user_dialogues %}
         <section class="user-dialogues">
             <h2>Your dialogues</h2>
+
             <ul>
                 {% for dialogue in user_dialogues %}
                     <li>
-                        <a href="{% url 'dialogues:detail' dialogue.id %}">
-                            <img src="{% static 'icons/dialogue_icon.svg' %}" alt="An icon of two over bubbles overlapping">
-                            {{ dialogue.title }}
+                        <a
+                            href="{% url 'dialogues:detail' dialogue.id %}"
+                            class="dashboard-button">
+
+                            <img
+                                src="{% static 'icons/dialogue_icon.svg' %}"
+                                alt="An icon of two over bubbles overlapping"
+                                class="icon">
+
+                            <span>{{ dialogue.title }}</span>
                         </a>
                     </li>
                 {% endfor %}

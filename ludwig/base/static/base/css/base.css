@@ -44,6 +44,7 @@ main,
 footer {
     display: flex;
     flex-direction: column;
+    min-width: 0;
 }
 
 body > header {
@@ -210,6 +211,10 @@ form label + ul.errorlist {
 }
 
 /* class targets */
+
+img.icon {
+    height: 1.25rem;
+}
 
 .logo {
     font-family: Bitter, serif;
