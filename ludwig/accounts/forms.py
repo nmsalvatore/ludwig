@@ -2,10 +2,16 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 
+
 User = get_user_model()
 
 
 class UserRegistrationForm(UserCreationForm):
+    """
+    Define UserRegistrationForm which extends UserCreationForm, adds
+    custom field labels and turns off autocomplete on form inputs.
+    """
+
     username = forms.CharField(
         label="Username",
         max_length=30,
@@ -32,25 +38,13 @@ class UserRegistrationForm(UserCreationForm):
         model = User
         fields = ("username", "email", "password1", "password2")
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field in self.fields.values():
-            field.help_text = None
-
-    def clean_username(self):
-        username = self.cleaned_data.get("username")
-        if User.objects.filter(username=username).exists():
-            raise forms.ValidationError("This username is already taken.")
-        return username
-
-    def clean_email(self):
-        email = self.cleaned_data.get("email")
-        if User.objects.filter(email=email).exists():
-            raise forms.ValidationError("This email is already registered.")
-        return email
-
 
 class UserLoginForm(AuthenticationForm):
+    """
+    Defines custom UserLoginForm which extends AuthenticationForm, adds
+    custom field labels and turns off autocomplete on form inputs.
+    """
+
     username = forms.CharField(
             label="Username",
             widget=forms.TextInput(attrs={
