@@ -8,15 +8,19 @@
 
 {% block main %}
 <div class="container">
+
     <!-- registration form -->
     <section class="form-container">
         <h1>Register</h1>
+
         <form method="post" novalidate>
             {% csrf_token %}
             {{ form.as_div }}
             <button type="submit">Create account</button>
         </form>
+
         <p>Already have an account? <a href="{% url 'accounts:login' %}">Login here</a></p>
     </section>
+
 </div>
 {% endblock %}
