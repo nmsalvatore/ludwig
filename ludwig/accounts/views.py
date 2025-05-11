@@ -1,52 +1,35 @@
-from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.views import LoginView
-from django.shortcuts import redirect, render
+from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
 from .forms import UserLoginForm, UserRegistrationForm
 
 
-class UserRegistrationView(CreateView):
+class UserRegistrationView(SuccessMessageMixin, CreateView):
+    """
+    Defines user registration view that displays user registation form
+    and creates a new user with CreateView.
+    """
+
     template_name = "accounts/register.html"
     form_class = UserRegistrationForm
-
-    def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            return redirect("dashboard:home")
-        return super().dispatch(request, *args, **kwargs)
-
-    def form_valid(self, form):
-        valid_form = super().form_valid(form)
-        username = form.cleaned_data.get('username')
-        password = form.cleaned_data.get('password1')
-
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            login(self.request, user)
-
-        return redirect('dashboard:home')
-
-    def get_success_url(self):
-        return reverse_lazy('dashboard:home')
+    success_url = reverse_lazy("accounts:login")
+    success_message = "Registration successful! Please login with your new credentials."
 
 
 class UserLoginView(LoginView):
+    """
+    Defines user login view that displays login form and logs in user.
+    """
+
     template_name = "accounts/login.html"
     authentication_form = UserLoginForm
-    redirect_authenticated_user = True
-
-    def get_success_url(self):
-        return self.request.GET.get("next", reverse_lazy("dashboard:home"))
 
 
-@login_required
-def logout_view(request):
-    """Log out the user."""
-    if request.method == "POST":
-        logout(request)
-        messages.success(request, "You have been logged out successfully.")
-        return redirect("accounts:login")
-    return render(request, "accounts/logout.html")
+class UserLogoutView(LogoutView):
+    """
+    Defines user logout view that logs out user.
+    """
+
+    next_page = reverse_lazy("accounts:login")
