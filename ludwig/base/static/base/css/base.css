@@ -199,7 +199,6 @@ form button[type="submit"] {
 
 form ul.errorlist {
     color: var(--color-alert);
-    margin-left: 1rem;
 }
 
 form > ul.errorlist {
