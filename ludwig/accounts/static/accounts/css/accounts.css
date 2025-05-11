@@ -1,3 +1,7 @@
+h1 {
+    font-size: 1.5rem;
+}
+
 .form-container {
     margin: auto;
     max-width: 360px;
@@ -12,4 +16,18 @@
     display: flex;
     flex-direction: column;
     margin-bottom: 1rem;
+}
+
+.messages,
+.errorlist {
+    background: var(--color-7);
+    border: 1px solid var(--color-8);
+    border-radius: 0.25rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+}
+
+ul.errorlist {
+    list-style-type: none;
 }

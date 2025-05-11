@@ -153,9 +153,9 @@ class RegisterViewTests(TestCase):
             self.good_registration_credentials
         )
 
-        # check that user is successfully logged in
+        # check that user is not logged in
         user = get_user(self.client)
-        self.assertTrue(user.is_authenticated)
+        self.assertFalse(user.is_authenticated)
 
     def test_successful_registration_redirect(self):
         # register user via POST request
@@ -165,7 +165,7 @@ class RegisterViewTests(TestCase):
         )
 
         # check that successful registration redirects to dashboard
-        self.assertRedirects(response, reverse("dashboard:home"))
+        self.assertRedirects(response, reverse("accounts:login"))
 
     def test_failed_registration(self):
         # register user via POST request

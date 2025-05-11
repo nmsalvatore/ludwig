@@ -11,7 +11,6 @@ from django.template.loader import render_to_string
 from .forms import DialogueCreationForm
 from .models import Dialogue, Post
 
-
 User = get_user_model()
 
 
