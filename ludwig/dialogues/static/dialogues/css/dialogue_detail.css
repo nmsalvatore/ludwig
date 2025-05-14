@@ -1,6 +1,8 @@
 .participants {
-    font-size: 0.875rem;
-    margin-bottom: 2rem;
+    font-size: 0.8125rem;
+    margin-bottom: 1rem;
+    color: var(--color-6);
+    font-family: Bitter, serif;
 }
 
 .dialogue-info p {
@@ -17,9 +19,8 @@
 }
 
 .post-body {
-    padding: 1rem;
-    background: var(--color-0);
-    border: 1px solid var(--color-8);
+    padding: 0.6125rem 0.75rem;
+    background: var(--color-7);
     border-radius: 0.25rem;
 }
 

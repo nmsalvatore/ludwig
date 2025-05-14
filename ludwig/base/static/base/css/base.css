@@ -8,8 +8,8 @@
     --color-4: hsl(150 20% 40%);
     --color-5: hsl(150 10% 30%);
     --color-6: hsl(150 10% 20%);
-    --color-7: hsl(60 10% 91%);
-    --color-8: hsl(60 10% 85%);
+    --color-7: hsl(60 10% 90%);
+    --color-8: hsl(60 10% 80%);
     --color-alert: hsl(0 35% 50%);
     --line-height: 1.6;
 }
@@ -23,7 +23,6 @@
 html {
     background: var(--color-1);
     color: var(--color-5);
-    font-size: 100%;
 }
 
 body {
@@ -34,6 +33,7 @@ body {
         "main"
         "footer";
     font-family: Inter, sans-serif;
+    font-size: 0.875rem;
     min-height: 100dvh;
 }
 
@@ -116,8 +116,8 @@ h6 {
 }
 
 h1 {
-    font-size: 2rem;
-    margin-bottom: 1rem;
+    font-size: 1.75rem;
+    margin-bottom: 1.125rem;
     margin-top: 1rem;
 }
 
@@ -148,7 +148,7 @@ button {
     border-radius: 0.25rem;
     cursor: pointer;
     font-family: inherit;
-    font-size: inherit;
+    font-size: 0.875rem;
 }
 
 strong {
@@ -169,12 +169,12 @@ form input[type="email"],
 form input[type="password"],
 form textarea {
     background: var(--color-0);
-    border: 1px solid var(--color-8);
+    border: 1px solid var(--color-7);
     border-radius: 0.25rem;
     color: inherit;
     font-family: inherit;
     font-size: 0.875rem;
-    padding: 1rem;
+    padding: 0.6125rem 0.75rem;
     width: 100%;
 }
 
@@ -217,6 +217,7 @@ img.icon {
 
 .logo {
     font-family: Bitter, serif;
+    font-size: 1rem;
     font-weight: 600;
     color: var(--color-4);
 }
