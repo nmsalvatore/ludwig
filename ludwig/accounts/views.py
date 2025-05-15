@@ -8,8 +8,8 @@ from .forms import UserLoginForm, UserRegistrationForm
 
 class UserRegistrationView(SuccessMessageMixin, CreateView):
     """
-    Defines user registration view that displays user registation form
-    and creates a new user with CreateView.
+    Defines user registration view that displays the user registation
+    form, creates a new user, then redirects to the login page.
     """
 
     template_name = "accounts/register.html"
@@ -29,7 +29,8 @@ class UserLoginView(LoginView):
 
 class UserLogoutView(LogoutView):
     """
-    Defines user logout view that logs out user.
+    Defines user logout view that logs out user and redirects to the
+    login page.
     """
 
     next_page = reverse_lazy("accounts:login")
