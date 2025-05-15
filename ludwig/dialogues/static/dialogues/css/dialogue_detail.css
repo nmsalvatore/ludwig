@@ -1,7 +1,8 @@
 .participants {
     font-size: 0.8125rem;
+    font-weight: 500;
     margin-bottom: 1rem;
-    color: var(--color-6);
+    color: var(--color-5);
     font-family: Bitter, serif;
 }
 
