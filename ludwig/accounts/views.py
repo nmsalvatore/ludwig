@@ -1,4 +1,5 @@
 from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
@@ -8,8 +9,8 @@ from .forms import UserLoginForm, UserRegistrationForm
 
 class UserRegistrationView(SuccessMessageMixin, CreateView):
     """
-    Defines user registration view that displays user registation form
-    and creates a new user with CreateView.
+    Defines user registration view that displays the user registation
+    form, creates a new user, then redirects to the login page.
     """
 
     template_name = "accounts/register.html"
@@ -27,9 +28,10 @@ class UserLoginView(LoginView):
     authentication_form = UserLoginForm
 
 
-class UserLogoutView(LogoutView):
+class UserLogoutView(LoginRequiredMixin, LogoutView):
     """
-    Defines user logout view that logs out user.
+    Defines user logout view that logs out user and redirects to the
+    login page.
     """
 
     next_page = reverse_lazy("accounts:login")

@@ -5,9 +5,15 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="{% static 'base/css/base.css' %}">
+
+        <link rel="preload" href="{% static 'css/fonts.css' %}" as="style">
+
+        <link rel="stylesheet" href="{% static 'css/fonts.css' %}">
+        <link rel="stylesheet" href="{% static 'css/base.css' %}">
+
         {% block stylesheets %}{% endblock %}
         {% block scripts %}{% endblock %}
+
         <title>Ludwig</title>
     </head>
     <body>

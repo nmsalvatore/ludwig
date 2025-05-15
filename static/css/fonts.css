@@ -1,0 +1,43 @@
+@font-face {
+    font-family: Bitter;
+    src:
+        local("Bitter Medium"),
+        local("Bitter-Medium"),
+        url("../fonts/Bitter-Medium.woff2") format("woff2");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: Bitter;
+    src:
+        local("Bitter Regular"),
+        local("Bitter-Regular"),
+        url("../fonts/Bitter-Regular.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: Inter;
+    src:
+        local("Inter Regular"),
+        local("Inter-Regular"),
+        url("../fonts/Inter-Regular.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Inter";
+    src:
+        local("Inter Medium"),
+        local("Inter-Medium"),
+        url("../fonts/Inter-Medium.woff2") format("woff2");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}

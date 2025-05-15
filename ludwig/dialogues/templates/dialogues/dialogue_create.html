@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="https://unpkg.com/htmx.org@2.0.4"></script>
+<script src="{% static 'js/htmx.min.js' %}"></script>
 <script src="{% static 'dialogues/js/user_selection.js' %}" defer></script>
 {% endblock %}
 
@@ -16,7 +16,7 @@
 <div class="container">
     <header class="dialogue-intro">
         <h1>Start a dialogue</h1>
-        <p>Dialogues on Ludwig are focused spaces where selected members engage in thoughtful exchanges. While participation is limited to members chosen by the dialogue's creator, a dialogue can be made public for viewing by anyone..</p>
+        <p>Dialogues on Ludwig are focused spaces where selected members engage in thoughtful exchanges. While participation is limited to members chosen by the dialogue's creator, a dialogue can be made public for viewing by anyone.</p>
     </header>
 
     <form method="post">
