@@ -1,4 +1,5 @@
 from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
@@ -27,7 +28,7 @@ class UserLoginView(LoginView):
     authentication_form = UserLoginForm
 
 
-class UserLogoutView(LogoutView):
+class UserLogoutView(LoginRequiredMixin, LogoutView):
     """
     Defines user logout view that logs out user and redirects to the
     login page.
