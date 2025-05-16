@@ -11,7 +11,7 @@
 }
 
 .post {
-    margin-bottom: 1rem;
+    margin-bottom: 1.25rem;
 }
 
 .post:last-child {
@@ -27,12 +27,16 @@
 .post-header {
     display: flex;
     align-items: center;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.6125rem;
 }
 
 .post-author {
     color: var(--color-4);
     font-weight: 500;
+}
+
+.post.post-by-user .post-author {
+    color: var(--color-5);
 }
 
 .post-time {
