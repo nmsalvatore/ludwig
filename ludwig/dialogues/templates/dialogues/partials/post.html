@@ -1,6 +1,6 @@
 <div class="post {% if post.author == request.user %}post-by-user{% endif %}" data-post-id="{{ post.id }}">
     <div class="post-header">
-        <div class="post-author">{{ post.author.username }}</div>
+        <div class="post-author">@{{ post.author.username }}</div>
         <div class="post-time">{{ post.created_on|timesince }} ago</div>
     </div>
     <div class="post-body">
