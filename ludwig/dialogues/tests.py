@@ -7,7 +7,7 @@ from django.urls.base import reverse
 from .models import Dialogue
 
 
-class DialogueTests(TestCase):
+class DialogueCreationTests(TestCase):
     def setUp(self):
         self.DIALOGUE_TEST_TITLE = "Some test dialogue"
         self.USERNAME = "sometestuser"
@@ -24,9 +24,7 @@ class DialogueTests(TestCase):
 
         User = get_user_model()
         User.objects.create_user(
-            username=self.USERNAME,
-            email=self.EMAIL,
-            password=self.PASSWORD
+            username=self.USERNAME, email=self.EMAIL, password=self.PASSWORD
         )
 
     def _dialogue_exists(self, title):
@@ -45,9 +43,7 @@ class DialogueTests(TestCase):
         from authenticated user.
         """
         self.client.post(self.login_url, self.good_login_credentials)
-        self.client.post(self.dialogue_create_url, {
-            "title": self.DIALOGUE_TEST_TITLE
-        })
+        self.client.post(self.dialogue_create_url, {"title": self.DIALOGUE_TEST_TITLE})
         dialogue_exists = self._dialogue_exists(self.DIALOGUE_TEST_TITLE)
         self.assertTrue(dialogue_exists)
 
@@ -56,9 +52,9 @@ class DialogueTests(TestCase):
         POST request to dialogue creation url should fail for users
         that are not authenticated.
         """
-        response = self.client.post(self.dialogue_create_url, {
-            "title": self.DIALOGUE_TEST_TITLE
-        })
+        response = self.client.post(
+            self.dialogue_create_url, {"title": self.DIALOGUE_TEST_TITLE}
+        )
         dialogue_exists = self._dialogue_exists(self.DIALOGUE_TEST_TITLE)
         self.assertRedirects(response, "/auth/login/?next=/dialogue/create/")
         self.assertFalse(dialogue_exists)
