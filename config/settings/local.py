@@ -3,6 +3,7 @@ from environs import Env
 from .base import *
 
 env = Env()
+env.read_env()
 
 DEBUG = env.str("DEBUG")
 
