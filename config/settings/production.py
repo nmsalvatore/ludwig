@@ -5,7 +5,7 @@ from .base import *
 env = Env()
 env.read_env()
 
-DEBUG = env.str("DEBUG")
+DEBUG = env.bool("DEBUG")
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 
 # use whitenoise for static files

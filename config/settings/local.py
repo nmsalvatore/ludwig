@@ -5,7 +5,7 @@ from .base import *
 env = Env()
 env.read_env()
 
-DEBUG = env.str("DEBUG")
+DEBUG = env.bool("DEBUG")
 
 # database configuration
 DATABASES = {
