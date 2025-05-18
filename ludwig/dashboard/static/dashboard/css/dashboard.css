@@ -15,6 +15,10 @@ a.dashboard-button {
     text-decoration: none;
 }
 
+.user-dialogues a.dashboard-button {
+    background: var(--color-8);
+}
+
 a.dashboard-button span {
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -30,7 +34,7 @@ a.dashboard-button.primary {
 }
 
 a.dashboard-button.coming-soon {
-    background: var(--color-7);
+    background: var(--color-8);
     color: rgba(43, 59, 51, 0.4);
     pointer-events: none;
 }
@@ -46,8 +50,4 @@ a.dashboard-button.coming-soon {
     flex-direction: column;
     gap: 0.5rem;
     list-style-type: none;
-}
-
-.user-dialogues .dashboard-button {
-    background: var(--color-7);
 }

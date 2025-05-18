@@ -20,8 +20,9 @@
 
 .post-body {
     padding: 0.6125rem 0.75rem;
-    background: var(--color-7);
+    background: var(--color-8);
     border-radius: 0.25rem;
+    border: 1px solid var(--color-0);
 }
 
 .post-header {
