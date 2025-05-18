@@ -3,10 +3,15 @@ import time
 
 from django.contrib.auth import get_user, get_user_model
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.http import HttpResponse, StreamingHttpResponse
+from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
+from django.urls import reverse, reverse_lazy
+from django.views.generic.base import TemplateView
+from django.views.generic.edit import CreateView
 
 from .forms import DialogueCreationForm
 from .models import Dialogue, Post
@@ -14,29 +19,51 @@ from .models import Dialogue, Post
 User = get_user_model()
 
 
-@login_required
-def create_dialogue(request):
-    if request.method == "POST":
-        form = DialogueCreationForm(request.POST)
-        if form.is_valid():
-            dialogue = form.save()
+class CreateDialogueView(LoginRequiredMixin, CreateView):
+    """
+    Display a form to create a dialogue and redirect to dialogue detail
+    page on successful dialogue creation.
+    """
 
-            dialogue.participants.add(request.user)
+    form_class = DialogueCreationForm
+    template_name = "dialogues/dialogue_create.html"
 
-            participant_ids = request.POST.getlist("selected_participants")
-            if participant_ids:
-                for user_id in participant_ids:
-                    try:
-                        user = User.objects.get(id=user_id)
-                        dialogue.participants.add(user)
-                    except User.DoesNotExist:
-                        pass
+    def _add_participants_to_dialogue(self, dialogue):
+        """Add current user and selected participants to dialogue."""
 
-            return redirect("dialogues:dialogue_detail", dialogue.id)
-    else:
-        form = DialogueCreationForm()
+        # add current user as participant
+        dialogue.participants.add(get_user(self.request))
 
-    return render(request, "dialogues/dialogue_create.html", {"form": form})
+        # get list of user ids from hidden form input field
+        user_ids = self.request.POST.getlist("selected_participants")
+
+        if user_ids:
+            # get all users with selected ids and add as participants
+            users = User.objects.filter(id__in=user_ids)
+            dialogue.participants.add(*users)
+
+    def form_valid(self, form):
+        """Save form data and redirect to dialogue detail page."""
+
+        dialogue = form.save(commit=False)
+        dialogue.author = get_user(self.request)
+        dialogue.save()
+
+        # since the Dialogue model has many-to-many relation with the
+        # User model and commit=False was used to save the form, we
+        # have to wait until the new dialogue instance is in the
+        # database before saving the many-to-many form data
+        form.save_m2m()
+
+        # add current user and selected participants to dialogue
+        self._add_participants_to_dialogue(dialogue)
+
+        # store dialogue as object for get_success_url
+        self.object = dialogue
+
+        return HttpResponseRedirect(
+            reverse("dialogues:dialogue_detail", args={dialogue.id})
+        )
 
 
 @login_required
@@ -54,7 +81,6 @@ def search_users(request):
     return render(request, "dialogues/partials/user_search_results.html", context)
 
 
-@login_required
 def dialogue_detail(request, dialogue_id):
     # get dialogue instance, otherwise throw a 404 error
     dialogue = get_object_or_404(Dialogue, id=dialogue_id)

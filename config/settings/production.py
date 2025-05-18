@@ -23,3 +23,6 @@ DATABASES = {
         "PORT": env.str("DB_PORT"),
     }
 }
+
+# tell django to trust the X-Forwarded-Proto header
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
