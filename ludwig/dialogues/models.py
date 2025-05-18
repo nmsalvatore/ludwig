@@ -19,7 +19,7 @@ class Dialogue(TimeStampedModel):
         max_length=10
     )
     is_open = models.BooleanField(default=False)
-    is_visible = models.BooleanField(default=True)
+    is_visible = models.BooleanField(default=False)
     participants = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='dialogues')
     summary = models.TextField(blank=True)
     title = models.CharField(max_length=200)
