@@ -32,7 +32,7 @@ def create_dialogue(request):
                     except User.DoesNotExist:
                         pass
 
-            return redirect("dialogues:detail", dialogue.id)
+            return redirect("dialogues:dialogue_detail", dialogue.id)
     else:
         form = DialogueCreationForm()
 
@@ -61,80 +61,65 @@ def dialogue_detail(request, dialogue_id):
 
     # get user instance from request
     user = get_user(request)
-
     if user in dialogue.participants.all() and request.method == "POST":
         # get post body and remove surrounding whitespace
         post_body = request.POST.get("body", "").strip()
-
         if post_body:
             # add the post to the database
-            Post.objects.create(
+            post = Post.objects.create(
                 author=request.user,
                 dialogue=dialogue,
                 body=post_body
             )
 
-        # since the event stream will catch the new post and
-        # append it to the dialogue with htmx, if the request is
-        # from htmx, simply refresh the form
-        if request.headers.get("HX-Request"):
-            return render(request, "dialogues/partials/form.html")
-
-        # if js is disabled, htmx is disabled, so just refresh the page
-        return redirect("dialogues:detail", dialogue_id=dialogue_id)
+        return redirect("dialogues:dialogue_detail", dialogue_id=dialogue_id)
 
     # get fresh queryset of posts, including the new one
-    posts = Post.objects.filter(dialogue=dialogue).select_related("author")
+    posts = Post.objects.filter(dialogue=dialogue).select_related("author").order_by("id")
 
-    context = {"dialogue": dialogue, "posts": posts}
+    # Get the highest post ID for initial polling
+    last_id = 0
+    if posts.exists():
+        last_id = posts.last().id
+
+    context = {
+        "dialogue": dialogue,
+        "posts": posts,
+        "last_id": last_id
+    }
+
     return render(request, "dialogues/dialogue_detail.html", context)
+
+
+@login_required
+def new_posts(request, dialogue_id):
+    dialogue = get_object_or_404(Dialogue, id=dialogue_id)
+
+    last_id_str = request.GET.get("last_id", "0")
+    try:
+        last_id = int(last_id_str)
+    except ValueError:
+        last_id = 0
+
+    new_posts = Post.objects.filter(
+        dialogue=dialogue,
+        id__gt=last_id
+    ).select_related("author").order_by("created_on")
+
+    highest_id = last_id
+
+    if new_posts.exists():
+        highest_id = new_posts.last().id
+
+    context = {
+        "posts": new_posts,
+        "last_id": highest_id,
+        "dialogue": dialogue
+    }
+
+    return render(request, "dialogues/partials/new_posts.html", context)
 
 
 @login_required
 def find_dialogue(request):
     pass
-
-
-@login_required
-def dialogue_stream(request, dialogue_id):
-    """SSE endpoint for real-time dialogue updates."""
-    dialogue = get_object_or_404(Dialogue, id=dialogue_id)
-
-    # Get the latest post ID the client has
-    last_post_id = request.GET.get("last_id", "0")
-    try:
-        last_post_id = int(last_post_id)
-    except ValueError:
-        last_post_id = 0
-
-    def event_stream():
-        nonlocal last_post_id
-
-        while True:
-            new_posts = Post.objects.filter(
-                dialogue=dialogue,
-                id__gt=last_post_id
-            ).select_related("author").order_by("id")
-
-            if new_posts.exists():
-                for post in new_posts:
-                    last_post_id = post.id
-
-                    html = render_to_string(
-                        "dialogues/partials/post.html",
-                        {"post": post},
-                        request
-                    ).replace("\n", "")
-
-                    yield f"event: new-post\ndata: {html} \n\n"
-
-            time.sleep(1)
-
-    response = StreamingHttpResponse(
-        event_stream(),
-        content_type="text/event-stream"
-    )
-    response["Cache-Control"] = "no-cache"
-    response["X-Accel-Buffering"] = "no"
-
-    return response

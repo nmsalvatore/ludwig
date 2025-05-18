@@ -10,12 +10,11 @@
 
 {% block scripts %}
 <script src="{% static 'js/htmx.min.js' %}"></script>
-<script src="{% static 'js/htmx-ext-sse.js' %}"></script>
-<script src="{% static 'dialogues/js/hx_listeners.js' %}" defer></script>
+<script src="{% static 'dialogues/js/listeners.js' %}" defer></script>
 {% endblock %}
 
 {% block main %}
-<div class="container" hx-ext="sse">
+<div class="container">
     <header>
         <h1>{{ dialogue.title }}</h1>
         <p class="participants">With {{ dialogue.participants.all|text_list }}</p>
@@ -27,11 +26,8 @@
         {% endif %}
     </header>
 
-    <div sse-connect="{% url 'dialogues:stream' dialogue.id %}?last_id={% if posts %}{{ posts.last.id }}{% else %}0{% endif %}">
-        <div sse-swap="new-post" hx-target="#posts_container" hx-swap="beforeend"></div>
-    </div>
-
     <section id="posts_container">
+
         {% if posts %}
             {% for post in posts %}
                 {% include "dialogues/partials/post.html" with post=post %}
@@ -42,6 +38,14 @@
             </div>
         {% endif %}
     </section>
+
+    <div
+        id="polling_div"
+        hx-get="{% url 'dialogues:new_posts' dialogue.id %}?last_id={{ last_id }}"
+        hx-trigger="every 1s"
+        hx-target="#posts_container"
+        hx-swap="beforeend">
+    </div>
 
     {% if request.user in dialogue.participants.all or dialogue.is_open %}
         <section class="post-form">
