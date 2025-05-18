@@ -58,9 +58,6 @@ class CreateDialogueView(LoginRequiredMixin, CreateView):
         # add current user and selected participants to dialogue
         self._add_participants_to_dialogue(dialogue)
 
-        # store dialogue as object for get_success_url
-        self.object = dialogue
-
         return HttpResponseRedirect(
             reverse("dialogues:dialogue_detail", args={dialogue.id})
         )
