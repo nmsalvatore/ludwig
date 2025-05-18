@@ -1,0 +1,19 @@
+document.addEventListener("htmx:afterOnLoad", (event) => {
+    const postsContainer = document.getElementById("posts_container");
+    const posts = postsContainer.querySelectorAll(".post");
+
+    if (posts.length !== 0) {
+        const noPostsMessage = document.getElementById("no_posts_message");
+        if (noPostsMessage) {
+            noPostsMessage.remove();
+        }
+    }
+});
+
+const postForm = document.getElementById("post_form");
+postForm.addEventListener("htmx:afterOnLoad", (event) => {
+    if (event.detail.successful) {
+        postForm.reset();
+        postForm.focus();
+    }
+});

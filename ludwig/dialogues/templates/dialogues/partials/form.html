@@ -1,4 +1,4 @@
-<form method="post" hx-post="{{ request.path }}">
+<form id="post_form" hx-post="{{ request.path }}" hx-swap="none" hx-on::after-request="this.reset()">
     {% csrf_token %}
 
     <textarea
@@ -9,6 +9,6 @@
     ></textarea>
 
     <div class="form-buttons">
-        <button type="submit">Submit post</button>
+        <button type="submit" id="post_submit_button">Submit post</button>
     </div>
 </form>
