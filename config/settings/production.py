@@ -29,3 +29,7 @@ SECURE_SSL_REDIRECT = True
 
 # tell django to trust the X-Forwarded-Proto header
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+# mark cookies as secure
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
