@@ -2,7 +2,7 @@
     --color-0: hsl(60 10% 97%);
     --color-1: hsl(60 10% 94%);
     --color-2: hsl(150 35% 75%);
-    --color-3: hsl(150 40% 60%);
+    --color-3: hsl(150 40% 65%);
     --color-4: hsl(150 50% 30%);
     --color-5: hsl(150 10% 25%);
     --color-6: hsl(150 90% 10%);
@@ -189,7 +189,8 @@ form textarea::placeholder {
 
 form button[type="submit"] {
     background: var(--color-2);
-    border: none;
+    border: 1px solid var(--color-3);
+    box-shadow: 1px 1px 4px -4px var(--color-6);
     color: inherit;
     width: 100%;
     padding: 0.5rem;
@@ -210,7 +211,7 @@ form label + ul.errorlist {
 /* class targets */
 
 img.icon {
-    height: 1.25rem;
+    height: 1.125rem;
 }
 
 .logo {
@@ -231,8 +232,9 @@ div:has(> .logo) {
 
 form button.logout {
     background: var(--color-1);
-    padding: 0;
-    text-decoration: underline;
+    border: none;
     box-shadow: none;
     color: var(--color-4);
+    padding: 0;
+    text-decoration: underline;
 }
