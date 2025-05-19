@@ -1,22 +1,21 @@
-import json
-import time
-
 from django.contrib.auth import get_user, get_user_model
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
-from django.http import HttpResponse, StreamingHttpResponse
 from django.http.response import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse
+from django.utils.decorators import method_decorator
+from django.utils.timezone import now
+from django.views.decorators.http import condition, etag
 from django.views.generic.base import TemplateView
+from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView
+
+import hashlib
 
 from .forms import DialogueCreationForm
 from .models import Dialogue, Post
-
-User = get_user_model()
 
 
 class CreateDialogueView(LoginRequiredMixin, CreateView):
@@ -39,6 +38,7 @@ class CreateDialogueView(LoginRequiredMixin, CreateView):
 
         if user_ids:
             # get all users with selected ids and add as participants
+            User = get_user_model()
             users = User.objects.filter(id__in=user_ids)
             dialogue.participants.add(*users)
 
@@ -59,90 +59,211 @@ class CreateDialogueView(LoginRequiredMixin, CreateView):
         self._add_participants_to_dialogue(dialogue)
 
         return HttpResponseRedirect(
-            reverse("dialogues:dialogue_detail", args={dialogue.id})
+            reverse("dialogues:dialogue_detail", args=(dialogue.id,))
         )
 
 
-@login_required
-def search_users(request):
-    query = request.GET.get("query", "")
+class SearchForUsersView(LoginRequiredMixin, TemplateView):
+    """
+    Display a dropdown list of users matching the query in the
+    participants input of the dialogue creation form. Results are
+    only shown for queries 2 or more characters long.
+    """
 
-    if len(query) < 2:
-        return HttpResponse("")
+    template_name = "dialogues/partials/user_search_results.html"
 
-    users = User.objects.filter(
-        Q(username__icontains=query) | Q(display_name__icontains=query)
-    ).exclude(id=request.user.id)[:10]
+    def get_context_data(self, **kwargs):
+        """Pass query value and matching users to context data."""
 
-    context = {"users": users, "query": query}
-    return render(request, "dialogues/partials/user_search_results.html", context)
+        # get initial context data
+        context = super().get_context_data(**kwargs)
+
+        # get value of the query form input
+        query = self.request.GET.get("query", "")
+
+        if len(query) >= 2:
+            # filter users whose display name or username contain the
+            # provided query value
+            User = get_user_model()
+            users = User.objects.filter(
+                Q(username__icontains=query) | Q(display_name__icontains=query)
+            ).exclude(id=self.request.user.id)[:10]
+
+            context.update({
+                "query": query,
+                "users": users
+            })
+
+        return context
 
 
-def dialogue_detail(request, dialogue_id):
-    # get dialogue instance, otherwise throw a 404 error
-    dialogue = get_object_or_404(Dialogue, id=dialogue_id)
+class DialogueDetailView(LoginRequiredMixin, DetailView):
+    """
+    Display a specific dialogue and manage interactivity among
+    participants. Limit access based on user auth status and dialogue
+    settings.
+    """
 
-    # get user instance from request
-    user = get_user(request)
-    if user in dialogue.participants.all() and request.method == "POST":
-        # get post body and remove surrounding whitespace
-        post_body = request.POST.get("body", "").strip()
-        if post_body:
-            # add the post to the database
-            post = Post.objects.create(
-                author=request.user,
-                dialogue=dialogue,
-                body=post_body
+    model = Dialogue
+    template_name = "dialogues/dialogue_detail.html"
+    context_object_name = "dialogue"
+    pk_url_kwarg = "dialogue_id"
+
+    def get_context_data(self, **kwargs):
+        """Pass all dialogue posts and last post ID to context data."""
+
+        # get initial context data, includes dialogue
+        context = super().get_context_data(**kwargs)
+
+        # get dialogue object
+        dialogue = self.get_object()
+
+        # get all posts in the dialogue and cache related author data
+        posts = Post.objects.filter(
+            dialogue=dialogue
+        ).select_related("author").order_by("id")
+
+        # get last post and extract `id` and `created_on` values
+        last_post = posts.last() if posts.exists() else None
+        last_id = last_post.id if last_post else 0
+        last_modified = last_post.created_on if last_post else now
+
+        context.update({
+            "posts": posts,
+            "last_id": last_id,
+            "last_modified": last_modified
+        })
+
+        return context
+
+    def post(self, request, *args, **kwargs):
+        """Handle POST requests within a dialogue."""
+
+        # get dialogue object
+        dialogue = self.get_object()
+
+        # get current user instance
+        user = get_user(request)
+
+        if user in dialogue.participants.all():
+            # get post body from post form and remove surrounding
+            # whitespace the retrieved value
+            post_body = request.POST.get("body", "").strip()
+
+            if post_body:
+                # add post to the database
+                Post.objects.create(
+                    author=user,
+                    dialogue=dialogue,
+                    body=post_body
+                )
+
+            return HttpResponseRedirect(
+                reverse("dialogues:dialogue_detail", args=(dialogue.id,))
             )
 
-        return redirect("dialogues:dialogue_detail", dialogue_id=dialogue_id)
 
-    # get fresh queryset of posts, including the new one
-    posts = Post.objects.filter(dialogue=dialogue).select_related("author").order_by("id")
-
-    # Get the highest post ID for initial polling
-    last_id = 0
-    if posts.exists():
-        last_id = posts.last().id
-
-    context = {
-        "dialogue": dialogue,
-        "posts": posts,
-        "last_id": last_id
-    }
-
-    return render(request, "dialogues/dialogue_detail.html", context)
-
-
-@login_required
-def new_posts(request, dialogue_id):
+def generate_etag(request, dialogue_id, *args, **kwargs):
+    """
+    Generate an ETag for the dialogue based on:
+    1. The latest post ID (if any)
+    2. The latest post timestamp (if any)
+    3. The dialogue ID (always)
+    """
     dialogue = get_object_or_404(Dialogue, id=dialogue_id)
 
-    last_id_str = request.GET.get("last_id", "0")
-    try:
-        last_id = int(last_id_str)
-    except ValueError:
-        last_id = 0
+    # start with dialogue id
+    etag_parts = [f"dialogue-{dialogue_id}"]
 
-    new_posts = Post.objects.filter(
-        dialogue=dialogue,
-        id__gt=last_id
-    ).select_related("author").order_by("created_on")
+    # add latest post info if posts exist
+    if dialogue.posts.exists():
+        latest_post = dialogue.posts.order_by('-created_on').first()
+        etag_parts.append(f"post-{latest_post.id}")
+        etag_parts.append(f"time-{latest_post.created_on.isoformat()}")
+    else:
+        etag_parts.append("no-posts")
 
-    highest_id = last_id
-
-    if new_posts.exists():
-        highest_id = new_posts.last().id
-
-    context = {
-        "posts": new_posts,
-        "last_id": highest_id,
-        "dialogue": dialogue
-    }
-
-    return render(request, "dialogues/partials/new_posts.html", context)
+    # create a hash of all parts
+    etag_string = "-".join(etag_parts)
+    return hashlib.md5(etag_string.encode()).hexdigest()
 
 
-@login_required
-def find_dialogue(request):
-    pass
+def get_last_modified(request, dialogue_id, *args, **kwargs):
+    """
+    Get the `created_on` date of the most recent dialogue post. Used
+    with the last_modified decorator to send a Last-Modified header
+    to the client.
+    """
+
+    # get current dialogue object
+    dialogue = get_object_or_404(Dialogue, id=dialogue_id)
+
+    # if dialogue has posts, return the `created_on` datetime
+    # of the most recent post
+    if dialogue.posts.exists():
+        return dialogue.posts.last().created_on
+
+    # if dialogue has no posts, return the current time
+    return now
+
+
+class NewPostsPollingView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    template_name = "dialogues/partials/new_posts.html"
+
+    def _get_last_id(self):
+        """Get and validate the last_id from request parameters"""
+
+        try:
+            last_id = self.request.GET.get("last_id", 0)
+            return int(last_id)
+        except (ValueError, TypeError):
+            return 0
+
+    @method_decorator(condition(
+        etag_func=generate_etag,
+        last_modified_func=get_last_modified
+    ))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def test_func(self):
+        """Check if user is a participant in the dialogue"""
+
+        dialogue_id = self.kwargs.get("dialogue_id")
+        dialogue = get_object_or_404(Dialogue, id=dialogue_id)
+        return self.request.user in dialogue.participants.all()
+
+    def get_context_data(self, **kwargs):
+        """Get new posts and pass them to the template"""
+
+        # get initial context data
+        context = super().get_context_data(**kwargs)
+
+        # get current dialogue object
+        dialogue_id = self.kwargs.get("dialogue_id")
+        dialogue = get_object_or_404(Dialogue, id=dialogue_id)
+
+        # get most recent post id to determine if a post is new
+        last_id = self._get_last_id()
+
+        # get all posts with ids greater than the last post id and
+        # cache related author data
+        posts = Post.objects.filter(
+            dialogue=dialogue,
+            id__gt=last_id
+        ).select_related("author").order_by("created_on")
+
+        # get last post and extract `id` and `created_on` values
+        last_post = posts.last() if posts.exists() else None
+        last_id = last_post.id if last_post else 0
+        last_modified = last_post.created_on if last_post else now
+
+        # update the context data
+        context.update({
+            "posts": posts,
+            "last_id": last_id,
+            "dialogue": dialogue,
+            "last_modified": last_modified
+        })
+
+        return context
