@@ -126,7 +126,7 @@ class DialogueDetailView(LoginRequiredMixin, DetailView):
         # get last post and extract `id` and `created_on` values
         last_post = posts.last() if posts.exists() else None
         last_id = last_post.id if last_post else 0
-        last_modified = last_post.created_on if last_post else now
+        last_modified = last_post.created_on if last_post else now()
 
         context.update({
             "posts": posts,
@@ -204,7 +204,7 @@ def get_last_modified(request, dialogue_id, *args, **kwargs):
         return dialogue.posts.last().created_on
 
     # if dialogue has no posts, return the current time
-    return now
+    return now()
 
 
 class NewPostsPollingView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
@@ -256,7 +256,7 @@ class NewPostsPollingView(LoginRequiredMixin, UserPassesTestMixin, TemplateView)
         # get last post and extract `id` and `created_on` values
         last_post = posts.last() if posts.exists() else None
         last_id = last_post.id if last_post else 0
-        last_modified = last_post.created_on if last_post else now
+        last_modified = last_post.created_on if last_post else now()
 
         # update the context data
         context.update({
