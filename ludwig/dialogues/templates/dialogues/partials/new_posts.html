@@ -6,7 +6,7 @@
     <div
         id="polling_div"
         hx-get="{% url 'dialogues:new_posts' dialogue.id %}?last_id={{ last_id }}"
-        hx-trigger="every 1s"
+        hx-trigger="every 2s"
         hx-target="#posts_container"
         hx-swap="beforeend"
         hx-swap-oob="true">

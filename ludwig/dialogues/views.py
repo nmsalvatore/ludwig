@@ -4,9 +4,15 @@ from django.db.models import Q
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
+from django.urls import reverse
+from django.utils.decorators import method_decorator
+from django.utils.timezone import now
+from django.views.decorators.http import condition, etag
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView
+
+import hashlib
 
 from .forms import DialogueCreationForm
 from .models import Dialogue, Post
@@ -52,7 +58,9 @@ class CreateDialogueView(LoginRequiredMixin, CreateView):
         # add current user and selected participants to dialogue
         self._add_participants_to_dialogue(dialogue)
 
-        return HttpResponseRedirect("dialogues:dialogue_detail", dialogue.id)
+        return HttpResponseRedirect(
+            reverse("dialogues:dialogue_detail", args=(dialogue.id,))
+        )
 
 
 class SearchForUsersView(LoginRequiredMixin, TemplateView):
@@ -81,8 +89,10 @@ class SearchForUsersView(LoginRequiredMixin, TemplateView):
                 Q(username__icontains=query) | Q(display_name__icontains=query)
             ).exclude(id=self.request.user.id)[:10]
 
-            context["query"] = query
-            context["users"] = users
+            context.update({
+                "query": query,
+                "users": users
+            })
 
         return context
 
@@ -113,13 +123,15 @@ class DialogueDetailView(LoginRequiredMixin, DetailView):
             dialogue=dialogue
         ).select_related("author").order_by("id")
 
-        # get last post id for polling implementation that will
-        # determine whether a post needs to be rendered
-        last_id = posts.last().id if posts.exists() else 0
+        # get last post and extract `id` and `created_on` values
+        last_post = posts.last() if posts.exists() else None
+        last_id = last_post.id if last_post else 0
+        last_modified = last_post.created_on if last_post else now
 
         context.update({
             "posts": posts,
-            "last_id": last_id
+            "last_id": last_id,
+            "last_modified": last_modified
         })
 
         return context
@@ -146,7 +158,53 @@ class DialogueDetailView(LoginRequiredMixin, DetailView):
                     body=post_body
                 )
 
-            return HttpResponseRedirect("dialogues:dialogue_detail", dialogue.id)
+            return HttpResponseRedirect(
+                reverse("dialogues:dialogue_detail", args=(dialogue.id,))
+            )
+
+
+def generate_etag(request, dialogue_id, *args, **kwargs):
+    """
+    Generate an ETag for the dialogue based on:
+    1. The latest post ID (if any)
+    2. The latest post timestamp (if any)
+    3. The dialogue ID (always)
+    """
+    dialogue = get_object_or_404(Dialogue, id=dialogue_id)
+
+    # start with dialogue id
+    etag_parts = [f"dialogue-{dialogue_id}"]
+
+    # add latest post info if posts exist
+    if dialogue.posts.exists():
+        latest_post = dialogue.posts.order_by('-created_on').first()
+        etag_parts.append(f"post-{latest_post.id}")
+        etag_parts.append(f"time-{latest_post.created_on.isoformat()}")
+    else:
+        etag_parts.append("no-posts")
+
+    # create a hash of all parts
+    etag_string = "-".join(etag_parts)
+    return hashlib.md5(etag_string.encode()).hexdigest()
+
+
+def get_last_modified(request, dialogue_id, *args, **kwargs):
+    """
+    Get the `created_on` date of the most recent dialogue post. Used
+    with the last_modified decorator to send a Last-Modified header
+    to the client.
+    """
+
+    # get current dialogue object
+    dialogue = get_object_or_404(Dialogue, id=dialogue_id)
+
+    # if dialogue has posts, return the `created_on` datetime
+    # of the most recent post
+    if dialogue.posts.exists():
+        return dialogue.posts.last().created_on
+
+    # if dialogue has no posts, return the current time
+    return now
 
 
 class NewPostsPollingView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
@@ -160,6 +218,13 @@ class NewPostsPollingView(LoginRequiredMixin, UserPassesTestMixin, TemplateView)
             return int(last_id)
         except (ValueError, TypeError):
             return 0
+
+    @method_decorator(condition(
+        etag_func=generate_etag,
+        last_modified_func=get_last_modified
+    ))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     def test_func(self):
         """Check if user is a participant in the dialogue"""
@@ -188,14 +253,17 @@ class NewPostsPollingView(LoginRequiredMixin, UserPassesTestMixin, TemplateView)
             id__gt=last_id
         ).select_related("author").order_by("created_on")
 
-        # get most recent post id
-        last_id = posts.last().id if posts.exists() else last_id
+        # get last post and extract `id` and `created_on` values
+        last_post = posts.last() if posts.exists() else None
+        last_id = last_post.id if last_post else 0
+        last_modified = last_post.created_on if last_post else now
 
         # update the context data
         context.update({
             "posts": posts,
             "last_id": last_id,
-            "dialogue": dialogue
+            "dialogue": dialogue,
+            "last_modified": last_modified
         })
 
         return context
