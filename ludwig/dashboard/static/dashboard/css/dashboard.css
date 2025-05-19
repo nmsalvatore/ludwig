@@ -6,9 +6,10 @@ div.dashboard-options {
 a.dashboard-button {
     align-items: center;
     border-radius: 0.25rem;
+    border: 1px solid var(--color-7);
+    box-shadow: 1px 1px 4px -4px var(--color-6);
     color: inherit;
     display: flex;
-    font-weight: 500;
     gap: 0.75rem;
     margin-bottom: 0.5rem;
     padding: 0.6125rem 0.75rem;
@@ -31,6 +32,7 @@ a.dashboard-button:last-child {
 
 a.dashboard-button.primary {
     background: var(--color-2);
+    border: 1px solid var(--color-3);
 }
 
 a.dashboard-button.coming-soon {
