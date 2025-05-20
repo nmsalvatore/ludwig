@@ -1,15 +1,22 @@
 :root {
     --color-0: hsl(60 10% 97%);
     --color-1: hsl(60 10% 94%);
-    --color-2: hsl(150 35% 75%);
+    --color-2: hsl(150 40% 75%);
     --color-3: hsl(150 40% 65%);
-    --color-4: hsl(150 50% 30%);
+    --color-4: hsl(150 30% 40%);
     --color-5: hsl(150 10% 25%);
     --color-6: hsl(150 90% 10%);
     --color-7: hsl(60 10% 85%);
     --color-8: hsl(60 10% 90%);
+
+    --size-0: calc(var(--size-1) * 0.5);
+    --size-1: 0.875rem;
+    --size-2: calc(var(--size-1) * 2);
+    --size-3: calc(var(--size-1) * 2);
+    --size-4: calc(var(--size-1) * 2);
+
     --color-alert: hsl(0 35% 50%);
-    --line-height: 1.6;
+    --line-height: 1.7;
 }
 
 * {
@@ -30,8 +37,10 @@ body {
         "header"
         "main"
         "footer";
-    font-family: Inter, sans-serif;
-    font-size: 0.875rem;
+    font-family: monospace;
+    font-size: var(--size-1);
+    letter-spacing: -0.03rem;
+    line-height: var(--line-height);
     min-height: 100dvh;
 }
 
@@ -47,7 +56,7 @@ footer {
 
 body > header {
     grid-area: header;
-    margin-top: 3rem;
+    margin-top: var(--size-3);
 }
 
 body > main {
@@ -56,7 +65,7 @@ body > main {
 
 body > footer {
     grid-area: footer;
-    margin-bottom: 3rem;
+    margin-bottom: var(--size-3);
 }
 
 @media only screen and (max-width: 720px) {
@@ -74,10 +83,9 @@ body > footer {
 .container {
     display: flex;
     flex: 1;
-    line-height: var(--line-height);
     margin: 0 auto;
     max-width: 720px;
-    padding: 1rem;
+    padding: var(--size-1);
     width: 100%;
 }
 
@@ -91,11 +99,11 @@ main .container {
 }
 
 main header {
-    margin-bottom: 2rem;
+    margin-bottom: var(--size-2);
 }
 
 section {
-    margin-bottom: 2rem;
+    margin-bottom: var(--size-2);
 }
 
 /* defaults */
@@ -107,21 +115,17 @@ h4,
 h5,
 h6 {
     color: var(--color-6);
-    font-family: Bitter, serif;
     font-size: inherit;
-    font-weight: 500;
-    line-height: 1.4;
+    font-weight: bold;
+    margin-bottom: var(--size-1);
 }
 
 h1 {
-    font-size: 1.75rem;
-    margin-bottom: 1rem;
-    margin-top: 1rem;
+    margin-top: var(--size-1);
 }
 
 h2 {
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--size-0);
 }
 
 a {
@@ -129,7 +133,7 @@ a {
 }
 
 p {
-    margin-bottom: 1rem;
+    margin-bottom: var(--size-1);
 }
 
 p:last-child {
@@ -142,24 +146,17 @@ textarea {
 
 button {
     background: none;
-    border: none;
-    border-radius: 0.25rem;
+    border: 1px solid;
+    box-shadow: 2px 2px;
     cursor: pointer;
     font-family: inherit;
-    font-size: 0.875rem;
-}
-
-strong {
-    font-weight: 500;
-    color: var(--color-6);
+    font-size: inherit;
 }
 
 form label {
     color: var(--color-6);
     display: block;
-    font-family: Bitter, serif;
-    font-weight: 500;
-    margin-bottom: 0.25rem;
+    margin-bottom: var(--size-0);
 }
 
 form input[type="text"],
@@ -167,12 +164,12 @@ form input[type="email"],
 form input[type="password"],
 form textarea {
     background: var(--color-0);
-    border: 1px solid var(--color-7);
-    border-radius: 0.25rem;
+    border: 1px solid;
+    box-shadow: inset 2px 2px var(--color-8);
     color: inherit;
     font-family: inherit;
-    font-size: 0.875rem;
-    padding: 0.6125rem 0.75rem;
+    font-size: inherit;
+    padding: var(--size-1);
     width: 100%;
 }
 
@@ -189,11 +186,11 @@ form textarea::placeholder {
 
 form button[type="submit"] {
     background: var(--color-2);
-    border: 1px solid var(--color-3);
-    box-shadow: 1px 1px 4px -4px var(--color-6);
+    border: 1px solid;
+    box-shadow: 2px 2px;
     color: inherit;
     width: 100%;
-    padding: 0.5rem;
+    padding: var(--size-1);
 }
 
 form ul.errorlist {
@@ -201,23 +198,21 @@ form ul.errorlist {
 }
 
 form > ul.errorlist {
-    margin-bottom: 1rem;
+    margin-bottom: var(--size-1);
 }
 
 form label + ul.errorlist {
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--size-0);
 }
 
 /* class targets */
 
 img.icon {
-    height: 1.125rem;
+    height: calc(var(--size-1) * 1.25);
 }
 
 .logo {
-    font-family: Bitter, serif;
-    font-size: 1rem;
-    font-weight: 500;
+    font-weight: bold;
     color: var(--color-4);
 }
 
@@ -241,8 +236,9 @@ form button.logout {
 
 .no-js-message {
     background: var(--color-0);
-    border: 1px solid var(--color-8);
+    border: 1px solid;
+    box-shadow: 2px 2px;
     color: var(--color-alert);
     font-style: italic;
-    padding: 0.6125rem 0.75rem;
+    padding: var(--size-1);
 }

@@ -5,14 +5,13 @@ div.dashboard-options {
 
 a.dashboard-button {
     align-items: center;
-    border-radius: 0.25rem;
-    border: 1px solid var(--color-7);
-    box-shadow: 1px 1px 4px -4px var(--color-6);
+    border: 1px solid;
+    box-shadow: 2px 2px;
     color: inherit;
     display: flex;
-    gap: 0.75rem;
-    margin-bottom: 0.5rem;
-    padding: 0.6125rem 0.75rem;
+    gap: var(--size-1);
+    margin-bottom: var(--size-0);
+    padding: var(--size-1);
     text-decoration: none;
 }
 
@@ -32,22 +31,15 @@ a.dashboard-button:last-child {
 
 a.dashboard-button.primary {
     background: var(--color-2);
-    border: 1px solid var(--color-3);
 }
 
 a.dashboard-button.coming-soon {
     display: none;
 }
 
-.coming-soon::after {
-    content: "Coming soon!";
-    font-size: 0.625rem;
-    font-style: italic;
-}
-
 .user-dialogues ul {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: var(--size-1);
     list-style-type: none;
 }
