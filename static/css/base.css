@@ -238,3 +238,11 @@ form button.logout {
     padding: 0;
     text-decoration: underline;
 }
+
+.no-js-message {
+    background: var(--color-0);
+    border: 1px solid var(--color-8);
+    color: var(--color-alert);
+    font-style: italic;
+    padding: 0.6125rem 0.75rem;
+}

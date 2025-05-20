@@ -6,6 +6,7 @@
 {% block stylesheets %}
 <link rel="stylesheet" href="{% static 'dialogues/css/dialogues.css' %}">
 <link rel="stylesheet" href="{% static 'dialogues/css/dialogue_detail.css' %}">
+<link rel="stylesheet" href="{% static 'dialogues/css/markdown.css' %}">
 {% endblock %}
 
 {% block scripts %}
@@ -49,7 +50,7 @@
 
     {% if request.user in dialogue.participants.all or dialogue.is_open %}
         <section class="post-form">
-            <h2>Write your post</h2>
+            <h2>Write a post</h2>
             {% include 'dialogues/partials/form.html' %}
         </section>
     {% endif %}
