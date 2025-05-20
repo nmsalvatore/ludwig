@@ -11,18 +11,62 @@
         <link rel="preload" href="{% static 'fonts/Bitter-Medium.woff2' %}" as="font" type="font/woff2" crossorigin>
         <link rel="preload" href="{% static 'fonts/Inter-Regular.woff2' %}" as="font" type="font/woff2" crossorigin>
         <link rel="preload" href="{% static 'fonts/Inter-Medium.woff2' %}" as="font" type="font/woff2" crossorigin>
-
-        <link rel="stylesheet" href="{% static 'css/fonts.css' %}">
         <link rel="stylesheet" href="{% static 'css/base.css' %}">
-
         {% block stylesheets %}{% endblock %}
 
-        <script>document.documentElement.dataset.jsEnabled = true</script>
-        {% block scripts %}{% endblock %}
+        <style id="font_definitions">
+            /*
+            inline font-face rules to ensure matching asset paths
+            between font preloads above and the font definitions below
+            */
 
-        <style>
+            @font-face {
+                font-family: Bitter;
+                src:
+                    local("Bitter Medium"),
+                    local("Bitter-Medium"),
+                    url("{% static 'fonts/Bitter-Medium.woff2' %}") format("woff2");
+                font-weight: 500;
+                font-style: normal;
+                font-display: swap;
+            }
 
+            @font-face {
+                font-family: Bitter;
+                src:
+                    local("Bitter Regular"),
+                    local("Bitter-Regular"),
+                    url("{% static 'fonts/Bitter-Regular.woff2' %}") format("woff2");
+                font-weight: normal;
+                font-style: normal;
+                font-display: swap;
+            }
+
+            @font-face {
+                font-family: Inter;
+                src:
+                    local("Inter Regular"),
+                    local("Inter-Regular"),
+                    url("{% static 'fonts/Inter-Regular.woff2' %}") format("woff2");
+                font-weight: normal;
+                font-style: normal;
+                font-display: swap;
+            }
+
+            @font-face {
+                font-family: Inter;
+                src:
+                    local("Inter Medium"),
+                    local("Inter-Medium"),
+                    url("{% static 'fonts/Inter-Medium.woff2' %}") format("woff2");
+                font-weight: 500;
+                font-style: normal;
+                font-display: swap;
+            }
         </style>
+
+        <script id="enable_js">document.documentElement.dataset.jsEnabled = true</script>
+        {% block scripts %}{% endblock %}
 
         <title>Ludwig</title>
     </head>
