@@ -36,9 +36,7 @@ a.dashboard-button.primary {
 }
 
 a.dashboard-button.coming-soon {
-    background: var(--color-8);
-    color: rgba(43, 59, 51, 0.4);
-    pointer-events: none;
+    display: none;
 }
 
 .coming-soon::after {
