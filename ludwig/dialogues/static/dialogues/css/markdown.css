@@ -1,0 +1,19 @@
+.markdown-body ol,
+.markdown-body ul {
+    margin-left: 1rem;
+}
+
+.markdown-body > ol,
+.markdown-body > ul {
+    margin-bottom: 1rem;
+}
+
+.markdown-body blockquote {
+    background: var(--color-7);
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+}
+
+.markdown-body img {
+    max-height: 360px;
+}

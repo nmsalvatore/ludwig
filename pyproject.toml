@@ -7,6 +7,7 @@ requires-python = ">=3.13"
 dependencies = [
     "django>=5.2",
     "environs[django]>=14.1.1",
+    "markdown>=3.8",
     "nanoid>=2.0.0",
     "psycopg[binary]>=3.2.6",
 ]
