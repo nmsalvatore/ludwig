@@ -219,12 +219,15 @@ class NewPostsPollingView(LoginRequiredMixin, UserPassesTestMixin, TemplateView)
         except (ValueError, TypeError):
             return 0
 
-    @method_decorator(condition(
-        etag_func=generate_etag,
-        last_modified_func=get_last_modified
-    ))
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
+    # TODO: Figuring out why the condition check is stalling some post
+    # submissions.
+    # -----------------------------------------
+    # @method_decorator(condition(
+    #     etag_func=generate_etag,
+    #     last_modified_func=get_last_modified
+    # ))
+    # def dispatch(self, request, *args, **kwargs):
+    #     return super().dispatch(request, *args, **kwargs)
 
     def test_func(self):
         """Check if user is a participant in the dialogue"""
