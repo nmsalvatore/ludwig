@@ -139,6 +139,8 @@ class DialogueDetailView(LoginRequiredMixin, DetailView):
     def post(self, request, *args, **kwargs):
         """Handle POST requests within a dialogue."""
 
+        print("submitting post")
+
         # get dialogue object
         dialogue = self.get_object()
 
@@ -163,50 +165,6 @@ class DialogueDetailView(LoginRequiredMixin, DetailView):
             )
 
 
-def generate_etag(request, dialogue_id, *args, **kwargs):
-    """
-    Generate an ETag for the dialogue based on:
-    1. The latest post ID (if any)
-    2. The latest post timestamp (if any)
-    3. The dialogue ID (always)
-    """
-    dialogue = get_object_or_404(Dialogue, id=dialogue_id)
-
-    # start with dialogue id
-    etag_parts = [f"dialogue-{dialogue_id}"]
-
-    # add latest post info if posts exist
-    if dialogue.posts.exists():
-        latest_post = dialogue.posts.order_by('-created_on').first()
-        etag_parts.append(f"post-{latest_post.id}")
-        etag_parts.append(f"time-{latest_post.created_on.isoformat()}")
-    else:
-        etag_parts.append("no-posts")
-
-    # create a hash of all parts
-    etag_string = "-".join(etag_parts)
-    return hashlib.md5(etag_string.encode()).hexdigest()
-
-
-def get_last_modified(request, dialogue_id, *args, **kwargs):
-    """
-    Get the `created_on` date of the most recent dialogue post. Used
-    with the last_modified decorator to send a Last-Modified header
-    to the client.
-    """
-
-    # get current dialogue object
-    dialogue = get_object_or_404(Dialogue, id=dialogue_id)
-
-    # if dialogue has posts, return the `created_on` datetime
-    # of the most recent post
-    if dialogue.posts.exists():
-        return dialogue.posts.last().created_on
-
-    # if dialogue has no posts, return the current time
-    return now()
-
-
 class NewPostsPollingView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     template_name = "dialogues/partials/new_posts.html"
 
@@ -218,16 +176,6 @@ class NewPostsPollingView(LoginRequiredMixin, UserPassesTestMixin, TemplateView)
             return int(last_id)
         except (ValueError, TypeError):
             return 0
-
-    # TODO: Figuring out why the condition check is stalling some post
-    # submissions.
-    # -----------------------------------------
-    # @method_decorator(condition(
-    #     etag_func=generate_etag,
-    #     last_modified_func=get_last_modified
-    # ))
-    # def dispatch(self, request, *args, **kwargs):
-    #     return super().dispatch(request, *args, **kwargs)
 
     def test_func(self):
         """Check if user is a participant in the dialogue"""
