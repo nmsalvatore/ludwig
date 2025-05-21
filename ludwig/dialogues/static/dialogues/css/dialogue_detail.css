@@ -12,8 +12,7 @@ header div:last-child {
 
 .dialogue-details {
     background: var(--color-accent-1);
-    border: 1px solid;
-    box-shadow: 2px 2px var(--color-primary-1);
+    border: 2px solid var(--color-accent-2);
     padding: var(--size-1);
     margin-bottom: 0;
 }
