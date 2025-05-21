@@ -32,11 +32,11 @@ class Dialogue(TimeStampedModel):
     summary = models.TextField(blank=True)
     title = models.CharField(max_length=200)
     views = models.IntegerField(default=0)
-    created_by = models.ForeignKey(
+    author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET(get_sentinel_user),
         null=True,
-        related_name="created_dialogues"
+        related_name="authored_dialogues"
     )
 
     class Meta:
