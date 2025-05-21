@@ -45,7 +45,7 @@ header div:last-child {
 
 .post-author {
     color: var(--color-accent-2);
-    font-weight: 600;
+    font-weight: bold;
 }
 
 .post.post-by-user .post-author {
