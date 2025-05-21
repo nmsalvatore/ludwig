@@ -5,6 +5,7 @@ div.dashboard-options {
 
 a.dashboard-button {
     align-items: center;
+    background: var(--color-neutral-3);
     border: 1px solid;
     box-shadow: 2px 2px;
     color: inherit;
@@ -13,10 +14,6 @@ a.dashboard-button {
     margin-bottom: var(--size-0);
     padding: var(--size-1);
     text-decoration: none;
-}
-
-.user-dialogues a.dashboard-button {
-    background: var(--color-8);
 }
 
 a.dashboard-button span {
@@ -30,7 +27,7 @@ a.dashboard-button:last-child {
 }
 
 a.dashboard-button.primary {
-    background: var(--color-2);
+    background: var(--color-primary-1);
 }
 
 a.dashboard-button.coming-soon {

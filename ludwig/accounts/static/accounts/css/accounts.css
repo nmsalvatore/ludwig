@@ -21,10 +21,17 @@
 
 .messages,
 .errorlist {
-    background: var(--color-7);
-    border: 1px solid var(--color-8);
+    border: 1px solid;
     padding: var(--size-1);
     margin-bottom: var(--size-1);
+}
+
+.messages {
+    background: var(--color-accent-1);
+}
+
+.errorlist {
+    background: var(--color-alert-1);
 }
 
 ul.errorlist {

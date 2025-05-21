@@ -1,5 +1,25 @@
-.dialogue-info p {
+header div {
+    margin-bottom: var(--size-1);
+}
+
+header div:last-child {
     margin-bottom: 0;
+}
+
+.dialogue-details {
+    background: var(--color-accent-1);
+    border: 1px solid;
+    box-shadow: 2px 2px var(--color-primary-1);
+    padding: var(--size-1);
+    margin-bottom: 0;
+}
+
+.dialogue-details .other p {
+    margin-bottom: 0;
+}
+
+.dialogue-details .participants ul {
+    margin-left: var(--size-2);
 }
 
 .post {
@@ -12,9 +32,9 @@
 
 .post-body {
     padding: var(--size-1);
-    background: var(--color-8);
+    background: var(--color-neutral-3);
     border: 1px solid;
-    box-shadow: 2px 2px var(--color-3);
+    box-shadow: 2px 2px var(--color-primary-1);
 }
 
 .post-header {
@@ -24,12 +44,12 @@
 }
 
 .post-author {
-    color: var(--color-4);
+    color: var(--color-accent-2);
     font-weight: 600;
 }
 
 .post.post-by-user .post-author {
-    color: var(--color-5);
+    color: var(--color-primary-2);
 }
 
 .post-time {
