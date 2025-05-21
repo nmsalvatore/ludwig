@@ -16,14 +16,34 @@
 {% block main %}
 <div class="container">
     <header>
-        <h1>{{ dialogue.title }}</h1>
-        <p class="participants">With {{ dialogue.participants.all|text_list }}</p>
+        <h1>Dialogue</h1>
+        <section class="dialogue-details">
+            <div class="title">
+                <h2>Title:</h2>
+                <span>{{ dialogue.title }}</span>
+            </div>
 
-        {% if dialogue.summary %}
-            <div class="dialogue-summary">
+            {% if dialogue.summary %}
+            <div class="summary">
+                <h2>Objective:</h2>
                 <p>{{ dialogue.summary }}</p>
             </div>
-        {% endif %}
+            {% endif %}
+
+            <div class="participants">
+                <h2>Participants:</h2>
+                <ul>
+                    {% for participant in dialogue.participants.all %}
+                    <li>{{ participant }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="other">
+                <p><strong>Created:</strong> {{ dialogue.created_on|date:"F j, Y" }}</p>
+                <p><strong>Visibility:</strong> {% if dialogue.is_visible %}Public{% else %}Private{% endif %}</p>
+            </div>
+        </section>
     </header>
 
     <section id="posts_container">
@@ -53,12 +73,6 @@
             {% include 'dialogues/partials/form.html' %}
         </section>
     {% endif %}
-
-    <section class="dialogue-info">
-        <p><strong>Created:</strong> {{ dialogue.created_on|date:"F j, Y" }}</p>
-        <p><strong>Visibility:</strong> {% if dialogue.is_visible %}Public{% else %}Private{% endif %}</p>
-        <p><strong>Access:</strong> {% if dialogue.is_open %}Open to join{% else %}Closed{% endif %}</p>
-    </section>
 
     <section class="dialogue-actions">
         <a href="{% url 'dashboard:home' %}" class="button">Back to Dashboard</a>

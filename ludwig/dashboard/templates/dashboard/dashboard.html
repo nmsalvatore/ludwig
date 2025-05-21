@@ -20,28 +20,10 @@
             href="{% url 'dialogues:create_dialogue' %}"
             class="dashboard-button primary">
             <img
-                src="{% static 'icons/create_icon.svg' %}"
+                src="{% static 'icons/plus.svg' %}"
                 alt="An icon of a plus symbol"
                 class="icon">
             Start a dialogue
-        </a>
-        <a
-            href="/"
-            class="dashboard-button coming-soon">
-            <img
-                src="{% static 'icons/search_icon.svg' %}"
-                alt="An icon of a magnifying glass"
-                class="icon">
-            Find a dialogue
-        </a>
-        <a
-            href="/"
-            class="dashboard-button coming-soon">
-            <img
-                src="{% static 'icons/settings_icon.svg' %}"
-                alt="An icon of a mechanical gear"
-                class="icon">
-            Account settings
         </a>
     </section>
 
@@ -55,7 +37,7 @@
                             href="{% url 'dialogues:dialogue_detail' dialogue.id %}"
                             class="dashboard-button">
                             <img
-                                src="{% static 'icons/dialogue_icon.svg' %}"
+                                src="{% static 'icons/message-square.svg' %}"
                                 alt="An icon of two over bubbles overlapping"
                                 class="icon">
                             <span>{{ dialogue.title }}</span>
