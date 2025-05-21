@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from nanoid import generate as generate_nanoid
@@ -11,6 +12,10 @@ def generate_unique_id():
     return generate_nanoid(size=10)
 
 
+def get_sentinel_user():
+    return get_user_model().objects.get_or_create(username="deleted")[0]
+
+
 class Dialogue(TimeStampedModel):
     id = models.CharField(
         primary_key=True,
@@ -20,10 +25,19 @@ class Dialogue(TimeStampedModel):
     )
     is_open = models.BooleanField(default=False)
     is_visible = models.BooleanField(default=False)
-    participants = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='dialogues')
+    participants = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name="dialogues"
+    )
     summary = models.TextField(blank=True)
     title = models.CharField(max_length=200)
     views = models.IntegerField(default=0)
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET(get_sentinel_user),
+        null=True,
+        related_name="created_dialogues"
+    )
 
     class Meta:
         ordering = ["-created_on"]
