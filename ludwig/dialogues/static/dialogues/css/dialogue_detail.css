@@ -4,17 +4,17 @@ h1 {
 
 .dialogue-details div {
     margin-bottom: var(--size-1);
+    padding: 0 var(--size-1);
 }
 
-.dialogue-details div:last-child {
-    margin-bottom: 0;
+.dialogue-details div:first-child {
+    padding-top: var(--size-1);
 }
 
 .dialogue-details {
     background: var(--color-accent-1);
     border: 1px solid;
     box-shadow: 2px 2px var(--color-primary-1);
-    padding: var(--size-1);
     margin-bottom: 0;
 }
 
@@ -24,6 +24,16 @@ h1 {
 
 .dialogue-details .participants ul {
     margin-left: var(--size-2);
+}
+
+.dialogue-details .settings {
+    padding: var(--size-1);
+    border-top: 1px solid;
+}
+
+.dialogue-details .settings summary {
+    cursor: pointer;
+    font-weight: bold;
 }
 
 .post {

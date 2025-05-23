@@ -18,11 +18,6 @@
     <section class="dialogue-header">
         <h1>{{ dialogue.title }}</h1>
         <div class="dialogue-details">
-            <!-- <div class="title">
-                <h2>Title:</h2>
-                <span>{{ dialogue.title }}</span>
-            </div> -->
-
             {% if dialogue.summary %}
             <div class="summary">
                 <h2>Objective:</h2>
@@ -43,10 +38,17 @@
                 <p><strong>Created:</strong> {{ dialogue.created_on|date:"F j, Y" }}</p>
                 <p><strong>Visibility:</strong> {% if dialogue.is_visible %}Public{% else %}Private{% endif %}</p>
             </div>
+
+            {% if user == dialogue.author %}
+                <details class="settings">
+                    <summary>Settings</summary>
+                    <div>
+                        something hidden
+                    </div>
+                </details>
+            {% endif %}
         </div>
     </section>
-
-    <hr>
 
     <section id="posts_container">
 
@@ -70,8 +72,6 @@
     </div>
 
     {% if request.user in dialogue.participants.all or dialogue.is_open %}
-        <hr>
-
         <section class="post-form">
             {% include 'dialogues/partials/form.html' %}
         </section>
