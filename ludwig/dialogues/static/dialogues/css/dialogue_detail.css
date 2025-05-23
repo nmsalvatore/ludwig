@@ -70,5 +70,5 @@ html[data-js-enabled="true"] #post_form {
 }
 
 #post_form textarea {
-    margin-bottom: var(--size-0);
+    margin-bottom: calc(var(--size-2) - 7px);
 }

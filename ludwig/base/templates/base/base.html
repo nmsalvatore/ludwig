@@ -7,6 +7,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="theme-color" content="hsl(60 10% 94%)">
 
+        <link rel="preload" href="{% static 'fonts/Inter-Regular.woff2' %}" type="font/woff2" as="font" crossorigin>
+        <link rel="preload" href="{% static 'fonts/Inter-Medium.woff2' %}" type="font/woff2" as="font" crossorigin>
         <link rel="stylesheet" href="{% static 'css/base.css' %}">
         {% block stylesheets %}{% endblock %}
 
@@ -15,28 +17,6 @@
             inline font-face rules to ensure matching asset paths
             between font preloads above and the font definitions below
             */
-
-            @font-face {
-                font-family: Bitter;
-                src:
-                    local("Bitter Medium"),
-                    local("Bitter-Medium"),
-                    url("{% static 'fonts/Bitter-Medium.woff2' %}") format("woff2");
-                font-weight: 500;
-                font-style: normal;
-                font-display: swap;
-            }
-
-            @font-face {
-                font-family: Bitter;
-                src:
-                    local("Bitter Regular"),
-                    local("Bitter-Regular"),
-                    url("{% static 'fonts/Bitter-Regular.woff2' %}") format("woff2");
-                font-weight: normal;
-                font-style: normal;
-                font-display: swap;
-            }
 
             @font-face {
                 font-family: Inter;
@@ -55,7 +35,7 @@
                     local("Inter Medium"),
                     local("Inter-Medium"),
                     url("{% static 'fonts/Inter-Medium.woff2' %}") format("woff2");
-                font-weight: 500;
+                font-weight: bold;
                 font-style: normal;
                 font-display: swap;
             }
