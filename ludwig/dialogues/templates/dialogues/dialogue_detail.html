@@ -16,12 +16,12 @@
 {% block main %}
 <div class="container">
     <section class="dialogue-header">
-        <h1>Dialogue</h1>
+        <h1>{{ dialogue.title }}</h1>
         <div class="dialogue-details">
-            <div class="title">
+            <!-- <div class="title">
                 <h2>Title:</h2>
                 <span>{{ dialogue.title }}</span>
-            </div>
+            </div> -->
 
             {% if dialogue.summary %}
             <div class="summary">
