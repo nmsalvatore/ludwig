@@ -9,6 +9,7 @@ header div:last-child {
 .dialogue-details {
     background: var(--color-accent-1);
     border: 1px solid var(--color-accent-2);
+    box-shadow: 2px 2px var(--color-accent-1);
     padding: var(--size-1);
     margin-bottom: 0;
 }
@@ -26,7 +27,7 @@ header div:last-child {
     background: var(--color-neutral-3);
     border: 1px solid;
     box-shadow: 2px 2px var(--color-primary-1);
-    margin-bottom: var(--size-1);
+    margin-bottom: var(--size-2);
 }
 
 .post:last-child {
