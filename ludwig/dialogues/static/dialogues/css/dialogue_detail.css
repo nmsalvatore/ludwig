@@ -13,7 +13,6 @@
 .dialogue-details {
     background: var(--color-accent-1);
     border: 1px solid;
-    border-radius: 4px;
     box-shadow: 2px 2px var(--color-primary-1);
     padding: var(--size-1);
     margin-bottom: 0;
@@ -31,9 +30,8 @@
     padding: var(--size-1);
     background: var(--color-neutral-3);
     border: 1px solid;
-    border-radius: 4px;
     box-shadow: 2px 2px var(--color-primary-1);
-    margin-bottom: var(--size-2);
+    margin-bottom: var(--size-1);
 }
 
 .post:last-child {
