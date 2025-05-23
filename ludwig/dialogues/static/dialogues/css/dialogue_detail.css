@@ -1,5 +1,5 @@
-.dialogue-details h2 {
-    margin-bottom: var(--size-0);
+h1 {
+    margin-bottom: var(--size-2);
 }
 
 .dialogue-details div {
@@ -31,7 +31,7 @@
     background: var(--color-neutral-3);
     border: 1px solid;
     box-shadow: 2px 2px var(--color-primary-1);
-    margin-bottom: var(--size-1);
+    margin-bottom: var(--size-2);
 }
 
 .post:last-child {
