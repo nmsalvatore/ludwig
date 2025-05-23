@@ -57,7 +57,7 @@ footer {
 
 body > header {
     grid-area: header;
-    padding-top: var(--size-3);
+    padding-top: var(--size-4);
 }
 
 body > main {
@@ -66,16 +66,16 @@ body > main {
 
 body > footer {
     grid-area: footer;
-    padding-bottom: var(--size-3);
+    padding-bottom: var(--size-4);
 }
 
 @media only screen and (max-width: 720px) {
     body > header {
-        padding-top: 0;
+        padding-top: var(--size-0);
     }
 
     body > footer {
-        padding-bottom: 0;
+        padding-bottom: var(--size-0);
     }
 }
 
@@ -165,7 +165,6 @@ form input[type="password"],
 form textarea {
     background: var(--color-neutral-1);
     border: 1px solid;
-    box-shadow: inset 2px 2px var(--color-neutral-2);
     color: inherit;
     font-family: inherit;
     font-size: inherit;

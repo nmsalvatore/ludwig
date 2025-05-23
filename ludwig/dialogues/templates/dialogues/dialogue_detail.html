@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="{% static 'js/htmx.min.js' %}" defer></script>
+<script src="{% static 'js/htmx.js' %}" defer></script>
 <script src="{% static 'dialogues/js/listeners.js' %}" defer></script>
 {% endblock %}
 
@@ -34,7 +34,7 @@
                 <h2>Participants:</h2>
                 <ul>
                     {% for participant in dialogue.participants.all %}
-                    <li>{{ participant }}</li>
+                    <li>{{ participant }}{% if participant == dialogue.author %} (Author){% endif %}</li>
                     {% endfor %}
                 </ul>
             </div>
