@@ -128,7 +128,7 @@ h6 {
 h1 {
     font-size: var(--font-size-3);
     margin-top: var(--size-1);
-    margin-bottom: calc(var(--size-2) - 6px);
+    margin-bottom: calc(var(--size-2) - 4px);
 }
 
 a {
