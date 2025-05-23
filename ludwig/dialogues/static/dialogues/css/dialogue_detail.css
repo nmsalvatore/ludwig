@@ -1,15 +1,20 @@
+.dialogue-details h2 {
+    margin-bottom: var(--size-0);
+}
+
 .dialogue-details div {
     margin-bottom: var(--size-1);
 }
 
-header div:last-child {
+.dialogue-details div:last-child {
     margin-bottom: 0;
 }
 
 .dialogue-details {
     background: var(--color-accent-1);
-    border: 1px solid var(--color-accent-2);
-    box-shadow: 2px 2px var(--color-accent-1);
+    border: 1px solid;
+    border-radius: 4px;
+    box-shadow: 2px 2px var(--color-primary-1);
     padding: var(--size-1);
     margin-bottom: 0;
 }
@@ -26,6 +31,7 @@ header div:last-child {
     padding: var(--size-1);
     background: var(--color-neutral-3);
     border: 1px solid;
+    border-radius: 4px;
     box-shadow: 2px 2px var(--color-primary-1);
     margin-bottom: var(--size-2);
 }
@@ -63,4 +69,8 @@ html:not([data-js-enabled="true"]) #post_form {
 
 html[data-js-enabled="true"] #post_form {
     display: block;
+}
+
+#post_form textarea {
+    margin-bottom: var(--size-0);
 }
