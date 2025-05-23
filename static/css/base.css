@@ -40,7 +40,7 @@ body {
         "header"
         "main"
         "footer";
-    font-family: Inter, sans-serif;
+    font-family: monospace;
     font-size: var(--size-1);
     letter-spacing: -0.03rem;
     line-height: var(--line-height);
