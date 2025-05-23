@@ -46,6 +46,8 @@
         </div>
     </section>
 
+    <hr>
+
     <section id="posts_container">
 
         {% if posts %}
@@ -68,8 +70,9 @@
     </div>
 
     {% if request.user in dialogue.participants.all or dialogue.is_open %}
+        <hr>
+
         <section class="post-form">
-            <h2>Write a post</h2>
             {% include 'dialogues/partials/form.html' %}
         </section>
     {% endif %}
