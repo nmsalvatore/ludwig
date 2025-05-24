@@ -7,8 +7,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="theme-color" content="hsl(60 10% 94%)">
 
-        <link rel="preload" href="{% static 'fonts/Inter-Regular.woff2' %}" type="font/woff2" as="font" crossorigin>
-        <link rel="preload" href="{% static 'fonts/Inter-Medium.woff2' %}" type="font/woff2" as="font" crossorigin>
+        <link rel="preload" href="{% static 'fonts/IBMPlexMono-Regular.woff2' %}" type="font/woff2" as="font" crossorigin>
+        <link rel="preload" href="{% static 'fonts/IBMPlexMono-SemiBold.woff2' %}" type="font/woff2" as="font" crossorigin>
         <link rel="stylesheet" href="{% static 'css/base.css' %}">
         {% block stylesheets %}{% endblock %}
 
@@ -19,22 +19,18 @@
             */
 
             @font-face {
-                font-family: Inter;
-                src:
-                    local("Inter Regular"),
-                    local("Inter-Regular"),
-                    url("{% static 'fonts/Inter-Regular.woff2' %}") format("woff2");
+                font-family: "IBM Plex Mono";
+                src: local("IBM Plex Mono Regular"), local("IBMPlexMono-Regular"),
+                    url("{% static 'fonts/IBMPlexMono-Regular.woff2' %}") format("woff2");
                 font-weight: normal;
                 font-style: normal;
                 font-display: swap;
             }
 
             @font-face {
-                font-family: Inter;
-                src:
-                    local("Inter Medium"),
-                    local("Inter-Medium"),
-                    url("{% static 'fonts/Inter-Medium.woff2' %}") format("woff2");
+                font-family: "IBM Plex Mono";
+                src: local("IBM Plex Mono SemiBold"), local("IBMPlexMono-SemiBold"),
+                    url("{% static 'fonts/IBMPlexMono-SemiBold.woff2' %}") format("woff2");
                 font-weight: bold;
                 font-style: normal;
                 font-display: swap;
