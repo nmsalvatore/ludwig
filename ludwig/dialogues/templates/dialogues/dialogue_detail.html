@@ -11,6 +11,7 @@
 {% block scripts %}
 <script src="{% static 'js/htmx.js' %}" defer></script>
 <script src="{% static 'dialogues/js/listeners.js' %}" defer></script>
+<script src="{% static 'dialogues/js/hx_config.js' %}" defer></script>
 {% endblock %}
 
 {% block main %}
@@ -18,32 +19,34 @@
     <section class="dialogue-header">
         <h1>{{ dialogue.title }}</h1>
         <div class="dialogue-details">
-            {% if dialogue.summary %}
-            <div class="summary">
-                <h2>Objective:</h2>
-                <p>{{ dialogue.summary }}</p>
-            </div>
-            {% endif %}
+            <div class="public-details">
+                {% if dialogue.summary %}
+                <div class="summary">
+                    <h2>Objective:</h2>
+                    <p>{{ dialogue.summary }}</p>
+                </div>
+                {% endif %}
 
-            <div class="participants">
-                <h2>Participants:</h2>
-                <ul>
-                    {% for participant in dialogue.participants.all %}
-                    <li>{{ participant }}{% if participant == dialogue.author %} (Author){% endif %}</li>
-                    {% endfor %}
-                </ul>
-            </div>
+                <div class="participants">
+                    <h2>Participants:</h2>
+                    <ul>
+                        {% for participant in dialogue.participants.all %}
+                        <li>{{ participant }}{% if participant == dialogue.author %} (Author){% endif %}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
 
-            <div class="other">
-                <p><strong>Created:</strong> {{ dialogue.created_on|date:"F j, Y" }}</p>
-                <p><strong>Visibility:</strong> {% if dialogue.is_visible %}Public{% else %}Private{% endif %}</p>
+                <div class="other">
+                    <p><strong>Created:</strong> {{ dialogue.created_on|date:"F j, Y" }}</p>
+                    <p><strong>Visibility:</strong> {% if dialogue.is_visible %}Public{% else %}Private{% endif %}</p>
+                </div>
             </div>
 
             {% if user == dialogue.author %}
                 <details class="settings">
                     <summary>Settings</summary>
-                    <div>
-                        something hidden
+                    <div class="collapsed-info">
+                        <p>Coming soon!</p>
                     </div>
                 </details>
             {% endif %}
@@ -51,7 +54,6 @@
     </section>
 
     <section id="posts_container">
-
         {% if posts %}
             {% for post in posts %}
                 {% include "dialogues/partials/post.html" with post=post %}
@@ -66,7 +68,7 @@
     <div
         id="polling_div"
         hx-get="{% url 'dialogues:new_posts' dialogue.id %}?last_id={{ last_id }}"
-        hx-trigger="every 3s"
+        hx-trigger="every 3s[!document.hidden && !window.pausePolling]"
         hx-target="#posts_container"
         hx-swap="beforeend">
     </div>

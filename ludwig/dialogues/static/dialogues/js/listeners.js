@@ -17,3 +17,13 @@ postForm.addEventListener("htmx:afterOnLoad", (event) => {
         postForm.focus();
     }
 });
+
+postForm.addEventListener("htmx:beforeRequest", () => {
+    window.pausePolling = true;
+});
+
+postForm.addEventListener("htmx:afterRequest", () => {
+    setTimeout(() => {
+        window.pausePolling = false;
+    }, 3000);
+});

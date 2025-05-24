@@ -1,8 +1,8 @@
 from django.contrib.auth import get_user, get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
-from django.http.response import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
+from django.http.response import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.decorators import method_decorator
@@ -123,15 +123,13 @@ class DialogueDetailView(LoginRequiredMixin, DetailView):
             dialogue=dialogue
         ).select_related("author").order_by("id")
 
-        # get last post and extract `id` and `created_on` values
+        # get last post id
         last_post = posts.last() if posts.exists() else None
         last_id = last_post.id if last_post else 0
-        last_modified = last_post.created_on if last_post else now()
 
         context.update({
             "posts": posts,
-            "last_id": last_id,
-            "last_modified": last_modified
+            "last_id": last_id
         })
 
         return context
@@ -139,10 +137,13 @@ class DialogueDetailView(LoginRequiredMixin, DetailView):
     def post(self, request, *args, **kwargs):
         """Handle POST requests within a dialogue."""
 
-        print("submitting post")
-
         # get dialogue object
         dialogue = self.get_object()
+
+        # get last post id
+        last_id = request.POST.get("last_id", 0)
+
+        print(last_id)
 
         # get current user instance
         user = get_user(request)
@@ -152,16 +153,39 @@ class DialogueDetailView(LoginRequiredMixin, DetailView):
             # whitespace the retrieved value
             post_body = request.POST.get("body", "").strip()
 
-            if post_body:
-                # add post to the database
-                Post.objects.create(
-                    author=user,
+            if not post_body:
+                return HttpResponse("")
+
+            # add post to the database
+            post = Post.objects.create(
+                author=user,
+                dialogue=dialogue,
+                body=post_body
+            )
+
+            # if the request is from htmx, get all posts since the last
+            # updated post id, including any posts from other users
+            # that haven't been captured by the polling loop
+            if request.headers.get("HX-Request"):
+                posts = Post.objects.filter(
                     dialogue=dialogue,
-                    body=post_body
-                )
+                    id__gt=last_id
+                ).select_related("author").order_by("created_on")
+
+                context = {
+                    "posts": posts,
+                    "last_id": posts.last().id,
+                    "dialogue": dialogue,
+                }
+
+                print(posts.last().id)
+
+                response = render(request, "dialogues/partials/new_posts.html", context)
+                response.headers["Vary"] = "HX-Request"
+                return response
 
             return HttpResponseRedirect(
-                reverse("dialogues:dialogue_detail", args=(dialogue.id,))
+                f"{reverse("dialogues:dialogue_detail", args=(dialogue.id,))}#post_form"
             )
 
 
@@ -204,17 +228,15 @@ class NewPostsPollingView(LoginRequiredMixin, UserPassesTestMixin, TemplateView)
             id__gt=last_id
         ).select_related("author").order_by("created_on")
 
-        # get last post and extract `id` and `created_on` values
+        # get last post id
         last_post = posts.last() if posts.exists() else None
         last_id = last_post.id if last_post else 0
-        last_modified = last_post.created_on if last_post else now()
 
         # update the context data
         context.update({
             "posts": posts,
             "last_id": last_id,
             "dialogue": dialogue,
-            "last_modified": last_modified
         })
 
         return context
