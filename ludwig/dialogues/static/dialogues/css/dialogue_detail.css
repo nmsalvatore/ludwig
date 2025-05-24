@@ -57,6 +57,7 @@
 .post-header {
     display: flex;
     align-items: center;
+    gap: var(--size-1);
     margin-bottom: var(--size-1);
 }
 
@@ -70,18 +71,10 @@
 }
 
 .post-time {
-    margin-left: var(--size-1);
-    font-variant: all-small-caps;
-}
-
-html:not([data-js-enabled="true"]) #post_form {
-    display: none;
-}
-
-html[data-js-enabled="true"] #post_form {
-    display: block;
+    font-size: var(--font-size-0);
+    text-transform: uppercase;
 }
 
 #post_form textarea {
-    margin-bottom: calc(var(--size-2) - 7px);
+    margin-bottom: calc(var(--size-1) - 7px);
 }
