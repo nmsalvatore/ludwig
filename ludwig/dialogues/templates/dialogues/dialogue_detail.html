@@ -18,32 +18,34 @@
     <section class="dialogue-header">
         <h1>{{ dialogue.title }}</h1>
         <div class="dialogue-details">
-            {% if dialogue.summary %}
-            <div class="summary">
-                <h2>Objective:</h2>
-                <p>{{ dialogue.summary }}</p>
-            </div>
-            {% endif %}
+            <div class="public-details">
+                {% if dialogue.summary %}
+                <div class="summary">
+                    <h2>Objective:</h2>
+                    <p>{{ dialogue.summary }}</p>
+                </div>
+                {% endif %}
 
-            <div class="participants">
-                <h2>Participants:</h2>
-                <ul>
-                    {% for participant in dialogue.participants.all %}
-                    <li>{{ participant }}{% if participant == dialogue.author %} (Author){% endif %}</li>
-                    {% endfor %}
-                </ul>
-            </div>
+                <div class="participants">
+                    <h2>Participants:</h2>
+                    <ul>
+                        {% for participant in dialogue.participants.all %}
+                        <li>{{ participant }}{% if participant == dialogue.author %} (Author){% endif %}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
 
-            <div class="other">
-                <p><strong>Created:</strong> {{ dialogue.created_on|date:"F j, Y" }}</p>
-                <p><strong>Visibility:</strong> {% if dialogue.is_visible %}Public{% else %}Private{% endif %}</p>
+                <div class="other">
+                    <p><strong>Created:</strong> {{ dialogue.created_on|date:"F j, Y" }}</p>
+                    <p><strong>Visibility:</strong> {% if dialogue.is_visible %}Public{% else %}Private{% endif %}</p>
+                </div>
             </div>
 
             {% if user == dialogue.author %}
                 <details class="settings">
                     <summary>Settings</summary>
-                    <div>
-                        something hidden
+                    <div class="collapsed-info">
+                        <p>Coming soon!</p>
                     </div>
                 </details>
             {% endif %}
