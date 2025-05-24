@@ -11,6 +11,7 @@
 {% block scripts %}
 <script src="{% static 'js/htmx.js' %}" defer></script>
 <script src="{% static 'dialogues/js/listeners.js' %}" defer></script>
+<script src="{% static 'dialogues/js/hx_config.js' %}" defer></script>
 {% endblock %}
 
 {% block main %}
@@ -53,7 +54,6 @@
     </section>
 
     <section id="posts_container">
-
         {% if posts %}
             {% for post in posts %}
                 {% include "dialogues/partials/post.html" with post=post %}
@@ -68,7 +68,7 @@
     <div
         id="polling_div"
         hx-get="{% url 'dialogues:new_posts' dialogue.id %}?last_id={{ last_id }}"
-        hx-trigger="every 3s"
+        hx-trigger="every 3s[!document.hidden && !window.pausePolling]"
         hx-target="#posts_container"
         hx-swap="beforeend">
     </div>
