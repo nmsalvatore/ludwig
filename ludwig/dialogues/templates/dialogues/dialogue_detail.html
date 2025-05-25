@@ -73,7 +73,7 @@
         hx-swap="beforeend">
     </div>
 
-    {% if request.user in dialogue.participants.all or dialogue.is_open %}
+    {% if user in dialogue.participants.all or dialogue.is_open %}
         <section class="post-form">
             {% include 'dialogues/partials/form.html' %}
         </section>
