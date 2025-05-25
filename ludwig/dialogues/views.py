@@ -2,7 +2,7 @@ from django.contrib.auth import get_user, get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
 from django.http.response import HttpResponse, HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.decorators import method_decorator
@@ -109,6 +109,15 @@ class DialogueDetailView(LoginRequiredMixin, DetailView):
     context_object_name = "dialogue"
     pk_url_kwarg = "dialogue_id"
 
+    def dispatch(self, request, *args, **kwargs):
+        dialogue = self.get_object()
+        user = get_user(request)
+
+        if user not in dialogue.participants.all() and not dialogue.is_visible:
+            return redirect("accounts:login")
+
+        return super().dispatch(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         """Pass all dialogue posts and last post ID to context data."""
 
@@ -189,7 +198,7 @@ class DialogueDetailView(LoginRequiredMixin, DetailView):
             )
 
 
-class NewPostsPollingView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+class NewPostsPollingView(TemplateView):
     template_name = "dialogues/partials/new_posts.html"
 
     def _get_last_id(self):
@@ -200,13 +209,6 @@ class NewPostsPollingView(LoginRequiredMixin, UserPassesTestMixin, TemplateView)
             return int(last_id)
         except (ValueError, TypeError):
             return 0
-
-    def test_func(self):
-        """Check if user is a participant in the dialogue"""
-
-        dialogue_id = self.kwargs.get("dialogue_id")
-        dialogue = get_object_or_404(Dialogue, id=dialogue_id)
-        return self.request.user in dialogue.participants.all()
 
     def get_context_data(self, **kwargs):
         """Get new posts and pass them to the template"""
