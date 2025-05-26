@@ -1,3 +1,4 @@
+from django.core.exceptions import PermissionDenied
 from django.contrib.auth import get_user, get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
@@ -114,7 +115,7 @@ class DialogueDetailView(LoginRequiredMixin, DetailView):
         user = get_user(request)
 
         if user not in dialogue.participants.all() and not dialogue.is_visible:
-            return redirect("accounts:login")
+            raise PermissionDenied
 
         return super().dispatch(request, *args, **kwargs)
 
@@ -146,16 +147,18 @@ class DialogueDetailView(LoginRequiredMixin, DetailView):
     def post(self, request, *args, **kwargs):
         """Handle POST requests within a dialogue."""
 
+        # get current user instance
+        user = get_user(request)
+
         # get dialogue object
         dialogue = self.get_object()
+
+        if not user.is_authenticated and not user in dialogue.participants.all():
+            raise PermissionDenied
 
         # get last post id
         last_id = request.POST.get("last_id", 0)
 
-        print(last_id)
-
-        # get current user instance
-        user = get_user(request)
 
         if user in dialogue.participants.all():
             # get post body from post form and remove surrounding
@@ -186,8 +189,6 @@ class DialogueDetailView(LoginRequiredMixin, DetailView):
                     "last_id": posts.last().id,
                     "dialogue": dialogue,
                 }
-
-                print(posts.last().id)
 
                 response = render(request, "dialogues/partials/new_posts.html", context)
                 response.headers["Vary"] = "HX-Request"

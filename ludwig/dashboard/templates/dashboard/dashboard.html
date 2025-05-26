@@ -1,6 +1,7 @@
 {% extends "base/base.html" %}
 
 {% load static %}
+{% load dialogue_filters %}
 
 {% block stylesheets %}
 <link rel="stylesheet" href="{% static 'dashboard/css/dashboard.css' %}">
@@ -23,9 +24,10 @@
         </a>
     </section>
 
-    {% if user_dialogues %}
-        <section class="user-dialogues">
-            <h2>Your dialogues</h2>
+    <section class="user-dialogues">
+        <h2>Your dialogues</h2>
+
+        {% if user_dialogues %}
             <ul>
                 {% for dialogue in user_dialogues %}
                     <li>
@@ -36,12 +38,25 @@
                                 src="{% static 'icons/message-square.svg' %}"
                                 alt="An icon of two over bubbles overlapping"
                                 class="icon">
-                            <span>{{ dialogue.title }}</span>
+                            <div class="dialogue-summary">
+                                <p>{{ dialogue.title }}</p>
+                                {% if dialogue.other_participants %}
+                                    <small class="participants">w/ {{ dialogue.other_participants|text_list }}</small>
+                                {% else %}
+                                    <small class="participants">(just you)</small>
+                                {% endif %}
+                                <small>
+                                    <span class="posts-count">{{ dialogue.posts.count }} post{{ dialogue.posts.count|pluralize }}</span>
+                                </small>
+                            </div>
                         </a>
                     </li>
                 {% endfor %}
             </ul>
-        </section>
-    {% endif %}
+        {% else %}
+            <p>No dialogues yet. Click the button above to start a dialogue!</p>
+        {% endif %}
+
+    </section>
 </div>
 {% endblock %}
