@@ -39,6 +39,7 @@
                                 alt="An icon of two over bubbles overlapping"
                                 class="icon">
                             <div class="dialogue-summary">
+                                <small>{{ dialogue.created_on|timesince }} ago</small>
                                 <p>{{ dialogue.title }}</p>
                                 {% if dialogue.other_participants %}
                                     <small class="participants">w/ {{ dialogue.other_participants|text_list }}</small>

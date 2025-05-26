@@ -51,9 +51,6 @@
     margin-bottom: 0;
 }
 
-.post-body {
-}
-
 .post-header {
     display: flex;
     align-items: center;
@@ -72,7 +69,6 @@
 
 .post-time {
     font-size: var(--font-size-0);
-    text-transform: uppercase;
 }
 
 #post_form textarea {
