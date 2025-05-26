@@ -1,7 +1,11 @@
 from django.contrib.auth import get_user
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Max
+from django.db.models import query
+from django.db.models.query import Prefetch
 from django.views.generic.base import TemplateView
+
+from ludwig.accounts.models import User
 
 
 class DashboardView(LoginRequiredMixin, TemplateView):
@@ -15,10 +19,14 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         """Get recent user dialogues, sorted by most recent post"""
         user = get_user(self.request)
         user_dialogues = user.dialogues.annotate(
-            latest_post_date=Max('posts__created_on')
-        ).values(
-            "id", "title", "latest_post_date"
-        ).order_by('-latest_post_date')
+            latest_post_date=Max("posts__created_on")
+        ).prefetch_related(
+            Prefetch(
+                "participants",
+                queryset=User.objects.exclude(id=user.id),
+                to_attr="other_participants"
+            )
+        ).order_by("-latest_post_date")
         return user_dialogues
 
     def get_context_data(self, **kwargs):

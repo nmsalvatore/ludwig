@@ -4,23 +4,41 @@ div.dashboard-options {
 }
 
 a.dashboard-button {
-    align-items: center;
+    align-items: flex-start;
     background: var(--color-neutral-3);
     border: 1px solid;
     border-radius: 4px;
     box-shadow: 2px 2px;
     color: inherit;
     display: flex;
+    flex-direction: row;
     gap: var(--size-1);
     margin-bottom: var(--size-0);
     padding: var(--size-1);
     text-decoration: none;
 }
 
-a.dashboard-button span {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
+a.dashboard-button .dialogue-summary {
+    display: flex;
+    flex-direction: column;
+    gap: var(--size-0);
+}
+
+a.dashboard-button .dialogue-summary p {
+    margin-bottom: 0;
+}
+
+a.dashboard-button .dialogue-summary small {
+    font-size: var(--font-size-0);
+}
+
+a.dashboard-button .dialogue-summary .posts-count {
+    color: var(--color-primary-2);
+}
+
+a.dashboard-button img {
+    position: relative;
+    top: 2px;
 }
 
 a.dashboard-button:last-child {
