@@ -9,7 +9,7 @@
 .dialogue-details {
     background: var(--color-accent-1);
     border: 1px solid;
-    box-shadow: 2px 2px var(--color-primary-1);
+    box-shadow: var(--box-shadow-primary);
     margin-bottom: 0;
 }
 
@@ -43,7 +43,7 @@
     padding: var(--size-1);
     background: var(--color-neutral-3);
     border: 1px solid;
-    box-shadow: 2px 2px var(--color-primary-1);
+    box-shadow: var(--box-shadow-primary);
     margin-bottom: var(--size-2);
 }
 

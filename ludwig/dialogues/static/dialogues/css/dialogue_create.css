@@ -77,7 +77,7 @@ form .checkbox-field-container label {
     align-items: center;
     background: var(--color-neutral-3);
     border: 1px solid;
-    box-shadow: 2px 2px var(--color-primary-1);
+    box-shadow: var(--box-shadow-primary);
     display: flex;
     gap: var(--size-1);
     padding: var(--size-0) var(--size-1);
