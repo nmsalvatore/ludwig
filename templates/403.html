@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block main %}
+    <div class="container">
+        <h1>403 Forbidden</h1>
+        <p>You don't have permission to view this page.</p>
+        <a href="{% url 'index' %}">Go home</a>
+    </div>
+{% endblock %}
