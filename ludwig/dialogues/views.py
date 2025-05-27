@@ -5,13 +5,13 @@ from django.db.models import Q
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 from django.template.loader import render_to_string
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.timezone import now
 from django.views.decorators.http import condition, etag
-from django.views.generic.base import TemplateView
+from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, DeleteView
 
 import hashlib
 
@@ -243,3 +243,9 @@ class NewPostsPollingView(TemplateView):
         })
 
         return context
+
+
+class DeleteDialogueView(LoginRequiredMixin, DeleteView):
+    model = Dialogue
+    success_url = reverse_lazy("dashboard:home")
+    pk_url_kwarg = "dialogue_id"

@@ -39,6 +39,25 @@
     margin-top: var(--size-1);
 }
 
+.dialogue-details a {
+    color: var(--color-accent-2);
+}
+
+.dialogue-details .settings .collapsed-info button {
+    background: none;
+    border: none;
+    box-shadow: none;
+    color: var(--color-accent-2);
+    font-weight: bold;
+    padding: 0;
+    text-decoration: underline;
+    width: auto;
+}
+
+.dialogue-details .settings .collapsed-info button#delete_dialogue_button {
+    color: var(--color-alert-2);
+}
+
 .post {
     padding: var(--size-1);
     background: var(--color-neutral-3);

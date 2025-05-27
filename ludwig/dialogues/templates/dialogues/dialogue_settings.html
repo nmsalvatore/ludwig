@@ -1,0 +1,7 @@
+<summary>Settings</summary>
+<div class="collapsed-info">
+    <form action="{% url 'dialogues:delete_dialogue' dialogue.id %}" method="post">
+        {% csrf_token %}
+        <button id="delete_dialogue_button" type="submit">Delete this dialogue</button>
+    </form>
+</div>

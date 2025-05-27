@@ -43,10 +43,7 @@
 
             {% if user == dialogue.author %}
                 <details class="settings">
-                    <summary>Settings</summary>
-                    <div class="collapsed-info">
-                        <p>Coming soon!</p>
-                    </div>
+                    {% include "dialogues/dialogue_settings.html" %}
                 </details>
             {% endif %}
         </div>
