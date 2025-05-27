@@ -24,7 +24,7 @@
 }
 
 .markdown-body blockquote {
-    background: var(--color-7);
+    background: var(--color-neutral-2);
     margin-bottom: var(--size-1);
     padding: var(--size-1);
 }
