@@ -2,7 +2,8 @@
     --color-neutral-1: hsl(60 10% 99%);
     --color-neutral-2: hsl(60 10% 94%);
     --color-neutral-3: hsl(60 10% 90%);
-    --color-neutral-4: hsl(60 10% 5%);
+    --color-neutral-4: hsl(60 10% 30%);
+    --color-neutral-5: hsl(60 10% 5%);
     --color-primary-1: hsl(150 30% 80%);
     --color-primary-2: hsl(150 30% 34%);
     --color-accent-1: hsl(210 30% 88%);
@@ -22,7 +23,6 @@
     --font-size-3: calc(var(--font-size-1) * 1.25);
 
     --line-height: 1.6;
-
     --box-shadow-primary: 2px 2px var(--color-primary-1);
 }
 
@@ -37,7 +37,7 @@ html {
 }
 
 body {
-    color: var(--color-neutral-4);
+    color: var(--color-neutral-5);
     display: grid;
     grid-template-rows: min-content 1fr min-content;
     grid-template-areas:
@@ -123,13 +123,23 @@ h5,
 h6 {
     font-size: inherit;
     font-weight: bold;
-    margin-bottom: var(--size-1);
 }
 
 h1 {
     font-size: var(--font-size-3);
     margin-top: var(--size-1);
     margin-bottom: calc(var(--size-2) - 4px);
+}
+
+h2 {
+    margin-bottom: var(--size-1);
+}
+
+h3,
+h4,
+h5,
+h6 {
+    margin-bottom: var(--size-0);
 }
 
 a {

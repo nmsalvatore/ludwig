@@ -30,6 +30,7 @@ a.dashboard-button .dialogue-summary p {
 
 a.dashboard-button .dialogue-summary small {
     font-size: var(--font-size-0);
+    color: var(--color-neutral-4);
 }
 
 a.dashboard-button .dialogue-summary .posts-count {

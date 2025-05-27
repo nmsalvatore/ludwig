@@ -1,4 +1,7 @@
-document.addEventListener("DOMContentLoaded", handlePostFormListeners);
+document.addEventListener("DOMContentLoaded", () => {
+    handlePostFormListeners();
+    handleDeleteDialogueListeners();
+});
 
 document.addEventListener("htmx:afterOnLoad", (event) => {
     const postsContainer = document.getElementById("posts_container");
@@ -34,5 +37,20 @@ function handlePostFormListeners() {
         setTimeout(() => {
             window.pausePolling = false;
         }, 3000);
+    });
+}
+
+function handleDeleteDialogueListeners() {
+    const deleteDialogueButton = document.getElementById(
+        "delete_dialogue_button",
+    );
+
+    if (!deleteDialogueButton) {
+        return;
+    }
+
+    deleteDialogueButton.addEventListener("click", () => {
+        const dialog = document.getElementById("delete_dialogue_dialog");
+        dialog.showModal();
     });
 }

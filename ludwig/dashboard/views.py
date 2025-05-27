@@ -20,12 +20,6 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         user = get_user(self.request)
         user_dialogues = user.dialogues.annotate(
             latest_post_date=Max("posts__created_on")
-        ).prefetch_related(
-            Prefetch(
-                "participants",
-                queryset=User.objects.exclude(id=user.id),
-                to_attr="other_participants"
-            )
         ).order_by("-latest_post_date")
         return user_dialogues
 
