@@ -245,7 +245,7 @@ div:has(> .logo) {
 }
 
 form button.logout {
-    background: var(--color-neutral-3);
+    background: var(--color-neutral-2);
     padding: var(--size-0);
 }
 
