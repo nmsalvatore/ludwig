@@ -52,20 +52,31 @@
     gap: var(--size-1);
 }
 
+.dialogue-details .settings-option-container {
+    margin-bottom: var(--size-2);
+}
+
+.dialogue-details .settings-option-container:last-child {
+    margin-bottom: 0;
+}
+
 .dialogue-details .settings .buttons button {
     width: 100%;
     padding: var(--size-0);
 }
 
 .dialogue-details .settings .buttons button.confirm-delete {
-    background: var(--color-accent-3);
+    background: var(--color-alert-2);
+    box-shadow: 2px 2px var(--color-accent-1);
     color: var(--color-neutral-1);
     border: 1px solid var(--color-neutral-4);
 }
 
-.dialogue-details .settings button#delete_dialogue_button {
-    padding: var(--size-0) var(--size-1);
+.dialogue-details button.settings-button {
+    background: var(--color-accent-1);
     box-shadow: 2px 2px var(--color-accent-2);
+    padding: var(--size-0) var(--size-1);
+    width: auto;
 }
 
 .dialogue-details .settings dialog {

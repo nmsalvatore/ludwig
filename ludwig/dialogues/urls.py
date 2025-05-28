@@ -10,4 +10,5 @@ urlpatterns = [
     path("<str:dialogue_id>/", views.DialogueDetailView.as_view(), name="dialogue_detail"),
     path("new-posts/<str:dialogue_id>", views.NewPostsPollingView.as_view(), name="new_posts"),
     path("delete/<str:dialogue_id>", views.DeleteDialogueView.as_view(), name="delete_dialogue"),
+    path("toggle-visibility/<str:dialogue_id>", views.ToggleVisibilityView.as_view(), name="toggle_visibility")
 ]

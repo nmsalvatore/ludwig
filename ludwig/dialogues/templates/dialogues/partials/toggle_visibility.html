@@ -1,0 +1,21 @@
+<div class="settings-option-container" id="toggle_visibility_container" hx-swap-oob="true">
+    <h3>Visibility</h3>
+    <p>
+        Currently, this dialogue is set to <strong>{{ dialogue.is_visible|yesno:"public,private" }}</strong>
+
+        {% if dialogue.is_visible %}
+            and can be viewed by anyone with access to this URL.
+        {% else %}
+            and can only be viewed by the participants listed above.
+        {% endif %}
+    </p>
+
+    <form hx-post="{% url 'dialogues:toggle_visibility' dialogue.id %}">
+        {% csrf_token %}
+        <button class="settings-button" id="visibility_button" type="submit">
+            Set visibility to {{ dialogue.is_visible|yesno:"private,public"}}
+        </button>
+    </form>
+</div>
+
+<p id="visibility_detail" hx-swap-oob="true"><strong>Visibility:</strong> {{ dialogue.is_visible|yesno:"Public,Private"}}</p>

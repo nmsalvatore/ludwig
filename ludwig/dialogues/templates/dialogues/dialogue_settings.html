@@ -1,19 +1,32 @@
 {% load static %}
 
-<summary>Settings</summary>
+<summary>Dialogue settings</summary>
 <div class="collapsed-info">
-    <div>
-        <div class="row">
-            <div>
-                <h3>Delete this dialogue</h3>
-                <p>This action is permanent, please be certain that you want to delete this dialogue before proceeding.</p>
-            </div>
-            <div>
-                <button id="delete_dialogue_button" data-dialogue-id="{{ dialogue.id }}">
-                    Delete it
-                </button>
-            </div>
-        </div>
+    <div class="settings-option-container" id="toggle_visibility_container">
+        <h3>Visibility</h3>
+        <p>
+            Currently, this dialogue is set to <strong>{{ dialogue.is_visible|yesno:"public,private" }}</strong>
+
+            {% if dialogue.is_visible %}
+                and can be viewed by anyone with access to this URL.
+            {% else %}
+                and can only be viewed by the participants listed above.
+            {% endif %}
+        </p>
+
+        <form hx-post="{% url 'dialogues:toggle_visibility' dialogue.id %}">
+            {% csrf_token %}
+            <button class="settings-button" type="submit">
+                Set visibility to {{ dialogue.is_visible|yesno:"private,public"}}
+            </button>
+        </form>
+    </div>
+    <div class="settings-option-container">
+        <h3>Delete this dialogue</h3>
+        <p>This action is permanent, please be certain that you want to delete this dialogue before proceeding.</p>
+        <button id="delete_dialogue_button" data-dialogue-id="{{ dialogue.id }}" class="settings-button">
+            Delete this dialogue
+        </button>
         <dialog id="delete_dialogue_dialog">
             <form id="delete_dialogue_form" action="{% url 'dialogues:delete_dialogue' dialogue.id %}" method="post">
                 {% csrf_token %}

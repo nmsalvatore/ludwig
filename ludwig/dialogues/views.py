@@ -11,7 +11,7 @@ from django.utils.timezone import now
 from django.views.decorators.http import condition, etag
 from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, DeleteView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
 import hashlib
 
@@ -98,7 +98,7 @@ class SearchForUsersView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class DialogueDetailView(LoginRequiredMixin, DetailView):
+class DialogueDetailView(DetailView):
     """
     Display a specific dialogue and manage interactivity among
     participants. Limit access based on user auth status and dialogue
@@ -249,3 +249,11 @@ class DeleteDialogueView(LoginRequiredMixin, DeleteView):
     model = Dialogue
     success_url = reverse_lazy("dashboard:home")
     pk_url_kwarg = "dialogue_id"
+
+
+class ToggleVisibilityView(LoginRequiredMixin, View):
+    def post(self, request, dialogue_id):
+        dialogue = get_object_or_404(Dialogue, id=dialogue_id)
+        dialogue.is_visible = not dialogue.is_visible
+        dialogue.save()
+        return render(request, "dialogues/partials/toggle_visibility.html", {"dialogue": dialogue})
