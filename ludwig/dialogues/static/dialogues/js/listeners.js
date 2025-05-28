@@ -1,9 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
-    handlePostFormListeners();
-    handleDeleteDialogueListeners();
+    setPostFormListeners();
+    setDeleteDialogueListeners();
 });
 
-document.addEventListener("htmx:afterOnLoad", (event) => {
+document.addEventListener("htmx:afterOnLoad", () => {
     const postsContainer = document.getElementById("posts_container");
     const posts = postsContainer.querySelectorAll(".post");
 
@@ -15,7 +15,7 @@ document.addEventListener("htmx:afterOnLoad", (event) => {
     }
 });
 
-function handlePostFormListeners() {
+function setPostFormListeners() {
     const postForm = document.getElementById("post_form");
 
     if (!postForm) {
@@ -40,7 +40,7 @@ function handlePostFormListeners() {
     });
 }
 
-function handleDeleteDialogueListeners() {
+function setDeleteDialogueListeners() {
     const deleteDialogueButton = document.getElementById(
         "delete_dialogue_button",
     );
