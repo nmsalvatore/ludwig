@@ -1,11 +1,12 @@
 {% for post in posts %}
-    {% include 'dialogues/partials/post.html' %}
+    {% include "dialogues/partials/post_detail.html" %}
 {% endfor %}
 
 {% if posts %}
     <div
-        id="polling_div"
-        hx-get="{% url 'dialogues:new_posts' dialogue.id %}?last_id={{ last_id }}"
+        hidden
+        id="polling"
+        hx-get="{% url 'dialogues:polling' dialogue.id %}?last_id={{ last_id }}"
         hx-trigger="every 3s[!document.hidden && !window.pausePolling]"
         hx-target="#posts_container"
         hx-swap="beforeend"
