@@ -18,16 +18,12 @@ def get_sentinel_user():
 
 class Dialogue(TimeStampedModel):
     id = models.CharField(
-        primary_key=True,
-        default=generate_unique_id,
-        editable=False,
-        max_length=10
+        primary_key=True, default=generate_unique_id, editable=False, max_length=10
     )
     is_open = models.BooleanField(default=False)
     is_visible = models.BooleanField(default=False)
     participants = models.ManyToManyField(
-        settings.AUTH_USER_MODEL,
-        related_name="dialogues"
+        settings.AUTH_USER_MODEL, related_name="dialogues"
     )
     summary = models.TextField(blank=True)
     title = models.CharField(max_length=200)
@@ -36,7 +32,7 @@ class Dialogue(TimeStampedModel):
         settings.AUTH_USER_MODEL,
         on_delete=models.SET(get_sentinel_user),
         null=True,
-        related_name="authored_dialogues"
+        related_name="authored_dialogues",
     )
 
     class Meta:
@@ -49,7 +45,9 @@ class Dialogue(TimeStampedModel):
 class Post(TimeStampedModel):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     body = models.TextField()
-    dialogue = models.ForeignKey(Dialogue, on_delete=models.CASCADE, related_name='posts')
+    dialogue = models.ForeignKey(
+        Dialogue, on_delete=models.CASCADE, related_name="posts"
+    )
 
     class Meta:
         ordering = ["created_on"]

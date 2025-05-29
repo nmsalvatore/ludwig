@@ -15,9 +15,7 @@ class DialogueCreationTests(TestCase):
         """Set up test data."""
         self.client = Client()
         self.user = User.objects.create_user(
-            username="testuser",
-            email="test@example.com",
-            password="testpass123"
+            username="testuser", email="test@example.com", password="testpass123"
         )
         self.login_url = reverse("accounts:login")
         self.dialogue_create_url = reverse("dialogues:create_dialogue")
@@ -28,20 +26,17 @@ class DialogueCreationTests(TestCase):
 
     def test_successful_dialogue_creation(self):
         """Dialogue should exist in database after creation."""
-        dialogue = Dialogue.objects.create(
-            title="Test Dialogue",
-            author=self.user
-        )
+        dialogue = Dialogue.objects.create(title="Test Dialogue", author=self.user)
         self.assertTrue(self._dialogue_exists("Test Dialogue"))
         self.assertEqual(dialogue.author, self.user)
 
     def test_creation_success_with_post(self):
         """Dialogue should be created via POST request from authenticated user."""
         self.client.login(username="testuser", password="testpass123")
-        response = self.client.post(self.dialogue_create_url, {
-            "title": "POST Created Dialogue",
-            "summary": "Test summary"
-        })
+        response = self.client.post(
+            self.dialogue_create_url,
+            {"title": "POST Created Dialogue", "summary": "Test summary"},
+        )
 
         self.assertTrue(self._dialogue_exists("POST Created Dialogue"))
         dialogue = Dialogue.objects.get(title="POST Created Dialogue")
@@ -50,9 +45,9 @@ class DialogueCreationTests(TestCase):
 
     def test_creation_failure_without_auth(self):
         """POST request should fail for unauthenticated users."""
-        response = self.client.post(self.dialogue_create_url, {
-            "title": "Unauthorized Dialogue"
-        })
+        response = self.client.post(
+            self.dialogue_create_url, {"title": "Unauthorized Dialogue"}
+        )
 
         self.assertFalse(self._dialogue_exists("Unauthorized Dialogue"))
         self.assertRedirects(response, "/auth/login/?next=/dialogue/create/")
@@ -65,32 +60,22 @@ class DialoguePermissionsTests(TestCase):
         """Set up test data."""
         self.client = Client()
         self.author = User.objects.create_user(
-            username="author",
-            email="author@example.com",
-            password="pass123"
+            username="author", email="author@example.com", password="pass123"
         )
         self.participant = User.objects.create_user(
-            username="participant",
-            email="participant@example.com",
-            password="pass123"
+            username="participant", email="participant@example.com", password="pass123"
         )
         self.outsider = User.objects.create_user(
-            username="outsider",
-            email="outsider@example.com",
-            password="pass123"
+            username="outsider", email="outsider@example.com", password="pass123"
         )
 
         self.private_dialogue = Dialogue.objects.create(
-            title="Private Dialogue",
-            author=self.author,
-            is_visible=False
+            title="Private Dialogue", author=self.author, is_visible=False
         )
         self.private_dialogue.participants.add(self.author, self.participant)
 
         self.public_dialogue = Dialogue.objects.create(
-            title="Public Dialogue",
-            author=self.author,
-            is_visible=True
+            title="Public Dialogue", author=self.author, is_visible=True
         )
 
     def test_participant_can_access_private_dialogue(self):
@@ -127,14 +112,9 @@ class PostCreationTests(TestCase):
         """Set up test data."""
         self.client = Client()
         self.user = User.objects.create_user(
-            username="poster",
-            email="poster@example.com",
-            password="pass123"
+            username="poster", email="poster@example.com", password="pass123"
         )
-        self.dialogue = Dialogue.objects.create(
-            title="Test Dialogue",
-            author=self.user
-        )
+        self.dialogue = Dialogue.objects.create(title="Test Dialogue", author=self.user)
         self.dialogue.participants.add(self.user)
 
     def test_participant_can_create_post(self):
@@ -142,9 +122,7 @@ class PostCreationTests(TestCase):
         self.client.login(username="poster", password="pass123")
         url = reverse("dialogues:dialogue_detail", args=[self.dialogue.id])
 
-        response = self.client.post(url, {
-            "body": "This is a test post"
-        })
+        response = self.client.post(url, {"body": "This is a test post"})
 
         self.assertTrue(Post.objects.filter(body="This is a test post").exists())
         post = Post.objects.get(body="This is a test post")
@@ -156,9 +134,12 @@ class PostCreationTests(TestCase):
         self.client.login(username="poster", password="pass123")
         url = reverse("dialogues:dialogue_detail", args=[self.dialogue.id])
 
-        response = self.client.post(url, {
-            "body": "   ",
-        })
+        response = self.client.post(
+            url,
+            {
+                "body": "   ",
+            },
+        )
 
         self.assertEqual(Post.objects.count(), 0)
 
@@ -170,14 +151,9 @@ class HTMXFunctionalityTests(TestCase):
         """Set up test data."""
         self.client = Client()
         self.user = User.objects.create_user(
-            username="htmxuser",
-            email="htmx@example.com",
-            password="pass123"
+            username="htmxuser", email="htmx@example.com", password="pass123"
         )
-        self.dialogue = Dialogue.objects.create(
-            title="HTMX Dialogue",
-            author=self.user
-        )
+        self.dialogue = Dialogue.objects.create(title="HTMX Dialogue", author=self.user)
         self.dialogue.participants.add(self.user)
 
     def test_htmx_post_creation_returns_partial(self):
@@ -185,9 +161,9 @@ class HTMXFunctionalityTests(TestCase):
         self.client.login(username="htmxuser", password="pass123")
         url = reverse("dialogues:dialogue_detail", args=[self.dialogue.id])
 
-        response = self.client.post(url, {
-            "body": "HTMX test post"
-        }, HTTP_HX_REQUEST="true")
+        response = self.client.post(
+            url, {"body": "HTMX test post"}, HTTP_HX_REQUEST="true"
+        )
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "HTMX test post")
@@ -198,15 +174,11 @@ class HTMXFunctionalityTests(TestCase):
         self.client.login(username="htmxuser", password="pass123")
         self.assertContains
         existing_post = Post.objects.create(
-            body="Existing post",
-            author=self.user,
-            dialogue=self.dialogue
+            body="Existing post", author=self.user, dialogue=self.dialogue
         )
 
         new_post = Post.objects.create(
-            body="New post",
-            author=self.user,
-            dialogue=self.dialogue
+            body="New post", author=self.user, dialogue=self.dialogue
         )
 
         url = reverse("dialogues:polling", args=[self.dialogue.id])
@@ -224,19 +196,15 @@ class SecurityAndDuplicationTests(TestCase):
         """Set up test data."""
         self.client = Client()
         self.participant = User.objects.create_user(
-            username="participant",
-            email="participant@example.com",
-            password="pass123"
+            username="participant", email="participant@example.com", password="pass123"
         )
         self.non_participant = User.objects.create_user(
             username="nonparticipant",
             email="nonparticipant@example.com",
-            password="pass123"
+            password="pass123",
         )
         self.dialogue = Dialogue.objects.create(
-            title="Test Dialogue",
-            author=self.participant,
-            is_visible=True
+            title="Test Dialogue", author=self.participant, is_visible=True
         )
         self.dialogue.participants.add(self.participant)
 
@@ -245,7 +213,7 @@ class SecurityAndDuplicationTests(TestCase):
         post = Post.objects.create(
             body="Test post for polling",
             author=self.participant,
-            dialogue=self.dialogue
+            dialogue=self.dialogue,
         )
 
         url = reverse("dialogues:polling", args=[self.dialogue.id])
@@ -266,16 +234,12 @@ class SecurityAndDuplicationTests(TestCase):
         self.client.login(username="participant", password="pass123")
         url = reverse("dialogues:dialogue_detail", args=[self.dialogue.id])
 
-        response = self.client.post(url, {
-            "body": "Unique test post"
-        })
+        response = self.client.post(url, {"body": "Unique test post"})
 
         posts = Post.objects.filter(body="Unique test post")
         self.assertEqual(posts.count(), 1)
 
-        response2 = self.client.post(url, {
-            "body": "Unique test post"
-        })
+        response2 = self.client.post(url, {"body": "Unique test post"})
 
         posts = Post.objects.filter(body="Unique test post")
         self.assertLessEqual(posts.count(), 2)

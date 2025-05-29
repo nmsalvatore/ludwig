@@ -11,7 +11,7 @@ class DashboardViewTest(TestCase):
         user = User.objects.create_user(
             username="testuser",
             email="testuser@example.com",
-            password="testpassword123"
+            password="testpassword123",
         )
 
         self.client = Client()
@@ -19,7 +19,7 @@ class DashboardViewTest(TestCase):
         self.login_url = reverse("accounts:login")
         self.good_login_credentials = {
             "username": "testuser",
-            "password": "testpassword123"
+            "password": "testpassword123",
         }
 
     def test_redirect_for_unauthenticated_user(self):
