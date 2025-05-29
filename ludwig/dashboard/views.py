@@ -7,13 +7,15 @@ from django.views.generic.base import TemplateView
 
 from ludwig.accounts.models import User
 
+from .constants import TemplateName
+
 
 class DashboardView(LoginRequiredMixin, TemplateView):
     """
     Display dashboard and show most recent dialogues.
     """
 
-    template_name = "dashboard/dashboard.html"
+    template_name = TemplateName.DASHBOARD
 
     def _get_recent_user_dialogues(self):
         """Get recent user dialogues, sorted by most recent post"""

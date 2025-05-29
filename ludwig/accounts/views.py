@@ -5,6 +5,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
 from .forms import UserLoginForm, UserRegistrationForm
+from .constants import TemplateName
 
 
 class UserRegistrationView(SuccessMessageMixin, CreateView):
@@ -13,7 +14,7 @@ class UserRegistrationView(SuccessMessageMixin, CreateView):
     form, creates a new user, then redirects to the login page.
     """
 
-    template_name = "accounts/register.html"
+    template_name = TemplateName.REGISTER
     form_class = UserRegistrationForm
     success_url = reverse_lazy("accounts:login")
     success_message = "Registration successful! Please login with your new credentials."
@@ -24,7 +25,7 @@ class UserLoginView(LoginView):
     Defines user login view that displays login form and logs in user.
     """
 
-    template_name = "accounts/login.html"
+    template_name = TemplateName.LOGIN
     authentication_form = UserLoginForm
 
 
