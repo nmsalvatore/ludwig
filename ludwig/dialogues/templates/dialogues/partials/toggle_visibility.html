@@ -1,5 +1,6 @@
 <div class="settings-option-container" id="toggle_visibility_container" hx-swap-oob="true">
     <h3>Visibility</h3>
+
     <p>
         Currently, this dialogue is set to <strong>{{ dialogue.is_visible|yesno:"public,private" }}</strong>
 
@@ -12,6 +13,7 @@
 
     <form hx-post="{% url 'dialogues:toggle_visibility' dialogue.id %}">
         {% csrf_token %}
+
         <button class="settings-button" id="visibility_button" type="submit">
             Set visibility to {{ dialogue.is_visible|yesno:"private,public"}}
         </button>
