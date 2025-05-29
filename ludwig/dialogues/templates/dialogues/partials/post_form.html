@@ -1,0 +1,31 @@
+<noscript>
+    <section>
+        <p class="no-js-message">To get real-time updates, please enable JavaScript.</p>
+    </section>
+</noscript>
+
+<form
+    id="post_form"
+    action="{% url 'dialogues:dialogue_detail' dialogue.id %}"
+    method="post"
+    hx-boost="true"
+    hx-push-url="false"
+    hx-swap="beforeend"
+    hx-target="#posts_container"
+    autocomplete="off">
+
+    {% csrf_token %}
+
+    <input id="last_id_input" type="hidden" name="last_id" value="{{ last_id }}">
+
+    <textarea
+        name="body"
+        cols="40"
+        rows="10"
+        placeholder="Say something..."
+    ></textarea>
+
+    <div class="form-buttons">
+        <button type="submit" id="post_submit_button">Submit post</button>
+    </div>
+</form>
