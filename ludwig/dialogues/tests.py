@@ -195,6 +195,8 @@ class HTMXFunctionalityTests(TestCase):
 
     def test_polling_returns_new_posts(self):
         """Polling endpoint should return new posts."""
+        self.client.login(username="htmxuser", password="pass123")
+        self.assertContains
         existing_post = Post.objects.create(
             body="Existing post",
             author=self.user,
@@ -207,7 +209,7 @@ class HTMXFunctionalityTests(TestCase):
             dialogue=self.dialogue
         )
 
-        url = reverse("dialogues:new_posts", args=[self.dialogue.id])
+        url = reverse("dialogues:polling", args=[self.dialogue.id])
         response = self.client.get(url, {"last_id": existing_post.id})
 
         self.assertEqual(response.status_code, 200)
@@ -246,7 +248,7 @@ class SecurityAndDuplicationTests(TestCase):
             dialogue=self.dialogue
         )
 
-        url = reverse("dialogues:new_posts", args=[self.dialogue.id])
+        url = reverse("dialogues:polling", args=[self.dialogue.id])
         response1 = self.client.get(url)
         self.assertContains(response1, "Test post for polling")
 
