@@ -1,11 +1,11 @@
-from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
-from .forms import UserLoginForm, UserRegistrationForm
 from .constants import TemplateName
+from .forms import UserLoginForm, UserRegistrationForm
 
 
 class UserRegistrationView(SuccessMessageMixin, CreateView):

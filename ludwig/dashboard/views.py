@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Max
-from django.db.models import query
+from django.db.models import Max, query
 from django.db.models.query import Prefetch
 from django.views.generic.base import TemplateView
 
