@@ -1,20 +1,16 @@
-from django.core.exceptions import PermissionDenied
 from django.contrib.auth import get_user, get_user_model
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.http.response import HttpResponse, HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
-from django.utils.decorators import method_decorator
-from django.utils.timezone import now
-from django.views.decorators.http import condition, etag
 from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
-import hashlib
-
+from .constants import TemplateName
 from .forms import DialogueCreationForm
 from .models import Dialogue, Post
 
@@ -26,7 +22,7 @@ class CreateDialogueView(LoginRequiredMixin, CreateView):
     """
 
     form_class = DialogueCreationForm
-    template_name = "dialogues/dialogue_create.html"
+    template_name = TemplateName.CREATE_DIALOGUE
 
     def _add_participants_to_dialogue(self, dialogue):
         """Add current user and selected participants to dialogue."""
@@ -71,15 +67,14 @@ class SearchForUsersView(LoginRequiredMixin, TemplateView):
     only shown for queries 2 or more characters long.
     """
 
-    template_name = "dialogues/partials/user_search_results.html"
+    template_name = TemplateName.USER_SEARCH_RESULTS
 
     def get_context_data(self, **kwargs):
         """Pass query value and matching users to context data."""
 
-        # get initial context data
         context = super().get_context_data(**kwargs)
 
-        # get value of the query form input
+        # get value of the user search query from the `query` input
         query = self.request.GET.get("query", "")
 
         if len(query) >= 2:
@@ -90,10 +85,7 @@ class SearchForUsersView(LoginRequiredMixin, TemplateView):
                 Q(username__icontains=query) | Q(display_name__icontains=query)
             ).exclude(id=self.request.user.id)[:10]
 
-            context.update({
-                "query": query,
-                "users": users
-            })
+            context.update({"query": query, "users": users})
 
         return context
 
@@ -106,7 +98,7 @@ class DialogueDetailView(DetailView):
     """
 
     model = Dialogue
-    template_name = "dialogues/dialogue_detail.html"
+    template_name = TemplateName.DIALOGUE_DETAIL
     context_object_name = "dialogue"
     pk_url_kwarg = "dialogue_id"
 
@@ -129,18 +121,17 @@ class DialogueDetailView(DetailView):
         dialogue = self.get_object()
 
         # get all posts in the dialogue and cache related author data
-        posts = Post.objects.filter(
-            dialogue=dialogue
-        ).select_related("author").order_by("id")
+        posts = (
+            Post.objects.filter(dialogue=dialogue)
+            .select_related("author")
+            .order_by("id")
+        )
 
         # get last post id
         last_post = posts.last() if posts.exists() else None
         last_id = last_post.id if last_post else 0
 
-        context.update({
-            "posts": posts,
-            "last_id": last_id
-        })
+        context.update({"posts": posts, "last_id": last_id})
 
         return context
 
@@ -159,7 +150,6 @@ class DialogueDetailView(DetailView):
         # get last post id
         last_id = request.POST.get("last_id", 0)
 
-
         if user in dialogue.participants.all():
             # get post body from post form and remove surrounding
             # whitespace the retrieved value
@@ -169,20 +159,17 @@ class DialogueDetailView(DetailView):
                 return HttpResponse("")
 
             # add post to the database
-            post = Post.objects.create(
-                author=user,
-                dialogue=dialogue,
-                body=post_body
-            )
+            post = Post.objects.create(author=user, dialogue=dialogue, body=post_body)
 
             # if the request is from htmx, get all posts since the last
             # updated post id, including any posts from other users
             # that haven't been captured by the polling loop
             if request.headers.get("HX-Request"):
-                posts = Post.objects.filter(
-                    dialogue=dialogue,
-                    id__gt=last_id
-                ).select_related("author").order_by("created_on")
+                posts = (
+                    Post.objects.filter(dialogue=dialogue, id__gt=last_id)
+                    .select_related("author")
+                    .order_by("created_on")
+                )
 
                 context = {
                     "posts": posts,
@@ -190,17 +177,35 @@ class DialogueDetailView(DetailView):
                     "dialogue": dialogue,
                 }
 
-                response = render(request, "dialogues/partials/new_posts.html", context)
+                response = render(request, TemplateName.POLLING, context)
                 response.headers["Vary"] = "HX-Request"
                 return response
 
             return HttpResponseRedirect(
-                f"{reverse("dialogues:dialogue_detail", args=(dialogue.id,))}#post_form"
+                f"{reverse('dialogues:dialogue_detail', args=(dialogue.id,))}#post_form"
             )
 
 
-class NewPostsPollingView(TemplateView):
-    template_name = "dialogues/partials/new_posts.html"
+class PollingView(TemplateView):
+    template_name = TemplateName.POLLING
+
+    def dispatch(self, request, *args, **kwargs):
+        """
+        Check if user has permission to view the dialogue before
+        processing the request. If a non-participant is viewing the
+        dialogue in real-time and the visibility settings are set to
+        private during the live viewing, the page will update in
+        real-time to show the 403 page.
+        """
+
+        dialogue_id = kwargs.get("dialogue_id")
+        dialogue = get_object_or_404(Dialogue, id=dialogue_id)
+        user = get_user(request)
+
+        if not dialogue.is_visible and not user in dialogue.participants.all():
+            return render(request, TemplateName.PERMISSION_DENIED)
+
+        return super().dispatch(request, *args, **kwargs)
 
     def _get_last_id(self):
         """Get and validate the last_id from request parameters"""
@@ -214,33 +219,33 @@ class NewPostsPollingView(TemplateView):
     def get_context_data(self, **kwargs):
         """Get new posts and pass them to the template"""
 
-        # get initial context data
         context = super().get_context_data(**kwargs)
 
-        # get current dialogue object
         dialogue_id = self.kwargs.get("dialogue_id")
         dialogue = get_object_or_404(Dialogue, id=dialogue_id)
 
-        # get most recent post id to determine if a post is new
+        # to determine whether a post is new, get the ID of the most
+        # recent post in the dialogue
         last_id = self._get_last_id()
 
-        # get all posts with ids greater than the last post id and
-        # cache related author data
-        posts = Post.objects.filter(
-            dialogue=dialogue,
-            id__gt=last_id
-        ).select_related("author").order_by("created_on")
+        # get all posts with IDs greater than `last_id` and cache the
+        # related author data
+        posts = (
+            Post.objects.filter(dialogue=dialogue, id__gt=last_id)
+            .select_related("author")
+            .order_by("created_on")
+        )
 
-        # get last post id
         last_post = posts.last() if posts.exists() else None
         last_id = last_post.id if last_post else 0
 
-        # update the context data
-        context.update({
-            "posts": posts,
-            "last_id": last_id,
-            "dialogue": dialogue,
-        })
+        context.update(
+            {
+                "posts": posts,
+                "last_id": last_id,
+                "dialogue": dialogue,
+            }
+        )
 
         return context
 
@@ -256,4 +261,6 @@ class ToggleVisibilityView(LoginRequiredMixin, View):
         dialogue = get_object_or_404(Dialogue, id=dialogue_id)
         dialogue.is_visible = not dialogue.is_visible
         dialogue.save()
-        return render(request, "dialogues/partials/toggle_visibility.html", {"dialogue": dialogue})
+
+        context = {"dialogue": dialogue}
+        return render(request, TemplateName.TOGGLE_VISIBILITY, context)
