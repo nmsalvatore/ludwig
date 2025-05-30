@@ -21,7 +21,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         user = get_user(self.request)
         user_dialogues = user.dialogues.annotate(
             latest_post_date=Max("posts__created_on")
-        ).order_by("-latest_post_date")
+        ).order_by("-latest_post_date", "-created_on")
         return user_dialogues
 
     def get_context_data(self, **kwargs):
