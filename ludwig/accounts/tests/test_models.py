@@ -5,8 +5,18 @@ User = get_user_model()
 
 
 class UserModelTests(TestCase):
+    """
+    Test suite for user models.
+
+    Tests included:
+        1. Successfully create user
+        2. Successfully create superuser
+    """
+
     def test_create_user(self):
-        # create user in database
+        """
+        Test that user is successfully created in the database.
+        """
         user = User.objects.create_user(
             username="testuser", email="test@example.com", password="testpassword123"
         )
@@ -17,7 +27,9 @@ class UserModelTests(TestCase):
         self.assertFalse(user.is_superuser)
 
     def test_create_superuser(self):
-        # create superuser in database
+        """
+        Test the superuser is successfully created in the database.
+        """
         user = User.objects.create_superuser(
             username="admin", email="admin@example.com", password="adminpassword123"
         )
