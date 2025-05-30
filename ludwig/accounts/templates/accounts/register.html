@@ -3,24 +3,21 @@
 {% load static %}
 
 {% block stylesheets %}
-<link rel="stylesheet" href="{% static 'accounts/css/accounts.css' %}">
+    <link rel="stylesheet" href="{% static 'accounts/css/accounts.css' %}">
 {% endblock %}
 
 {% block main %}
-<div class="container">
+    <div class="container">
+        <section class="form-container">
+            <h1>Registration</h1>
 
-    <!-- registration form -->
-    <section class="form-container">
-        <h1>Registration</h1>
+            <form method="post" novalidate>
+                {% csrf_token %}
+                {{ form.as_div }}
+                <button type="submit">Create account</button>
+            </form>
 
-        <form method="post" novalidate>
-            {% csrf_token %}
-            {{ form.as_div }}
-            <button type="submit">Create account</button>
-        </form>
-
-        <p>Already have an account? <a href="{% url 'accounts:login' %}">Login here</a></p>
-    </section>
-
-</div>
+            <p>Already have an account? <a href="{% url 'accounts:login' %}">Login here</a></p>
+        </section>
+    </div>
 {% endblock %}
