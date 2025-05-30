@@ -15,7 +15,8 @@ class UserModelTests(TestCase):
 
     def test_create_user(self):
         """
-        Test that user is successfully created in the database.
+        Test that user is successfully created in the database with
+        all of the correct attributes.
         """
         user = User.objects.create_user(
             username="testuser", email="test@example.com", password="testpassword123"
@@ -28,7 +29,8 @@ class UserModelTests(TestCase):
 
     def test_create_superuser(self):
         """
-        Test the superuser is successfully created in the database.
+        Test the superuser is successfully created in the database with
+        all of the correct attributes.
         """
         user = User.objects.create_superuser(
             username="admin", email="admin@example.com", password="adminpassword123"

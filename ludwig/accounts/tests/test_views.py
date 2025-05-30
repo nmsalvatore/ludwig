@@ -5,6 +5,9 @@ from django.urls import reverse
 from ..constants import TemplateName
 
 
+User = get_user_model()
+
+
 class LoginViewTests(TestCase):
     """
     Testing suite for login view.
@@ -21,23 +24,21 @@ class LoginViewTests(TestCase):
         """
         Initial setup for login view testing suite.
         """
-
         self.client = Client()
 
         # Create a test user
-        User = get_user_model()
         self.test_login_user = User.objects.create_user(
             username="testuser",
             email="test@example.com",
             password="somepassword123"
         )
 
-        # Store URLs
+        # URLs
         self.register_url = reverse("accounts:register")
         self.login_url = reverse("accounts:login")
         self.dashboard_url = reverse("dashboard:home")
 
-        # Store login credentials
+        # Login credentials
         self.good_login_credentials = {
             "username": "testuser",
             "password": "somepassword123",
@@ -109,21 +110,24 @@ class LogoutViewTests(TestCase):
         """
         Initial setup for logout view testing suite.
         """
-
         self.client = Client()
 
         # Create test user
-        User = get_user_model()
         self.test_login_user = User.objects.create_user(
-            username="testuser", email="test@example.com", password="somepassword123"
+            username="testuser",
+            email="test@example.com",
+            password="somepassword123"
         )
 
-        # Store URLs
+        # URLs
         self.login_url = reverse("accounts:login")
         self.logout_url = reverse("accounts:logout")
 
-        # Store login credentials
-        self.login_credentials = {"username": "testuser", "password": "somepassword123"}
+        # Login credentials
+        self.login_credentials = {
+            "username": "testuser",
+            "password": "somepassword123"
+        }
 
     def test_successful_logout(self):
         """
@@ -131,7 +135,10 @@ class LogoutViewTests(TestCase):
         successfully logging out.
         """
         # Log in user
-        response = self.client.post(self.login_url, self.login_credentials)
+        response = self.client.post(
+            self.login_url,
+            self.login_credentials
+        )
 
         # Make sure that user has successfully logged in
         user = get_user(self.client)
@@ -178,15 +185,34 @@ class LogoutViewTests(TestCase):
         response = self.client.post(self.logout_url, follow=True)
 
         # Check the success message is shown on the login page
-        success_message = "You have been successfully logged out"
+        success_message = "You have been successfully logged out."
         self.assertIn(success_message, response.text)
 
 
 class RegisterViewTests(TestCase):
+    """
+    Testing suite for account registration view.
+
+    Tests included:
+        1. Successful page load
+        2. Successful registration
+        3. Redirect to login page after successful registration
+        4. Login page has success message after registration
+        5. Failed registration
+        6. No redirect if registration fails
+    """
+
     def setUp(self):
+        """
+        Initial setup for registration view testing suite.
+        """
         self.client = Client()
+
+        # URLs
         self.login_url = reverse("accounts:login")
         self.register_url = reverse("accounts:register")
+
+        # Registration credentials
         self.good_registration_credentials = {
             "username": "testuser",
             "email": "testuser@example.com",
@@ -201,45 +227,108 @@ class RegisterViewTests(TestCase):
         }
 
     def test_register_page_loads(self):
-        # make GET request to register URL
+        """
+        Test for successful page load by checking for successful
+        response from the register URL and that the correct template
+        is used.
+        """
         response = self.client.get(self.register_url)
-
-        # check for successful response status
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed("accounts/register.html")
+        self.assertTemplateUsed(TemplateName.REGISTER)
 
     def test_successful_registration(self):
-        # register user via POST request
-        self.client.post(self.register_url, self.good_registration_credentials)
+        """
+        Test for successful registration by checking that the user
+        exists in the database after registration and that they can
+        successfully login.
+        """
+        # Check that the user does not exist in the database prior to
+        # registration
+        unregistered_user = User.objects.filter(
+            username=self.good_registration_credentials["username"],
+            email=self.good_registration_credentials["email"]
+        )
+        assert not unregistered_user.exists()
 
-        # check that user is not logged in
+        # Register user
+        self.client.post(
+            self.register_url,
+            self.good_registration_credentials
+        )
+
+        # User should now be in the database
+        registered_user = User.objects.filter(
+            username=self.good_registration_credentials["username"],
+            email=self.good_registration_credentials["email"]
+        )
+        assert registered_user.exists()
+
+        # Log in user
+        self.client.post(self.login_url, {
+            "username": self.good_registration_credentials["username"],
+            "password": self.good_registration_credentials["password1"]
+        })
+
+        # User should now be authenticated
         user = get_user(self.client)
-        self.assertFalse(user.is_authenticated)
+        self.assertTrue(user.is_authenticated)
 
     def test_successful_registration_redirect(self):
-        # register user via POST request
+        """
+        Test to see if user is redirected to the login page after a
+        successful registration.
+        """
         response = self.client.post(
-            self.register_url, self.good_registration_credentials
+            self.register_url,
+            self.good_registration_credentials
         )
-
-        # check that successful registration redirects to dashboard
         self.assertRedirects(response, reverse("accounts:login"))
 
-    def test_failed_registration(self):
-        # register user via POST request
+    def test_success_message(self):
+        """
+        Test for registration success message on the login page after a
+        successful registration.
+        """
+        # Follow response to the login page
         response = self.client.post(
-            self.register_url, self.bad_registration_credentials
+            self.register_url,
+            self.good_registration_credentials,
+            follow=True
         )
 
-        # check that user is not authenticated
-        user = get_user(self.client)
-        self.assertFalse(user.is_authenticated)
+        # Check for success message on the login page
+        success_message = "Registration successful! Please login with your new credentials."
+        self.assertIn(success_message, response.text)
+
+    def test_failed_registration(self):
+        """
+        Test for failed registration by making sure the user doesn't
+        exist in the database after a failed attempt.
+        """
+        # Attempt registration with bad credentials (mismatched passwords)
+        response = self.client.post(
+            self.register_url,
+            self.bad_registration_credentials
+        )
+
+        # User should not exist in the database
+        user = User.objects.filter(
+            username=self.bad_registration_credentials["username"],
+            email=self.bad_registration_credentials["email"]
+        )
+        assert not user.exists()
+
 
     def test_failed_registration_redirect(self):
-        # register user via POST request
+        """
+        Test to make sure the user is not redirected after a failed
+        registration attempt and that they remain on the registration
+        page.
+        """
         response = self.client.post(
-            self.register_url, self.bad_registration_credentials, follow=True
+            self.register_url,
+            self.bad_registration_credentials,
+            follow=True
         )
-
-        # check that there is no redirect
         self.assertEqual(response.redirect_chain, [])
+        self.assertTemplateUsed(response, TemplateName.REGISTER)
