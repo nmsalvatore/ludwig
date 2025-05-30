@@ -178,7 +178,9 @@ class DashboardViewTest(TestCase):
     def test_nonparticipant_dialogues_not_shown(self):
         """
         Test that dialogues excluding the current user are not shown in
-        the list of the user's dialogues.
+        the list of the user's dialogues. Additionally, check that the
+        dialogue shows up in the user's dialogues after being added as
+        a participant.
         """
         self.client.post(self.login_url, self.good_login_credentials)
 
