@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.messages.views import SuccessMessageMixin
@@ -36,3 +37,8 @@ class UserLogoutView(LoginRequiredMixin, LogoutView):
     """
 
     next_page = reverse_lazy("accounts:login")
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            messages.success(request, "You have been successfully logged out.")
+        return super().dispatch(request, *args, **kwargs)
