@@ -27,7 +27,7 @@ class CreateDialogueView(LoginRequiredMixin, CreateView):
     def _add_participants_to_dialogue(self, dialogue):
         """Add current user and selected participants to dialogue."""
         # get list of user ids from hidden form input field
-        user_ids = self.request.POST.getlist("selected_participants")
+        user_ids = self.request.POST.getlist("participants")
 
         if user_ids:
             # get all users with selected ids and add as participants
