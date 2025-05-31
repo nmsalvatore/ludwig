@@ -41,13 +41,15 @@ class DashboardViewTest(TestCase):
         # after posts are submitted.
         self.dialogue1_title = "Dialogue #1"
         self.dialogue1 = Dialogue.objects.create(
-            title=self.dialogue1_title
+            title=self.dialogue1_title,
+            author=self.test_user1
         )
         self.dialogue1.participants.set([self.test_user1])
 
         self.dialogue2_title = "Dialogue #2"
         self.dialogue2 = Dialogue.objects.create(
-            title=self.dialogue2_title
+            title=self.dialogue2_title,
+            author=self.test_user1
         )
         self.dialogue2.participants.set([self.test_user1])
 
@@ -118,13 +120,11 @@ class DashboardViewTest(TestCase):
         """
         self.client.post(self.login_url, self.good_login_credentials)
 
-        user = get_user(self.client)
-
         # Post in Dialogue 1
         Post.objects.create(
             dialogue=self.dialogue1,
             body="Test post",
-            author=user
+            author=self.test_user1
         )
 
         # Dialogue 2 should be at the top still because it is empty
@@ -137,7 +137,7 @@ class DashboardViewTest(TestCase):
         Post.objects.create(
             dialogue=self.dialogue2,
             body="Test post",
-            author=user
+            author=self.test_user1
         )
 
         # Both dialogues have posts now and Dialogue 2 will remain at
@@ -151,7 +151,7 @@ class DashboardViewTest(TestCase):
         Post.objects.create(
             dialogue=self.dialogue1,
             body="Another test post",
-            author=user
+            author=self.test_user1
         )
 
         # Dialogue 1 should be at the top of the list now because both
@@ -165,7 +165,7 @@ class DashboardViewTest(TestCase):
         Post.objects.create(
             dialogue=self.dialogue2,
             body="Test post",
-            author=user
+            author=self.test_user1
         )
 
         # Dialogue 2 should be at the top of the list again because both
@@ -209,8 +209,7 @@ class DashboardViewTest(TestCase):
         )
 
         # Add testuser1 to testuser2's dialogue
-        user = get_user(self.client)
-        other_user_dialogue.participants.add(user)
+        other_user_dialogue.participants.add(self.test_user1)
 
         # Dialogue authored by testuser2 should now be in the list of
         # testuser1's dialogues
