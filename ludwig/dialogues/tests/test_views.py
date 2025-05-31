@@ -204,7 +204,8 @@ class SearchForUsersViewTests(TestCase):
     Testing suite for SearchForUsersView.
 
     Tests included:
-        1. Query should be in context data
+        1. Query value greater than 2 characters should be in context data
+        2. Query values less than 2 characters should return None
     """
     def setUp(self):
         """
@@ -225,7 +226,8 @@ class SearchForUsersViewTests(TestCase):
 
     def test_search_query(self):
         """
-        Query value should be in context data.
+        Query values greater than 2 characters should be in context
+        data.
         """
         query = "Test"
         response = self.client.get(
@@ -236,7 +238,8 @@ class SearchForUsersViewTests(TestCase):
 
     def test_short_query(self):
         """
-        Query with less than two characters should return None.
+        Query with less than 2 characters should be in context data
+        with a value of None.
         """
         query = "x"
         response = self.client.get(
