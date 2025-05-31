@@ -18,6 +18,7 @@ class DialogueModelTests(TestCase):
         3. Dialogue without title not created
         4. Delete dialogue
         5. Change dialogue title
+        6. Author should be a participant
     """
     def setUp(self):
         self.user = User.objects.create_user(
@@ -99,6 +100,18 @@ class DialogueModelTests(TestCase):
         dialogue.title = "Updated Title"
         dialogue.save()
         self.assertEqual(dialogue.title, "Updated Title")
+
+    def test_author_is_participant(self):
+        """
+        Author should be a participant.
+        """
+        dialogue = Dialogue.objects.create(
+            summary="Testing",
+            title="Testing",
+            author=self.user
+        )
+        participants = dialogue.participants.all()
+        self.assertIn(self.user, participants)
 
 
 class PostModelTests(TestCase):
