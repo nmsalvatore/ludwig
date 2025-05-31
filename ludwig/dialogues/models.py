@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
+from django.core.exceptions import ValidationError
 from django.db import models
 from nanoid import generate as generate_nanoid
 
@@ -38,6 +39,15 @@ class Dialogue(TimeStampedModel):
     class Meta:
         ordering = ["-created_on"]
 
+    def save(self, *args, **kwargs):
+        # Perform validation on model fields
+        self.full_clean()
+        super().save(*args, **kwargs)
+
+        # Add author as a participant to the dialogue
+        if self.author and not self.participants.filter(id=self.author.id).exists():
+            self.participants.add(self.author)
+
     def __str__(self):
         return self.title
 
@@ -51,6 +61,11 @@ class Post(TimeStampedModel):
 
     class Meta:
         ordering = ["created_on"]
+
+    def save(self, *args, **kwargs):
+        # Perform validation on model fields
+        self.full_clean()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.body[:50]
