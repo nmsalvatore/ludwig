@@ -1,9 +1,10 @@
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user, get_user_model
 from django.test import TestCase
 from django.test.client import Client
 from django.urls.base import reverse
 
-from ludwig.dialogues.models import Dialogue
+from ..constants import TemplateName
+from ..models import Dialogue
 
 
 User = get_user_model()
@@ -19,7 +20,9 @@ class CreateDialogueViewTests(TestCase):
         3. Can't create dialogue without title
         4. Add multiple participants
         5. Summary is optional
-        6. Successful creation redirets to dialogue detail
+        6. Successful dialogue creation redirects to dialogue detail
+        7. Failed dialogue creation stays on dialogue creation page
+        8. User must be logged in to create a dialogue
     """
 
     def setUp(self):
@@ -35,6 +38,11 @@ class CreateDialogueViewTests(TestCase):
         self.user2 = User.objects.create_user(
             username="testuser2",
             email="testuser2@example.com",
+            password="testpassword"
+        )
+        self.user3 = User.objects.create_user(
+            username="testuser3",
+            email="testuser3@example.com",
             password="testpassword"
         )
         self.client.login(
@@ -106,8 +114,96 @@ class CreateDialogueViewTests(TestCase):
 
         self.assertEqual(response.redirect_chain, [])
 
-    def test_multiple_participants(self):
+    def test_participant_addition(self):
         """
         Add multiple participants to a dialogue.
         """
-        pass
+        response = self.client.post(
+            self.create_dialogue_url,
+            {
+                "title": "Test dialogue",
+                "summary": "Test summary",
+                "participants": [self.user2.id, self.user3.id]
+            }
+        )
+
+        dialogue = Dialogue.objects.get(title="Test dialogue")
+
+        self.assertEqual(dialogue.participants.count(), 3)
+        self.assertIn(self.user2, dialogue.participants.all())
+        self.assertIn(self.user3, dialogue.participants.all())
+        self.assertIn(self.user1, dialogue.participants.all())
+
+    def test_summary_optional(self):
+        """
+        Creating a dialogue without a summary should succeed.
+        """
+        response = self.client.post(
+            self.create_dialogue_url,
+            {"title": "Test dialogue"}
+        )
+
+        dialogue = Dialogue.objects.get(title="Test dialogue")
+
+        self.assertEqual(dialogue.title, "Test dialogue")
+        self.assertEqual(dialogue.summary, "")
+
+    def test_successful_dialogue_creation_redirects_to_detail(self):
+        """
+        Successful dialogue creation should redirect to the dialogue detail page.
+        """
+        response = self.client.post(
+            self.create_dialogue_url,
+            {"title": "Test dialogue"},
+            follow=True
+        )
+
+        self.assertTemplateUsed(response, TemplateName.DIALOGUE_DETAIL)
+
+    def test_failed_dialogue_creation_redirect(self):
+        """
+        Failed dialogue creation should keep user on dialogue creation page.
+        """
+        response = self.client.post(
+            self.create_dialogue_url,
+            {"title": ""}
+        )
+
+        self.assertNotEqual(response.status_code, 302)
+        self.assertTemplateUsed(response, TemplateName.CREATE_DIALOGUE)
+
+    def test_auth_required_for_dialogue_creation(self):
+        """
+        User must be logged in to successfully create a dialogue.
+        """
+        # Store title as variable to avoid typo-related errors
+        dialogue_title = "Unauthorized dialogue"
+
+        # Log out user to make sure that they can't create a dialogue
+        # while not authenticated.
+        self.client.post(reverse("accounts:logout"))
+        user = get_user(self.client)
+        self.assertFalse(user.is_authenticated)
+        self.client.post(self.create_dialogue_url, {"title": dialogue_title})
+        with self.assertRaises(Dialogue.DoesNotExist):
+            Dialogue.objects.get(title=dialogue_title)
+
+        # Log in user to successfully create a dialogue
+        self.client.post(reverse("accounts:login"), {
+            "username": "testuser",
+            "password": "testpassword"
+        })
+        self.client.post(self.create_dialogue_url, {"title": dialogue_title})
+        dialogue = Dialogue.objects.get(title=dialogue_title)
+        self.assertTrue(dialogue.id)
+        self.assertEqual(dialogue.title, dialogue_title)
+
+
+class SearchForUsersViewTests(TestCase):
+    """
+    Testing suite for SearchForUsersView.
+
+    Tests included:
+        1.
+    """
+    pass
