@@ -10,4 +10,4 @@ class DialogueCreationForm(forms.ModelForm):
 
     class Meta:
         model = Dialogue
-        fields = ["title", "summary", "is_open"]
+        fields = ["title", "summary", "is_visible"]
