@@ -19,12 +19,20 @@ class DialogueModelTests(TestCase):
         4. Delete dialogue
         5. Change dialogue title
         6. Author should be a participant
+        7. User `authored_dialogues` shows dialogues authored by user
+        8. User `dialogues` shows dialogues user is participating in
+        9. Deleted user should show sentinel user as dialogue author
     """
     def setUp(self):
-        self.user = User.objects.create_user(
+        self.user1 = User.objects.create_user(
             username="testuser",
             email="test@example.com",
             password="testpass"
+        )
+        self.user2 = User.objects.create_user(
+            username="testuser2",
+            email="test2@example.com",
+            password="testpass2"
         )
 
     def test_create_dialogue(self):
@@ -34,14 +42,14 @@ class DialogueModelTests(TestCase):
         Dialogue.objects.create(
             title="Test",
             summary="Testing",
-            author=self.user
+            author=self.user1
         )
 
         dialogue = Dialogue.objects.get(title="Test")
 
         self.assertTrue(dialogue.title, "Test")
         self.assertTrue(dialogue.summary, "Testing")
-        self.assertTrue(dialogue.author, self.user)
+        self.assertTrue(dialogue.author, self.user1)
         self.assertIsNotNone(dialogue.id)
         self.assertIsNotNone(dialogue.created_on)
         self.assertFalse(dialogue.is_visible)
@@ -56,7 +64,7 @@ class DialogueModelTests(TestCase):
         with self.assertRaises(ValidationError):
             Dialogue.objects.create(
                 summary="Testing",
-                author=self.user
+                author=self.user1
             )
         dialogue = Dialogue.objects.filter(summary="Testing")
         self.assertFalse(dialogue.exists())
@@ -80,7 +88,7 @@ class DialogueModelTests(TestCase):
         Dialogue.objects.create(
             summary="Testing",
             title="Testing",
-            author=self.user
+            author=self.user1
         )
         dialogue = Dialogue.objects.filter(summary="Testing")
         self.assertTrue(dialogue.exists())
@@ -94,7 +102,7 @@ class DialogueModelTests(TestCase):
         dialogue = Dialogue.objects.create(
             summary="Testing",
             title="Testing",
-            author=self.user
+            author=self.user1
         )
         self.assertEqual(dialogue.title, "Testing")
         dialogue.title = "Updated Title"
@@ -108,10 +116,59 @@ class DialogueModelTests(TestCase):
         dialogue = Dialogue.objects.create(
             summary="Testing",
             title="Testing",
-            author=self.user
+            author=self.user1
         )
         participants = dialogue.participants.all()
-        self.assertIn(self.user, participants)
+        self.assertIn(self.user1, participants)
+
+    def test_authored_dialogues(self):
+        """
+        User `authored_dialogues` should show dialogues authored by user.
+        """
+        dialogue1 = Dialogue.objects.create(
+            title="Test dialogue 1",
+            author=self.user1,
+        )
+        dialogue2 = Dialogue.objects.create(
+            title="Test dialogue 2",
+            author=self.user2,
+        )
+        self.assertNotIn(dialogue2, self.user1.authored_dialogues.all())
+        self.assertEqual(self.user1.authored_dialogues.count(), 1)
+        self.assertIn(dialogue2, self.user2.authored_dialogues.all())
+        self.assertEqual(self.user2.authored_dialogues.count(), 1)
+
+    def test_user_dialogues(self):
+        """
+        User `dialogues` should show dialogues authored by user and
+        dialogues that they are a participant in.
+        """
+        dialogue1 = Dialogue.objects.create(
+            title="Test dialogue 1",
+            author=self.user1,
+        )
+        dialogue2 = Dialogue.objects.create(
+            title="Test dialogue 2",
+            author=self.user2,
+        )
+        dialogue2.participants.add(self.user1)
+        self.assertEqual(self.user1.authored_dialogues.count(), 1)
+        self.assertIn(dialogue2, self.user1.dialogues.all())
+        self.assertEqual(self.user1.dialogues.count(), 2)
+
+    def test_deleted_user(self):
+        """
+        Deleted user should show sentinel user as dialogue author.
+        """
+        dialogue1 = Dialogue.objects.create(
+            title="Test dialogue 1",
+            author=self.user1,
+        )
+        self.assertEqual(dialogue1.author, self.user1)
+        self.user1.delete()
+
+        dialogue1 = Dialogue.objects.get(id=dialogue1.id)
+        self.assertEqual(dialogue1.author, User.objects.get(username="deleted"))
 
 
 class PostModelTests(TestCase):
