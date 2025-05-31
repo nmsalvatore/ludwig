@@ -16,6 +16,8 @@ class DialogueModelTests(TestCase):
         1. Successfully create a dialogue and verify model fields
         2. Dialogue without title not be created
         3. Dialogue without title not created
+        4. Delete dialogue
+        5. Change dialogue title
     """
     def setUp(self):
         self.user = User.objects.create_user(
@@ -26,8 +28,7 @@ class DialogueModelTests(TestCase):
 
     def test_create_dialogue(self):
         """
-        Test that dialogue is successfully created in the database and
-        that all model fields are as expected.
+        Dialogue successfully created with required values.
         """
         Dialogue.objects.create(
             title="Test",
@@ -49,8 +50,7 @@ class DialogueModelTests(TestCase):
 
     def test_dialogue_without_title_fails(self):
         """
-        Test that creating a dialogue without a title will fail and
-        raise a ValidationError.
+        Creating a dialogue without a title should fail.
         """
         with self.assertRaises(ValidationError):
             Dialogue.objects.create(
@@ -62,8 +62,7 @@ class DialogueModelTests(TestCase):
 
     def test_dialogue_without_author(self):
         """
-        Test that creating a dialogue without an author will fail and
-        raise a ValidationError.
+        Creating a dialogue without an author should fail.
         """
         with self.assertRaises(ValidationError):
             Dialogue.objects.create(
@@ -72,6 +71,34 @@ class DialogueModelTests(TestCase):
             )
         dialogue = Dialogue.objects.filter(summary="Testing")
         self.assertFalse(dialogue.exists())
+
+    def test_delete_dialogue(self):
+        """
+        Deleting dialogue should remove dialogue from database.
+        """
+        Dialogue.objects.create(
+            summary="Testing",
+            title="Testing",
+            author=self.user
+        )
+        dialogue = Dialogue.objects.filter(summary="Testing")
+        self.assertTrue(dialogue.exists())
+        dialogue.delete()
+        self.assertFalse(dialogue.exists())
+
+    def test_change_dialogue_title(self):
+        """
+        Changing dialogue title should update the title in the database.
+        """
+        dialogue = Dialogue.objects.create(
+            summary="Testing",
+            title="Testing",
+            author=self.user
+        )
+        self.assertEqual(dialogue.title, "Testing")
+        dialogue.title = "Updated Title"
+        dialogue.save()
+        self.assertEqual(dialogue.title, "Updated Title")
 
 
 class PostModelTests(TestCase):
@@ -83,6 +110,8 @@ class PostModelTests(TestCase):
         2. Post shows up in dialogue.posts
         2. Post without body not created
         3. Post without author not created
+        4. Delete post
+        5. Edit post
     """
 
     def setUp(self):
@@ -107,8 +136,7 @@ class PostModelTests(TestCase):
 
     def test_create_post(self):
         """
-        Test that post is successfully added to a dialogue and that all
-        model fields are as expected.
+        Post successfully created with required values.
         """
         post = Post.objects.create(
             dialogue=self.dialogue,
@@ -124,7 +152,7 @@ class PostModelTests(TestCase):
 
     def test_post_in_dialogue_posts(self):
         """
-        Test that post can be found in `Dialogue.posts`
+        Post should be found in `posts` attribute of dialogue instance.
         """
         post = Post.objects.create(
             dialogue=self.dialogue,
@@ -136,8 +164,7 @@ class PostModelTests(TestCase):
 
     def test_post_without_body_not_created(self):
         """
-        Test that a post without a body will not be created and will
-        raise a ValidationError.
+        Creating a post without a body should fail.
         """
         with self.assertRaises(ValidationError):
             Post.objects.create(
@@ -149,8 +176,7 @@ class PostModelTests(TestCase):
 
     def test_post_without_author_not_created(self):
         """
-        Test that a post without an author will not be created and will
-        raise a ValidationError.
+        Creating post without an author should fail.
         """
         with self.assertRaises(ValidationError):
             Post.objects.create(
@@ -159,3 +185,35 @@ class PostModelTests(TestCase):
             )
         post = Post.objects.filter(dialogue=self.dialogue)
         self.assertFalse(post.exists())
+
+    def test_delete_post(self):
+        """
+        Deleting post should remove post from dialogue.
+        """
+        post = Post.objects.create(
+            dialogue=self.dialogue,
+            author=self.user1,
+            body="Test post",
+        )
+        self.assertIn(post, self.dialogue.posts.all())
+        self.assertEqual(self.dialogue.posts.count(), 1)
+        post.delete()
+        self.assertNotIn(post, self.dialogue.posts.all())
+        self.assertEqual(self.dialogue.posts.count(), 0)
+
+    def test_edit_post(self):
+        """
+        Editing post should update post body.
+        """
+        post = Post.objects.create(
+            dialogue=self.dialogue,
+            author=self.user1,
+            body="Test post",
+        )
+        self.assertIn(post, self.dialogue.posts.all())
+        self.assertEqual(self.dialogue.posts.count(), 1)
+        post.body = "Updated post"
+        post.save()
+        self.assertIn(post, self.dialogue.posts.all())
+        self.assertEqual(self.dialogue.posts.count(), 1)
+        self.assertEqual(post.body, "Updated post")
