@@ -204,6 +204,43 @@ class SearchForUsersViewTests(TestCase):
     Testing suite for SearchForUsersView.
 
     Tests included:
-        1.
+        1. Query should be in context data
     """
-    pass
+    def setUp(self):
+        """
+        Initial setup for testing suite.
+        """
+        self.client = Client()
+
+        self.user = User.objects.create_user(
+            username="testuser",
+            email="testuser@example.com",
+            password="testpassword"
+        )
+
+        self.client.post(reverse("accounts:login"), {
+            "username": "testuser",
+            "password": "testpassword"
+        })
+
+    def test_search_query(self):
+        """
+        Query value should be in context data.
+        """
+        query = "Test"
+        response = self.client.get(
+            reverse("dialogues:search_users"),
+            {"query": query}
+        )
+        self.assertEqual(response.context_data.get("query"), query)
+
+    def test_short_query(self):
+        """
+        Query with less than two characters should return None.
+        """
+        query = "x"
+        response = self.client.get(
+            reverse("dialogues:search_users"),
+            {"query": query}
+        )
+        self.assertEqual(response.context_data.get("query"), None)
