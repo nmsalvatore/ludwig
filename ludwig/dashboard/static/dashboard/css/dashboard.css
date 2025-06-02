@@ -24,7 +24,8 @@ a.dashboard-button .dialogue-summary {
     gap: var(--size-0);
 }
 
-a.dashboard-button .dialogue-summary p {
+a.dashboard-button .dialogue-title {
+    font-weight: 500;
     margin-bottom: 0;
 }
 
