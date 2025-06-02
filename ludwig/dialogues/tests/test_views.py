@@ -247,3 +247,131 @@ class SearchForUsersViewTests(TestCase):
             {"query": query}
         )
         self.assertEqual(response.context_data.get("query"), None)
+
+
+class DialogueDetailViewTests(TestCase):
+    """
+    Testing suite for DialogueDetailView.
+
+    Tests included:
+        1. Successful page load of private dialogue
+        2. Successful page load of public dialogue
+        3. New post rendered in dialogue
+        4. HTMX post returns partial template
+        5. Non-participant can view public dialogue
+        6. Non-participant cannot view private dialogue
+    """
+    def setUp(self):
+        """
+        Initial setup of testing suite.
+        """
+        self.client1 = Client()
+        self.client2 = Client()
+
+        self.user1 = User.objects.create_user(
+            username="testuser1",
+            email="testuser1@example.com",
+            password="testpassword"
+        )
+        self.user2 = User.objects.create_user(
+            username="testuser2",
+            email="testuser2@example.com",
+            password="testpassword"
+        )
+
+        self.client1.post(reverse("accounts:login"), {
+            "username": "testuser1",
+            "password": "testpassword"
+        })
+        self.client2.post(reverse("accounts:login"), {
+            "username": "testuser2",
+            "password": "testpassword"
+        })
+
+        self.private_dialogue = Dialogue.objects.create(
+            title="Private test dialogue",
+            summary="Testy business",
+            author=self.user1
+        )
+        self.private_dialogue_url = reverse(
+            "dialogues:dialogue_detail",
+            args=[self.private_dialogue.id]
+        )
+
+        self.public_dialogue = Dialogue.objects.create(
+            title="Public test dialogue",
+            summary="Testosteroni",
+            author=self.user1,
+            is_visible=True
+        )
+        self.public_dialogue_url = reverse(
+            "dialogues:dialogue_detail",
+            args=[self.public_dialogue.id]
+        )
+
+    def test_successful_page_load_private_dialogue(self):
+        """
+        Detail page should successfully load private dialogue with
+        dialogue detail template.
+        """
+        response = self.client1.get(self.private_dialogue_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(TemplateName.DIALOGUE_DETAIL)
+        self.assertFalse(self.private_dialogue.is_visible)
+
+    def test_successful_page_load_public_dialogue(self):
+        """
+        Detail page should successfully load public dialogue with
+        dialogue detail template.
+        """
+        response = self.client1.get(self.public_dialogue_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(TemplateName.DIALOGUE_DETAIL)
+        self.assertTrue(self.public_dialogue.is_visible)
+
+    def test_new_post(self):
+        """
+        New post should be rendered in dialogue.
+        """
+        post_body = "Hello world"
+        response = self.client.get(self.private_dialogue_url)
+        self.assertNotIn(post_body, response.text)
+        self.client1.post(self.private_dialogue_url, {
+            "body": post_body
+        })
+        response = self.client1.get(self.private_dialogue_url)
+        self.assertIn(post_body, response.text)
+
+    def test_htmx_post_response(self):
+        """
+        New posts with HTMX should return partial template containing
+        post body.
+        """
+        post_body = "Hello world"
+        response = self.client1.post(
+            self.private_dialogue_url,
+            {"body": post_body},
+            headers={
+                "HX-Request": True
+            })
+        self.assertIn(post_body, response.text)
+
+    def test_nonparticipant_can_view_public_dialogue(self):
+        """
+        Non-participants should be able to view public dialogues.
+        """
+        self.assertIn(self.user1, self.public_dialogue.participants.all())
+        self.assertNotIn(self.user2, self.public_dialogue.participants.all())
+        self.assertTrue(self.public_dialogue.is_visible)
+        response = self.client2.get(self.public_dialogue_url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_nonparticipant_cannot_view_private_dialogue(self):
+        """
+        Non-participants should not be able to view private dialogues.
+        """
+        self.assertIn(self.user1, self.private_dialogue.participants.all())
+        self.assertNotIn(self.user2, self.private_dialogue.participants.all())
+        self.assertFalse(self.private_dialogue.is_visible)
+        response = self.client2.get(self.private_dialogue_url)
+        self.assertEqual(response.status_code, 403)
