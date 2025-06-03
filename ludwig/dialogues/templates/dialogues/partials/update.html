@@ -6,7 +6,7 @@
     <div
         hidden
         id="polling"
-        hx-get="{% url 'dialogues:polling' dialogue.id %}?last_id={{ last_id }}"
+        hx-get="{% url 'dialogues:dialogue_detail_update' dialogue.id %}?last_id={{ last_id }}"
         hx-trigger="every 3s[!document.hidden && !window.pausePolling]"
         hx-target="#posts_container"
         hx-swap="beforeend"
