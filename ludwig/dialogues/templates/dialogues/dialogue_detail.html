@@ -22,13 +22,13 @@
 
                     {% if dialogue.summary %}
                         <div class="summary">
-                            <h2>Objective:</h2>
+                            <h3>Objective:</h3>
                             <p>{{ dialogue.summary }}</p>
                         </div>
                     {% endif %}
 
                     <div class="participants">
-                        <h2>Participants:</h2>
+                        <h3>Participants:</h3>
                         <ul>
                             {% for participant in dialogue.participants.all %}
                                 <li>{{ participant }}{% if participant == dialogue.author %} (Author){% endif %}</li>
@@ -82,7 +82,7 @@
     <div
         hidden
         id="polling"
-        hx-get="{% url 'dialogues:polling' dialogue.id %}?last_id={{ last_id }}"
+        hx-get="{% url 'dialogues:dialogue_detail_update' dialogue.id %}?last_id={{ last_id }}"
         hx-trigger="every 3s[!document.hidden && !window.pausePolling]"
         hx-target="#posts_container"
         hx-swap="beforeend">
