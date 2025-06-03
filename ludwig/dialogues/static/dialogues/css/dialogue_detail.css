@@ -96,7 +96,7 @@
     background: var(--color-neutral-3);
     border: 1px solid;
     box-shadow: var(--box-shadow-primary);
-    margin-bottom: var(--size-2);
+    margin-bottom: var(--size-1);
 }
 
 .post:last-child {
