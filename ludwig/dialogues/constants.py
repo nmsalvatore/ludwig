@@ -8,8 +8,8 @@ class TemplateName(StrEnum):
 
     # partial templates
     PERMISSION_DENIED = "dialogues/partials/403.html"
-    DIALOGUE_SETTINGS = "dialogues/partials/settings.html"
-    POLLING = "dialogues/partials/polling.html"
+    DIALOGUE_SETTINGS = "dialogues/partials/dialogue_settings.html"
+    DIALOGUE_DETAIL_UPDATE = "dialogues/partials/update.html"
     POST_DETAIL = "dialogues/partials/post_detail.html"
     POST_FORM = "dialogues/partials/post_form.html"
     TOGGLE_VISIBILITY = "dialogues/partials/toggle_visibility.html"
