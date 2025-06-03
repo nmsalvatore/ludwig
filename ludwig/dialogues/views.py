@@ -173,7 +173,7 @@ class DialogueDetailView(DetailView):
                     "dialogue": dialogue,
                 }
 
-                response = render(request, TemplateName.POLLING, context)
+                response = render(request, TemplateName.DIALOGUE_DETAIL_UPDATE, context)
                 response.headers["Vary"] = "HX-Request"
                 return response
 
@@ -182,8 +182,13 @@ class DialogueDetailView(DetailView):
             )
 
 
-class PollingView(TemplateView):
-    template_name = TemplateName.POLLING
+class DialogueDetailUpdateView(TemplateView):
+    """
+    Update the content on the dialogue detail page without a full page
+    refresh. This requires JavaScript to be enabled and is triggered
+    by post submissions and a 3 second polling mechanism.
+    """
+    template_name = TemplateName.DIALOGUE_DETAIL_UPDATE
 
     def dispatch(self, request, *args, **kwargs):
         """
@@ -251,10 +256,35 @@ class DeleteDialogueView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy("dashboard:home")
     pk_url_kwarg = "dialogue_id"
 
+    def dispatch(self, request, *args, **kwargs):
+        dialogue_id = kwargs.get("dialogue_id")
+        dialogue = get_object_or_404(Dialogue, id=dialogue_id)
+
+        user = get_user(request)
+
+        if dialogue.author != user:
+            raise PermissionDenied
+
+        return super().dispatch(request, *args, **kwargs)
+
 
 class ToggleVisibilityView(LoginRequiredMixin, View):
+    def dispatch(self, request, *args, **kwargs):
+        dialogue_id = kwargs.get("dialogue_id")
+        dialogue = get_object_or_404(Dialogue, id=dialogue_id)
+
+        user = get_user(request)
+
+        if dialogue.author != user:
+            raise PermissionDenied
+
+        return super().dispatch(request, *args, **kwargs)
+
     def post(self, request, dialogue_id):
         dialogue = get_object_or_404(Dialogue, id=dialogue_id)
+
+        if dialogue.author != request.user:
+            return
         dialogue.is_visible = not dialogue.is_visible
         dialogue.save()
 
