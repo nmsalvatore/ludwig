@@ -345,7 +345,7 @@ class DialogueDetailViewTests(TestCase):
     def test_htmx_post_response(self):
         """
         New posts with HTMX should return partial template containing
-        post body.
+        post body and `last_id` of post.
         """
         post_body = "Hello world"
         response = self.client1.post(
@@ -355,6 +355,7 @@ class DialogueDetailViewTests(TestCase):
                 "HX-Request": True
             })
         self.assertIn(post_body, response.text)
+        self.assertTrue(response.context.get("last_id"))
 
     def test_nonparticipant_can_view_public_dialogue(self):
         """
@@ -375,3 +376,83 @@ class DialogueDetailViewTests(TestCase):
         self.assertFalse(self.private_dialogue.is_visible)
         response = self.client2.get(self.private_dialogue_url)
         self.assertEqual(response.status_code, 403)
+
+
+class DeleteDialogueViewTests(TestCase):
+    """
+    Testing suite for DeleteDialogueView.
+
+    Tests included:
+        1. Successfully delete dialogue
+        2. Must be author to delete dialogue
+    """
+    def setUp(self):
+        """
+        Initial setup for testing suite.
+        """
+        self.client = Client()
+
+        self.user = User.objects.create_user(
+            username="testuser",
+            email="testuser@example.com",
+            password="testpassword"
+        )
+
+        self.dialogue = Dialogue.objects.create(
+            author=self.user,
+            title="To be deleted dialogue"
+        )
+
+    def test_delete_dialogue(self):
+        """
+        POST request to `delete_dialogue` URL should remove dialogue
+        from the database.
+        """
+        self.client.post(reverse("accounts:login"), {
+            "username": "testuser",
+            "password": "testpassword"
+        })
+
+        self.assertTrue(
+            Dialogue.objects.filter(id=self.dialogue.id).exists()
+        )
+
+        self.client.post(reverse(
+            "dialogues:delete_dialogue",
+            args=[self.dialogue.id]
+        ))
+
+        self.assertFalse(
+            Dialogue.objects.filter(id=self.dialogue.id).exists()
+        )
+
+    def test_login_required_for_delete(self):
+        """
+        User should not be able to delete dialogue if not dialogue author.
+        """
+        User.objects.create_user(
+            username="randomuser",
+            email="randomuser@example.com",
+            password="randompassword"
+        )
+
+        self.client.post(reverse("accounts:login"), {
+            "username": "randomuser",
+            "password": "randompassword"
+        })
+
+        random_user = get_user(self.client)
+
+        self.assertEqual(self.dialogue.author, self.user)
+        self.assertNotEqual(self.dialogue.author, random_user)
+        self.assertTrue(random_user.is_authenticated)
+
+        response = self.client.post(reverse(
+            "dialogues:delete_dialogue",
+            args=[self.dialogue.id]
+        ))
+
+        self.assertEqual(response.status_code, 403)
+        self.assertTrue(
+            Dialogue.objects.filter(id=self.dialogue.id).exists()
+        )
