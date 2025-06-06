@@ -8,7 +8,7 @@ form .checkbox-field-container {
 }
 
 form .hint {
-    margin-bottom: var(--size-0);
+    margin-bottom: var(--size-1);
 }
 
 form .checkbox-field-container input {

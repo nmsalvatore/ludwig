@@ -21,10 +21,8 @@
     --font-size-0: calc(var(--font-size-1) * 0.75);
     --font-size-1: var(--size-1);
     --font-size-2: calc(var(--font-size-1) * 1.125);
-    --font-size-3: calc(var(--font-size-1) * 1.25);
-    --font-size-4: calc(var(--font-size-1) * 1.5);
 
-    --line-height: 1.6;
+    --line-height: 1.7;
     --box-shadow-primary: 2px 2px var(--color-primary-1);
 }
 
@@ -128,13 +126,12 @@ h6 {
 }
 
 h1 {
-    font-size: var(--font-size-4);
+    font-size: var(--font-size-2);
     margin-top: var(--size-1);
     margin-bottom: calc(var(--size-2) - 4px);
 }
 
 h2 {
-    font-size: var(--font-size-2);
     margin-bottom: var(--size-1);
 }
 
