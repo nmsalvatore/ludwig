@@ -1,7 +1,12 @@
 from django.contrib.auth import get_user
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Max
+from django.db.models import Max, query
+from django.db.models.query import Prefetch
 from django.views.generic.base import TemplateView
+
+from ludwig.accounts.models import User
+
+from .constants import TemplateName
 
 
 class DashboardView(LoginRequiredMixin, TemplateView):
@@ -9,16 +14,14 @@ class DashboardView(LoginRequiredMixin, TemplateView):
     Display dashboard and show most recent dialogues.
     """
 
-    template_name = "dashboard/dashboard.html"
+    template_name = TemplateName.DASHBOARD
 
     def _get_recent_user_dialogues(self):
         """Get recent user dialogues, sorted by most recent post"""
         user = get_user(self.request)
         user_dialogues = user.dialogues.annotate(
-            latest_post_date=Max('posts__created_on')
-        ).values(
-            "id", "title", "latest_post_date"
-        ).order_by('-latest_post_date')
+            latest_post_date=Max("posts__created_on")
+        ).order_by("-latest_post_date", "-created_on")
         return user_dialogues
 
     def get_context_data(self, **kwargs):

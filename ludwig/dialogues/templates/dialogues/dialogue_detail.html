@@ -1,63 +1,90 @@
-{% extends "base/base.html" %}
+{% extends "base.html" %}
 
 {% load static %}
-{% load dialogue_filters %}
 
 {% block stylesheets %}
-<link rel="stylesheet" href="{% static 'dialogues/css/dialogues.css' %}">
-<link rel="stylesheet" href="{% static 'dialogues/css/dialogue_detail.css' %}">
+    <link rel="stylesheet" href="{% static 'dialogues/css/dialogue_detail.css' %}">
+    <link rel="stylesheet" href="{% static 'dialogues/css/markdown.css' %}">
 {% endblock %}
 
 {% block scripts %}
-<script src="{% static 'js/htmx.min.js' %}"></script>
-<script src="{% static 'js/htmx-ext-sse.js' %}"></script>
-<script src="{% static 'dialogues/js/hx_listeners.js' %}" defer></script>
+    <script src="{% static 'js/htmx.js' %}" defer></script>
+    <script src="{% static 'dialogues/js/listeners.js' %}" defer></script>
+    <script src="{% static 'dialogues/js/hx_config.js' %}" defer></script>
 {% endblock %}
 
 {% block main %}
-<div class="container" hx-ext="sse">
-    <header>
-        <h1>{{ dialogue.title }}</h1>
-        <p class="participants">With {{ dialogue.participants.all|text_list }}</p>
+    <div class="container" id="dialogue_detail_container">
+        <section class="dialogue-header">
+            <h1>{{ dialogue.title }}</h1>
+            <div class="dialogue-details">
+                <div class="public-details">
 
-        {% if dialogue.summary %}
-            <div class="dialogue-summary">
-                <p>{{ dialogue.summary }}</p>
+                    {% if dialogue.summary %}
+                        <div class="summary">
+                            <h3>Objective:</h3>
+                            <p>{{ dialogue.summary }}</p>
+                        </div>
+                    {% endif %}
+
+                    <div class="participants">
+                        <h3>Participants:</h3>
+                        <ul>
+                            {% for participant in dialogue.participants.all %}
+                                <li>{{ participant }}{% if participant == dialogue.author %} (Author){% endif %}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <div class="other">
+                        <p><strong>Created:</strong> {{ dialogue.created_on|date:"F j, Y" }}</p>
+                        <p id="visibility_detail"><strong>Visibility:</strong> {{ dialogue.is_visible|yesno:"Public,Private"}}</p>
+                    </div>
+                </div>
+
+                {% if user == dialogue.author %}
+                    <details class="settings">
+                        {% include "dialogues/partials/dialogue_settings.html" %}
+                    </details>
+                {% endif %}
             </div>
-        {% endif %}
-    </header>
+        </section>
 
-    <div sse-connect="{% url 'dialogues:stream' dialogue.id %}?last_id={% if posts %}{{ posts.last.id }}{% else %}0{% endif %}">
-        <div sse-swap="new-post" hx-target="#posts_container" hx-swap="beforeend"></div>
+        <section id="posts_container">
+            {% if posts %}
+                {% for post in posts %}
+                    {% include "dialogues/partials/post_detail.html" with post=post %}
+                {% endfor %}
+            {% else %}
+                <div class="no-posts" id="no_posts_message">
+                    <p>No messages yet. Start the conversation!</p>
+                </div>
+            {% endif %}
+        </section>
+
+        {% if user in dialogue.participants.all or dialogue.is_open %}
+            <section class="post-form">
+                {% include "dialogues/partials/post_form.html" %}
+            </section>
+        {% endif %}
+
+        <section class="dialogue-actions">
+            <a href="{% url 'dashboard:home' %}" class="button">Back to Dashboard</a>
+        </section>
     </div>
 
-    <section id="posts_container">
-        {% if posts %}
-            {% for post in posts %}
-                {% include "dialogues/partials/post.html" with post=post %}
-            {% endfor %}
-        {% else %}
-            <div class="no-posts" id="no_posts_message">
-                <p>No messages yet. Start the conversation!</p>
-            </div>
-        {% endif %}
-    </section>
-
-    {% if request.user in dialogue.participants.all or dialogue.is_open %}
-        <section class="post-form">
-            <h2>Write your post</h2>
-            {% include 'dialogues/partials/form.html' %}
-        </section>
-    {% endif %}
-
-    <section class="dialogue-info">
-        <p><strong>Created:</strong> {{ dialogue.created_on|date:"F j, Y" }}</p>
-        <p><strong>Visibility:</strong> {% if dialogue.is_visible %}Public{% else %}Private{% endif %}</p>
-        <p><strong>Access:</strong> {% if dialogue.is_open %}Open to join{% else %}Closed{% endif %}</p>
-    </section>
-
-    <section class="dialogue-actions">
-        <a href="{% url 'dashboard:home' %}" class="button">Back to Dashboard</a>
-    </section>
-</div>
+    <!--
+    An HTMX trigger that loops every 3 seconds and looks for updates
+    to the dialogue in "real" time. Performs an out-of-band swap on
+    the polling element below and the `last_id_input` in the post form,
+    plus appends any new posts to `posts_container`.
+    -->
+    <div
+        hidden
+        id="polling"
+        hx-get="{% url 'dialogues:dialogue_detail_update' dialogue.id %}?last_id={{ last_id }}"
+        hx-trigger="every 3s[!document.hidden && !window.pausePolling]"
+        hx-target="#posts_container"
+        hx-swap="beforeend">
+    </div>
 {% endblock %}

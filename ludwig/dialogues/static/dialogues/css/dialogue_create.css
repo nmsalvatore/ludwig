@@ -1,19 +1,21 @@
+form label {
+    font-weight: bold;
+}
+
 form .checkbox-field-container {
     display: flex;
     align-items: center;
 }
 
 form .hint {
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--size-1);
 }
 
 form .checkbox-field-container input {
-    margin-right: 0.5rem;
+    margin-right: var(--size-0);
 }
 
 form .checkbox-field-container label {
-    color: var(--color-5);
-    font-family: Liter, sans-serif;
     margin: 0;
 }
 
@@ -28,7 +30,6 @@ form .checkbox-field-container label {
     right: 8px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 0.8em;
     opacity: 0.7;
     display: none;
 }
@@ -40,25 +41,24 @@ form .checkbox-field-container label {
 .search-results-dropdown:has(.user-option) {
     position: absolute;
     width: 100%;
-    background: var(--color-0);
-    border: 1px solid var(--color-7);
-    border-radius: 0.25rem;
+    background: var(--color-neutral-1);
+    border: 1px solid;
     z-index: 10;
     max-height: 200px;
     overflow-y: auto;
 }
 
 .user-option {
-    padding: 0.6125rem 0.75rem;
+    padding: var(--size-1);
     cursor: pointer;
 }
 
 .user-option:hover {
-    background: var(--color-1);
+    background: var(--color-neutral-2);
 }
 
 .no-results {
-    margin-top: 0.5rem;
+    margin-top: var(--size-0);
     font-style: italic;
     opacity: 0.6;
 }
@@ -66,26 +66,32 @@ form .checkbox-field-container label {
 .selected-users {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: var(--size-0);
 }
 
 .selected-users:has(.selected-user) {
-    margin-top: 1rem;
+    margin-top: var(--size-1);
 }
 
 .selected-user {
-    display: flex;
     align-items: center;
-    background: var(--color-7);
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
+    background: var(--color-neutral-3);
+    border: 1px solid;
+    box-shadow: var(--box-shadow-primary);
+    display: flex;
+    gap: var(--size-1);
+    padding: var(--size-0) var(--size-1);
 }
 
-.remove-user {
+.selected-user .remove-user {
     color: inherit;
-    margin-left: 0.5rem;
     cursor: pointer;
     border: none;
     background: none;
-    font-size: 1.2em;
+    font-size: var(--size-1);
+}
+
+button.remove-user {
+    border: none;
+    box-shadow: none;
 }

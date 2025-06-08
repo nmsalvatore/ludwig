@@ -5,13 +5,45 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="theme-color" content="hsl(60 10% 94%)">
 
-        <link rel="preload" href="{% static 'css/fonts.css' %}" as="style">
-
-        <link rel="stylesheet" href="{% static 'css/fonts.css' %}">
         <link rel="stylesheet" href="{% static 'css/base.css' %}">
-
         {% block stylesheets %}{% endblock %}
+
+        <style id="font_definitions">
+            /*
+            inline font-face rules to ensure matching asset paths
+            between font preloads above and the font definitions below
+            */
+
+            @font-face {
+                font-family: "IBM Plex Mono";
+                src:
+                    local("IBM Plex Mono Regular"),
+                    local("IBMPlexMono-Regular"),
+                    url("{% static 'fonts/IBMPlexMono-Regular.woff2' %}") format("woff2");
+                font-weight: normal;
+                font-style: normal;
+                font-display: swap;
+            }
+
+            @font-face {
+                font-family: "IBM Plex Mono";
+                src:
+                    local("IBM Plex Mono SemiBold"),
+                    local("IBMPlexMono-SemiBold"),
+                    url("{% static 'fonts/IBMPlexMono-SemiBold.woff2' %}") format("woff2");
+                font-weight: bold;
+                font-style: normal;
+                font-display: swap;
+            }
+
+            body {
+                font-family: "IBM Plex Mono", monospace;
+            }
+        </style>
+
+        <script id="enable_js">document.documentElement.dataset.jsEnabled = true</script>
         {% block scripts %}{% endblock %}
 
         <title>Ludwig</title>

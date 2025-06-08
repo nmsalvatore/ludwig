@@ -4,20 +4,42 @@ div.dashboard-options {
 }
 
 a.dashboard-button {
-    display: flex;
-    gap: 0.75rem;
-    align-items: center;
-    border-radius: 0.25rem;
-    padding: 0.6125rem 0.75rem;
-    margin-bottom: 0.5rem;
-    text-decoration: none;
+    align-items: flex-start;
+    background: var(--color-neutral-3);
+    border: 1px solid;
+    border-radius: 4px;
+    box-shadow: var(--box-shadow-primary);
     color: inherit;
+    display: flex;
+    flex-direction: row;
+    gap: var(--size-1);
+    margin-bottom: var(--size-0);
+    padding: var(--size-1);
+    text-decoration: none;
 }
 
-a.dashboard-button span {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
+a.dashboard-button .dialogue-summary {
+    display: flex;
+    flex-direction: column;
+    gap: var(--size-0);
+}
+
+a.dashboard-button .dialogue-title {
+    margin-bottom: 0;
+}
+
+a.dashboard-button .dialogue-summary small {
+    font-size: var(--font-size-0);
+    color: var(--color-neutral-4);
+}
+
+a.dashboard-button .dialogue-summary .posts-count {
+    color: var(--color-primary-2);
+}
+
+a.dashboard-button img {
+    position: relative;
+    top: 2px;
 }
 
 a.dashboard-button:last-child {
@@ -25,28 +47,20 @@ a.dashboard-button:last-child {
 }
 
 a.dashboard-button.primary {
-    background: var(--color-2);
+    background: var(--color-primary-1);
 }
 
 a.dashboard-button.coming-soon {
-    background: var(--color-7);
-    color: rgba(43, 59, 51, 0.4);
-    pointer-events: none;
-}
-
-.coming-soon::after {
-    content: "Coming soon!";
-    font-size: 0.625rem;
-    font-style: italic;
+    display: none;
 }
 
 .user-dialogues ul {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: var(--size-1);
     list-style-type: none;
 }
 
 .user-dialogues .dashboard-button {
-    background: var(--color-7);
+    box-shadow: var(--box-shadow-primary);
 }

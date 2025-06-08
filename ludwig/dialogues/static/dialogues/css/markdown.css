@@ -1,0 +1,34 @@
+.markdown-body ol,
+.markdown-body ul {
+    margin-left: var(--size-1);
+}
+
+.markdown-body > ol,
+.markdown-body > ul {
+    margin-bottom: var(--size-1);
+    margin-left: var(--size-2);
+}
+
+.markdown-body > ol ul,
+.markdown-body > ol ol,
+.markdown-body > ul ul,
+.markdown-body > ul ol {
+    margin-top: var(--size-0);
+    margin-bottom: var(--size-0);
+    margin-left: var(--size-1);
+}
+
+.markdown-body > ol:last-child,
+.markdown-body > ul:last-child {
+    margin-bottom: 0;
+}
+
+.markdown-body blockquote {
+    background: var(--color-neutral-2);
+    margin-bottom: var(--size-1);
+    padding: var(--size-1);
+}
+
+.markdown-body img {
+    max-height: 360px;
+}

@@ -14,23 +14,22 @@ class UserRegistrationForm(UserCreationForm):
     username = forms.CharField(
         label="Username",
         max_length=30,
-        widget=forms.TextInput(attrs={"autocomplete": "off"})
+        widget=forms.TextInput(attrs={"autocomplete": "off"}),
     )
 
     email = forms.EmailField(
         label="Email address",
         max_length=254,
-        widget=forms.EmailInput(attrs={"autocomplete": "off"})
+        widget=forms.EmailInput(attrs={"autocomplete": "off"}),
     )
 
     password1 = forms.CharField(
-        label="Password",
-        widget=forms.PasswordInput(attrs={"autocomplete": "off"})
+        label="Password", widget=forms.PasswordInput(attrs={"autocomplete": "off"})
     )
 
     password2 = forms.CharField(
         label="Confirm password",
-        widget=forms.PasswordInput(attrs={"autocomplete": "off"})
+        widget=forms.PasswordInput(attrs={"autocomplete": "off"}),
     )
 
     class Meta:
@@ -45,15 +44,10 @@ class UserLoginForm(AuthenticationForm):
     """
 
     username = forms.CharField(
-            label="Username",
-            widget=forms.TextInput(attrs={
-                "autofocus": True,
-                "autocomplete": "off"
-            })
-        )
+        label="Username",
+        widget=forms.TextInput(attrs={"autofocus": True, "autocomplete": "off"}),
+    )
 
     password = forms.CharField(
-        widget=forms.PasswordInput(attrs={
-            "autocomplete": "off"
-        })
+        widget=forms.PasswordInput(attrs={"autocomplete": "off"})
     )

@@ -1,50 +1,129 @@
-.participants {
-    font-size: 0.8125rem;
-    font-weight: 500;
-    margin-bottom: 1rem;
-    color: var(--color-5);
-    font-family: Bitter, serif;
+.dialogue-details .public-details div {
+    margin-bottom: var(--size-1);
 }
 
-.dialogue-info p {
+.dialogue-details .public-details div:last-child {
     margin-bottom: 0;
 }
 
+.dialogue-details {
+    background: var(--color-accent-1);
+    border: 1px solid;
+    box-shadow: var(--box-shadow-primary);
+    margin-bottom: 0;
+}
+
+.dialogue-details .public-details {
+    padding: var(--size-1);
+}
+
+.dialogue-details .other p {
+    margin-bottom: 0;
+}
+
+.dialogue-details .participants ul {
+    margin-left: var(--size-2);
+}
+
+.dialogue-details .settings {
+    padding: var(--size-1);
+    border-top: 1px solid;
+}
+
+.dialogue-details .settings summary {
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.dialogue-details .settings .collapsed-info {
+    margin-top: var(--size-1);
+}
+
+.dialogue-details a {
+    color: var(--color-accent-2);
+}
+
+.dialogue-details .settings p {
+    margin-bottom: var(--size-1);
+}
+
+.dialogue-details .settings .buttons {
+    display: flex;
+    gap: var(--size-1);
+}
+
+.dialogue-details .settings-option-container {
+    margin-bottom: var(--size-2);
+}
+
+.dialogue-details .settings-option-container:last-child {
+    margin-bottom: 0;
+}
+
+.dialogue-details .settings .buttons button {
+    width: 100%;
+    padding: var(--size-0);
+}
+
+.dialogue-details .settings .buttons button.confirm-delete {
+    background: var(--color-alert-2);
+    box-shadow: 2px 2px var(--color-accent-1);
+    color: var(--color-neutral-1);
+    border: 1px solid var(--color-neutral-4);
+}
+
+.dialogue-details button.settings-button {
+    background: var(--color-accent-1);
+    box-shadow: 2px 2px var(--color-accent-2);
+    padding: var(--size-0) var(--size-1);
+    width: auto;
+}
+
+.dialogue-details .settings dialog {
+    margin: auto;
+    background: var(--color-neutral-2);
+    padding: var(--size-1);
+    border: 1px solid;
+    box-shadow: 2px 2px 8px -6px;
+}
+
+.dialogue-details .settings dialog::backdrop {
+    background: rgba(14, 14, 11, 0.5);
+}
+
 .post {
-    margin-bottom: 1.25rem;
+    padding: var(--size-1);
+    background: var(--color-neutral-3);
+    border: 1px solid;
+    box-shadow: var(--box-shadow-primary);
+    margin-bottom: var(--size-1);
 }
 
 .post:last-child {
     margin-bottom: 0;
 }
 
-.post-body {
-    padding: 0.6125rem 0.75rem;
-    background: var(--color-7);
-    border-radius: 0.25rem;
-}
-
 .post-header {
     display: flex;
     align-items: center;
-    margin-bottom: 0.6125rem;
+    gap: var(--size-1);
+    margin-bottom: var(--size-1);
 }
 
 .post-author {
-    color: var(--color-4);
-    font-weight: 500;
+    color: var(--color-accent-3);
+    font-weight: bold;
 }
 
 .post.post-by-user .post-author {
-    color: var(--color-5);
+    color: var(--color-primary-2);
 }
 
 .post-time {
-    margin-left: 1rem;
-    text-transform: uppercase;
-    font-size: 0.625rem;
+    font-size: var(--font-size-0);
+    color: var(--color-neutral-4);
 }
 
-.post-form textarea {
-    font-size: 0.875rem;
+#post_form textarea {
+    margin-bottom: calc(var(--size-1) - 7px);
 }

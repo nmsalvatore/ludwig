@@ -1,12 +1,16 @@
 [project]
 name = "ludwig"
 version = "0.1.0"
-description = "Add your description here"
+description = "A web application to facilitate dialogues between humans."
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "django>=5.2",
     "environs[django]>=14.1.1",
+    "markdown>=3.8",
     "nanoid>=2.0.0",
     "psycopg[binary]>=3.2.6",
 ]
+
+[project.optional-dependencies]
+production = ["gunicorn>=23.0.0", "whitenoise>=6.9.0"]

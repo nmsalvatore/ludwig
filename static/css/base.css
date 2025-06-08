@@ -1,15 +1,29 @@
 :root {
-    --color-0: hsl(60 10% 97%);
-    --color-1: hsl(60 10% 94%);
-    --color-2: hsl(150 30% 80%);
-    --color-3: hsl(150 25% 60%);
-    --color-4: hsl(150 20% 40%);
-    --color-5: hsl(150 10% 30%);
-    --color-6: hsl(150 10% 20%);
-    --color-7: hsl(60 10% 90%);
-    --color-8: hsl(60 10% 80%);
-    --color-alert: hsl(0 35% 50%);
-    --line-height: 1.6;
+    --color-neutral-1: hsl(60 10% 99%);
+    --color-neutral-2: hsl(60 10% 94%);
+    --color-neutral-3: hsl(60 10% 90%);
+    --color-neutral-4: hsl(60 10% 30%);
+    --color-neutral-5: hsl(60 10% 5%);
+    --color-primary-1: hsl(150 30% 80%);
+    --color-primary-2: hsl(150 30% 34%);
+    --color-accent-1: hsl(210 30% 88%);
+    --color-accent-2: hsl(210 30% 80%);
+    --color-accent-3: hsl(210 30% 40%);
+    --color-alert-1: hsl(0 30% 88%);
+    --color-alert-2: hsl(0 30% 40%);
+
+    --size-0: calc(var(--size-1) * 0.5);
+    --size-1: 0.875rem;
+    --size-2: calc(var(--size-1) * 2);
+    --size-3: calc(var(--size-1) * 3);
+    --size-4: calc(var(--size-1) * 4);
+
+    --font-size-0: calc(var(--font-size-1) * 0.75);
+    --font-size-1: var(--size-1);
+    --font-size-2: calc(var(--font-size-1) * 1.125);
+
+    --line-height: 1.7;
+    --box-shadow-primary: 2px 2px var(--color-primary-1);
 }
 
 * {
@@ -19,19 +33,21 @@
 }
 
 html {
-    background: var(--color-1);
-    color: var(--color-5);
+    background: var(--color-neutral-2);
 }
 
 body {
+    color: var(--color-neutral-5);
     display: grid;
     grid-template-rows: min-content 1fr min-content;
     grid-template-areas:
         "header"
         "main"
         "footer";
-    font-family: Inter, sans-serif;
-    font-size: 0.875rem;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: var(--size-1);
+    letter-spacing: -0.03rem;
+    line-height: var(--line-height);
     min-height: 100dvh;
 }
 
@@ -47,7 +63,7 @@ footer {
 
 body > header {
     grid-area: header;
-    margin-top: 3rem;
+    padding-top: var(--size-4);
 }
 
 body > main {
@@ -56,16 +72,16 @@ body > main {
 
 body > footer {
     grid-area: footer;
-    margin-bottom: 3rem;
+    padding-bottom: var(--size-4);
 }
 
 @media only screen and (max-width: 720px) {
     body > header {
-        margin-top: 0;
+        padding-top: var(--size-0);
     }
 
     body > footer {
-        margin-bottom: 0;
+        padding-bottom: var(--size-0);
     }
 }
 
@@ -74,10 +90,9 @@ body > footer {
 .container {
     display: flex;
     flex: 1;
-    line-height: var(--line-height);
     margin: 0 auto;
     max-width: 720px;
-    padding: 1rem;
+    padding: var(--size-1);
     width: 100%;
 }
 
@@ -90,12 +105,12 @@ main .container {
     flex-direction: column;
 }
 
-main header {
-    margin-bottom: 2rem;
+section {
+    margin-bottom: var(--size-2);
 }
 
-section {
-    margin-bottom: 2rem;
+main header {
+    margin-bottom: var(--size-2);
 }
 
 /* defaults */
@@ -106,30 +121,33 @@ h3,
 h4,
 h5,
 h6 {
-    color: var(--color-6);
-    font-family: Bitter, serif;
     font-size: inherit;
-    font-weight: 500;
-    line-height: 1;
+    font-weight: bold;
 }
 
 h1 {
-    font-size: 1.75rem;
-    margin-bottom: 1.25rem;
-    margin-top: 1rem;
+    font-size: var(--font-size-2);
+    margin-top: var(--size-1);
+    margin-bottom: calc(var(--size-2) - 4px);
 }
 
 h2 {
-    font-size: 1rem;
-    margin-bottom: 1rem;
+    margin-bottom: var(--size-1);
+}
+
+h3,
+h4,
+h5,
+h6 {
+    margin-bottom: var(--size-0);
 }
 
 a {
-    color: var(--color-4);
+    color: var(--color-primary-2);
 }
 
 p {
-    margin-bottom: 1rem;
+    margin-bottom: var(--size-1);
 }
 
 p:last-child {
@@ -142,37 +160,37 @@ textarea {
 
 button {
     background: none;
-    border: none;
-    border-radius: 0.25rem;
+    border: 1px solid;
+    border-radius: 4px;
+    box-shadow: var(--box-shadow-primary);
+    color: inherit;
     cursor: pointer;
     font-family: inherit;
-    font-size: 0.875rem;
+    font-size: inherit;
 }
 
-strong {
-    font-weight: 500;
-    color: var(--color-6);
+hr {
+    margin-bottom: var(--size-2);
+    border: none;
+    border-bottom: 1px solid;
 }
 
 form label {
-    color: var(--color-6);
     display: block;
-    font-family: Bitter, serif;
-    font-weight: 500;
-    margin-bottom: 0.25rem;
+    margin-bottom: var(--size-0);
 }
 
 form input[type="text"],
 form input[type="email"],
 form input[type="password"],
 form textarea {
-    background: var(--color-0);
-    border: 1px solid var(--color-7);
-    border-radius: 0.25rem;
+    background: var(--color-neutral-1);
+    border: 1px solid;
+    box-shadow: var(--box-shadow-primary);
     color: inherit;
     font-family: inherit;
-    font-size: 0.875rem;
-    padding: 0.6125rem 0.75rem;
+    font-size: inherit;
+    padding: var(--size-1);
     width: 100%;
 }
 
@@ -183,44 +201,40 @@ form textarea:focus {
 
 form input::placeholder,
 form textarea::placeholder {
-    opacity: 0.5;
+    opacity: 0.6;
     color: inherit;
 }
 
 form button[type="submit"] {
-    background: var(--color-2);
-    border: none;
+    background: var(--color-primary-1);
     color: inherit;
     width: 100%;
-    padding: 0.5rem;
+    padding: var(--size-1);
 }
 
 form ul.errorlist {
-    color: var(--color-alert);
+    background: var(--color-alert-1);
+    border: 1px solid;
+    padding: var(--size-1);
 }
 
 form > ul.errorlist {
-    margin-bottom: 1rem;
+    margin-bottom: var(--size-1);
 }
 
 form label + ul.errorlist {
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--size-0);
 }
 
 /* class targets */
 
 img.icon {
-    height: 1.25rem;
-}
-
-.logo {
-    font-family: Bitter, serif;
-    font-size: 1rem;
-    font-weight: 500;
-    color: var(--color-4);
+    height: calc(var(--size-1) * 1.25);
 }
 
 a.logo {
+    font-weight: bold;
+    color: var(--color-primary-2);
     text-decoration: none;
 }
 
@@ -230,9 +244,13 @@ div:has(> .logo) {
 }
 
 form button.logout {
-    background: var(--color-1);
-    padding: 0;
-    text-decoration: underline;
-    box-shadow: none;
-    color: var(--color-4);
+    background: var(--color-neutral-2);
+    padding: var(--size-0);
+}
+
+.no-js-message {
+    background: var(--color-alert-1);
+    border: 1px solid;
+    box-shadow: var(--box-shadow-primary);
+    padding: var(--size-1);
 }

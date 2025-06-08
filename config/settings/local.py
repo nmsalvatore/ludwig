@@ -1,10 +1,17 @@
+from environs import Env
+
 from .base import *
 
-DEBUG = True
+env = Env()
+env.read_env()
+
+DEBUG = env.bool("DEBUG")
+
+# database configuration
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "ludwig",
-        "HOST": "localhost"
+        "ENGINE": env.str("DB_ENGINE"),
+        "NAME": env.str("DB_NAME"),
+        "HOST": env.str("DB_HOST"),
     }
 }
