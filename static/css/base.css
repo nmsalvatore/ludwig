@@ -20,7 +20,7 @@
 
     --font-size-0: calc(var(--font-size-1) * 0.75);
     --font-size-1: var(--size-1);
-    --font-size-2: calc(var(--font-size-1) * 1.125);
+    --font-size-2: calc(var(--font-size-1) * 1.25);
 
     --line-height: 1.7;
     --box-shadow-primary: 2px 2px var(--color-primary-1);
